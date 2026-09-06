@@ -10,5 +10,6 @@ Plantilla del método "PC arranca, móvil continúa":
 - **Nada se verifica desde la sesión**: el sandbox no alcanza internet, así que los despliegues los comprueban los propios workflows.
 - El **PC solo sirve para aterrizar** una copia de lectura con `tools/aterrizar.ps1`; nunca es origen de cambios.
 - Un proyecto nuevo son **dos pasos manuales**: crear el repo desde la plantilla y activar Pages. El resto lo hace `init-plantilla.yml`.
+- Esa inicialización deja el repo **entero** con su nombre —hasta el paquete Rust, el `GET /` del backend y el prefijo del `build`—, aparta la historia de la plantilla a `docs/plantilla/` y **falla el run** si se deja algo sin sustituir.
 
 Empieza por [`ARRANQUE.md`](ARRANQUE.md) · Guía extendida en [`docs/guia.html`](docs/guia.html) · Reglas para los agentes en [`CLAUDE.md`](CLAUDE.md) · Planificación en [`docs/planificacion/`](docs/planificacion/).

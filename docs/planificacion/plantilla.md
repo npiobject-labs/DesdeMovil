@@ -5,6 +5,8 @@
 
 Este repo pasa de ser un proyecto concreto a una plantilla reutilizable: "Use this template" → cuatro pasos manuales → una instrucción pegada en una sesión de Code → dos despliegues vivos y verificados.
 
+> **Documento histórico, superado dos veces.** Describe el flujo de cuatro pasos manuales con marcadores `PLANTILLA:` sustituidos a mano. Lo sustituyó [`simplificacion.md`](simplificacion.md) (dos pasos, `init-plantilla.yml` automático) y después [`portado-hijos.md`](portado-hijos.md) (la sustitución cubre también el backend y el prefijo de build, y un paso del workflow falla si queda cualquier residuo). En particular, la tabla de «los diez sitios» de más abajo **ya no describe nada que haya que hacer a mano**, y era justo la trampa que detectó `PruebaPlantilla`: ni el número ni la tabla cuadraban con lo que devolvía el `grep`. Se conserva sin tocar como registro de la consolidación.
+
 ## Qué cambió
 
 ### `CLAUDE.md` reescrito

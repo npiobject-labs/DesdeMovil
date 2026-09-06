@@ -3,6 +3,8 @@
 **Fecha:** 2026-09-06
 **Objetivo:** que un proyecto nuevo arranque solo con GitHub (Pages) y **un único paso manual**. Fly y Drive pasan a ser opcionales y se activan a mitad de proyecto sin rehacer nada.
 
+> **Ampliado después.** La sustitución que hace `init-plantilla.yml` se quedaba en el nombre y el owner; [`portado-hijos.md`](portado-hijos.md) la extendió al paquete Rust, al usuario del runtime, a los textos de `app/src/main.rs` y al prefijo del `build`, añadió el apartado de la documentación heredada a `docs/plantilla/` y un paso final que falla el run si queda cualquier residuo. Lo de aquí sigue siendo válido; la lista de ficheros del punto 3 es la corta.
+
 Antes: 4 pasos manuales (crear repo, activar Pages, token de Fly, carpeta de Drive) + pegar un bloque de instrucciones con cuatro valores rellenados a mano.
 Después: crear repo desde la plantilla + activar Pages. Nada que rellenar; el resto lo hace un workflow.
 
