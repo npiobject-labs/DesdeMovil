@@ -90,6 +90,14 @@ En todos los casos: `docs/planificacion/` queda con su `README.md` y `sesiones/`
 
 Además, sobre el árbol de `miusuario/CasaVerde`: `cargo build --release` en verde compilando `casaverde-backend`, los tres workflows pasan `yaml.safe_load` y `docs/guia.html` cierra todas las etiquetas.
 
+## Runs de verificación (SHA `63c590a0fc42211aad56f8d3725985fda91c6efa`)
+
+| Workflow | Run | Resultado |
+|---|---|---|
+| `pages.yml` | [34032563770](https://github.com/npiobject/DesdeMovil/actions/runs/34032563770) | **success** |
+| `deploy.yml` | [34032563781](https://github.com/npiobject/DesdeMovil/actions/runs/34032563781) | **success** (app derivada `desdemovil-npiobject`, paso *Verificar /salud* en verde) |
+| `init-plantilla.yml` | [34032563762](https://github.com/npiobject/DesdeMovil/actions/runs/34032563762) | **skipped** — la barrera `is_template == false` corta el job en la plantilla |
+
 ## Supuestos
 
 - **[SUPUESTO]** El prefijo del `build` es libre por proyecto y derivarlo de las iniciales es aceptable. Plan B: `init-plantilla.yml` puede leerlo de una variable de repositorio, o dejarse fijo y renumerar.
