@@ -87,3 +87,21 @@ Además: los tres YAML pasan `yaml.safe_load`, `docs/guia.html` cierra todas las
 7. **La región de Fly ya no está duplicada** en `deploy.yml`: el resumen la lee de `app/fly.toml`, que es donde manda.
 8. **`Assert-Git` en vez de una función envoltorio de git.** Un `Invoke-Git -C $Repo fetch` fallaría en el binding de parámetros de PowerShell (`-C` se interpretaría como nombre de parámetro de la función). El helper solo comprueba `$LASTEXITCODE` y las llamadas a git quedan literales.
 9. **La comprobación de `repo\` no vacía se añadió también a `estado.ps1`**, no solo a `aterrizar.ps1`: el diagnóstico útil tiene que salir en el script que se ejecuta primero.
+
+## Runs de verificación (SHA `a5e5cd32587a851de95232cdd84070a9aa37cf0c`)
+
+| Workflow | Run | Resultado |
+|---|---|---|
+| `pages.yml` | [34030354493](https://github.com/npiobject/DesdeMovil/actions/runs/34030354493) | **success** |
+| `deploy.yml` | [34030354491](https://github.com/npiobject/DesdeMovil/actions/runs/34030354491) | **success**, vía «Fly configurado» |
+| `init-plantilla.yml` | [34030354554](https://github.com/npiobject/DesdeMovil/actions/runs/34030354554) | **skipped** — la barrera `is_template == false` corta el job en la plantilla |
+
+Del log de `deploy.yml`, los diez pasos en `success`:
+
+- `FLY_APP_VAR:` vacío (no hay variable de repositorio) → `FLY_APP: desdemovil-npiobject`, el nombre derivado.
+- `flyctl apps create` creó la app; se provisionaron IPs y una máquina en `cdg`.
+- `Intento 1/10: {"build":"a5e5cd32587a851de95232cdd84070a9aa37cf0c","ok":true}` → verificación a la primera.
+
+El despliegue completo tardó 30 s, no varios minutos: el builder remoto de Fly tenía en caché todas las capas del Dockerfile de la app anterior de la misma organización (`#14 [builder 6/6] RUN ... cargo build --release` → `CACHED`). En un proyecto nuevo con otra organización de Fly no habrá caché y sí tardará lo que dice `ARRANQUE.md`.
+
+`init-plantilla.yml` aparece en la lista de Actions porque su `on: push` sí se evalúa, pero el job queda en `skipped`: no hay forma de filtrar por `is_template` en el `on:`, y una condición a nivel de job es exactamente lo que se pedía. Una vez que un proyecto generado se inicializa, el workflow ya no existe en ese repo.
