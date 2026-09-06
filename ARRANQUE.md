@@ -5,6 +5,7 @@
 1. **Crear el repo**: [Use this template](https://github.com/new?template_name=DesdeMovil&template_owner=npiobject).
 2. **Pages**: en el repo nuevo, **Settings → Pages → Build and deployment → Source**: cambia el desplegable de **Deploy from a branch** a **GitHub Actions**.
    Si lo dejas como está tendrás un enlace que funciona pero que muestra el README en vez del mock; y si el workflow corre antes de este cambio, falla con `Create Pages site failed. Error: Resource not accessible by integration` (precedido de un *warning* `Get Pages site failed… Not Found`). El `enablement: true` de `configure-pages` **no** sustituye a este paso: el `GITHUB_TOKEN` no tiene permiso para crear el sitio.
+   Cómo saber si se te olvidó: en **Actions** aparece un run `pages build and deployment` con `Build with Jekyll` tras cada push. Ese constructor solo corre en el modo antiguo; con Source en «GitHub Actions» no existe.
 
 > **El primer run en rojo es normal.** *Use this template* dispara `pages.yml` con el commit inicial, antes de que hayas tocado Settings, así que ese run falla. El historial de Actions arranca en rojo y no es un problema: `init-plantilla.yml` relanza Pages al terminar. (`deploy.yml` no: sin `FLY_API_TOKEN` termina en verde.)
 
@@ -61,4 +62,4 @@ Crea `%USERPROFILE%\C - Desarrollo\DesdeMovil\repo` con un clon de `main`. Es id
 
 ---
 
-Guía extendida: [`docs/guia.html`](docs/guia.html) · Reglas para los agentes: [`CLAUDE.md`](CLAUDE.md)
+Guía extendida: [`docs/guiaFable.html`](docs/guiaFable.html) (revisada) · anterior: [`docs/guia.html`](docs/guia.html) · Reglas para los agentes: [`CLAUDE.md`](CLAUDE.md)

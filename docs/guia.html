@@ -120,7 +120,7 @@
 <table>
   <thead><tr><th>Síntoma</th><th>Causa</th></tr></thead>
   <tbody>
-    <tr><td>Pages sirve el README, no el mock</td><td>Falta cambiar Source a «GitHub Actions».</td></tr>
+    <tr><td>Pages sirve el README, no el mock; <code>docs/x.html</code> da 404 en <code>/x.html</code></td><td>Source sigue en «Deploy from a branch». Señal inequívoca: un run <code>pages build and deployment</code> con <code>Build with Jekyll</code> tras cada push. Los runs verdes de <code>pages.yml</code> no lo detectan.</td></tr>
     <tr><td>El repo nuevo sigue con el nombre de la plantilla</td><td><code>init-plantilla.yml</code> no llegó a lanzarse: Actions → Inicializar plantilla → Run workflow.</td></tr>
     <tr><td><code>Create Pages site failed… Resource not accessible by integration</code></td><td>Falta cambiar Source a «GitHub Actions». El <code>enablement: true</code> del workflow no basta: el <code>GITHUB_TOKEN</code> no puede crear el sitio.</td></tr>
     <tr><td><code>init-plantilla.yml</code> falla en «Comprobar que no queda ningun residuo»</td><td>Quedó algo de la plantilla fuera de <code>docs/plantilla/</code>. El log lista fichero y línea.</td></tr>
