@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260906-003">
+<meta name="build" content="DM-B3-20260906-004">
 <title>DesdeMovil · guía</title>
 <style>
   :root { color-scheme: light dark; --bg:#fafafa; --fg:#1a1a1a; --mut:#5b5b5b; --bd:#e0e0e0; --card:#fff; --acc:#0b6bcb; }
@@ -50,13 +50,34 @@
   <thead><tr><th>Pieza</th><th>Para qué</th><th>Obligatorio</th></tr></thead>
   <tbody>
     <tr><td><code>docs/</code> + <code>pages.yml</code></td><td>Mock estático publicado en GitHub Pages en cada push a <code>main</code>.</td><td>Sí</td></tr>
-    <tr><td><code>init-plantilla.yml</code></td><td>Sustituye nombre y owner en el repo recién creado y se autodestruye.</td><td>Sí (una vez)</td></tr>
+    <tr><td><code>init-plantilla.yml</code></td><td>Deja el repo recién creado entero con su nombre y se apaga solo.</td><td>Sí (una vez)</td></tr>
     <tr><td><code>app/</code> + <code>deploy.yml</code></td><td>Backend en Rust (axum + tokio) desplegado en Fly.io.</td><td>No</td></tr>
     <tr><td>Carpeta de Drive</td><td>Copia de seguridad de <code>docs/planificacion/</code> al cerrar sesión.</td><td>No</td></tr>
     <tr><td><code>tools/*.ps1</code></td><td>Aterrizar una copia de lectura en el PC y saber si está al día.</td><td>No</td></tr>
   </tbody>
 </table>
 <p>Un proyecto nuevo arranca solo con lo obligatorio. Fly y Drive se activan a mitad de proyecto sin rehacer nada.</p>
+
+<h2>Inicialización</h2>
+<p>Crear el repo con <em>Use this template</em> y cambiar el desplegable de Pages: esos son los dos pasos manuales, y son los únicos. El resto lo hace <code>init-plantilla.yml</code> en el primer push, sin nada que rellenar.</p>
+<table>
+  <thead><tr><th>Qué deriva</th><th>De dónde</th><th>Dónde lo aplica</th></tr></thead>
+  <tbody>
+    <tr><td>Nombre y owner</td><td><code>github.repository</code></td><td><code>CLAUDE.md</code>, <code>README.md</code>, <code>ARRANQUE.md</code>, <code>docs/*.html</code>, <code>tools/*.ps1</code>, <code>app/src/main.rs</code></td></tr>
+    <tr><td>Slug del paquete</td><td>nombre en minúsculas, saneado a <code>[a-z0-9-]</code></td><td><code>app/Cargo.toml</code>, <code>app/Cargo.lock</code>, <code>app/Dockerfile</code> (<code>&lt;slug&gt;-backend</code>)</td></tr>
+    <tr><td>Usuario del runtime</td><td>slug sin guiones</td><td><code>app/Dockerfile</code></td></tr>
+    <tr><td>Prefijo del <code>build</code></td><td>iniciales (<code>CasaVerde</code> → <code>CV-B1</code>)</td><td><code>CLAUDE.md</code>, <code>docs/index.html</code>, <code>docs/guia.html</code></td></tr>
+  </tbody>
+</table>
+<p>Además rellena la sección <strong>Parámetros</strong> de <code>CLAUDE.md</code> dejando vacío el id de Drive, aparta la planificación heredada a <code>docs/plantilla/</code> y reordena <code>Cargo.lock</code>, que el renombrado deja fuera del orden que mantiene cargo.</p>
+<div class="nota">El checklist no es una lista que revisar a ojo: el último paso hace <code>grep</code> de todo lo que huela a plantilla fuera de <code>docs/plantilla/</code> y <strong>falla el run</strong> si encuentra algo, diciendo fichero y línea.</div>
+
+<h3>Por qué no se borra a sí mismo</h3>
+<p>Porque no puede. <code>GITHUB_TOKEN</code> no tiene permiso para crear ni modificar nada bajo <code>.github/workflows/</code>, y si el commit toca un solo fichero de esa carpeta GitHub <strong>rechaza el push entero</strong> — se perdería toda la inicialización. Por eso el workflow no edita ni borra nada de ahí: borra el marcador <code>.plantilla-pendiente</code> (que ya lo dejaba inerte) y se deshabilita por la API. Queda en el repo, apagado; bórralo a mano si te molesta.</p>
+
+<h3>El primer run sale en rojo</h3>
+<p><em>Use this template</em> dispara los tres workflows con el commit inicial, antes de que hayas tocado Settings. Cae <code>pages.yml</code>, en el paso <code>Configure Pages</code>; <code>deploy.yml</code> termina en verde sin token, e <code>init-plantilla.yml</code> hace su trabajo y relanza Pages al acabar. Un solo run rojo, y no es un problema.</p>
+<p>El recorrido completo, con los runs que lo prueban, está en <a href="https://github.com/npiobject/DesdeMovil/blob/main/docs/planificacion/prueba-init.md">prueba-init.md</a>.</p>
 
 <h2>Ciclo de una sesión</h2>
 <ol>
