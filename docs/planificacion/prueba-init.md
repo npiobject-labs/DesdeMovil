@@ -104,3 +104,17 @@ El error del primer run se leyó entero y es, literalmente, el que documenta `AR
 ```
 
 Confirmado también que `enablement: true` no basta: el `GITHUB_TOKEN` del job llega con `Pages: write` y aun así no puede **crear** el sitio. El `workflow_dispatch` que lanza `init-plantilla.yml` al terminar falla por lo mismo mientras Pages siga sin activar; en cuanto se cambia Source a «GitHub Actions», basta relanzarlo.
+
+Hecho eso, el relanzamiento cierra el ciclo: run [34039653290](https://github.com/npiobject/PruebaInit/actions/runs/34039653290), **success**, con los cinco pasos en verde —`Configure Pages`, que antes fallaba, incluido— y `Deploy to GitHub Pages` publicando https://npiobject.github.io/PruebaInit/ con el mock `PI-B1-20260905-001`.
+
+## Estado final de la prueba
+
+| Paso | Cómo terminó |
+|---|---|
+| Crear el repo desde la plantilla | manual, el único que no puede hacer un agente |
+| `init-plantilla.yml` | **success** solo, en el `run_number: 1` del *Initial commit* |
+| `deploy.yml` | **success** sin token, por la vía «Fly no configurado» |
+| Activar Pages | manual, el segundo y último paso |
+| `pages.yml` relanzado | **success**, sitio publicado |
+
+Los dos pasos manuales que promete `ARRANQUE.md` son exactamente dos, y todo lo demás salió solo.
