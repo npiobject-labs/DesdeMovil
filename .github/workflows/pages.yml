@@ -1,4 +1,4 @@
-# PLANTILLA: este workflow no lleva el nombre del proyecto; no hay nada que sustituir.
+# Este workflow no lleva el nombre del proyecto: init-plantilla.yml no lo toca.
 # Requiere Settings -> Pages -> Source: GitHub Actions activado una vez a mano.
 name: Deploy docs to GitHub Pages
 

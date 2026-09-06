@@ -99,8 +99,12 @@ jobs:
           sed -i "s/DM-B3/${PREFIJO}-B1/g" CLAUDE.md docs/index.html docs/guia.html
           echo "  prefijo de build: ${PREFIJO}-B1"
 
-          # Comentarios PLANTILLA: ya resueltos.
-          sed -i '/^# PLANTILLA:/d' .github/workflows/pages.yml app/Dockerfile
+          # Comentarios PLANTILLA: ya resueltos. Nada de .github/workflows/ se
+          # toca aqui: GITHUB_TOKEN no puede modificar workflows y el push seria
+          # rechazado ("refusing to allow a GitHub App to ... without workflows
+          # permission"). Este workflow no se borra: queda inerte sin el marcador
+          # y ademas se deshabilita por la API al final.
+          sed -i '/^# PLANTILLA:/d' app/Dockerfile
           sed -i '/^# PLANTILLA: si cambias este nombre/{N;d}' app/Cargo.toml
 
           if [ -f ARRANQUE.md ]; then
@@ -112,7 +116,6 @@ jobs:
           echo "  seccion Parametros rellenada; id de Drive vaciado"
 
           rm -f .plantilla-pendiente
-          rm -f .github/workflows/init-plantilla.yml
 
       # docs/planificacion/ nace con la planificacion completa de la plantilla
       # mezclada con la carpeta donde va la del proyecto nuevo. Se aparta.
@@ -134,8 +137,11 @@ jobs:
         if: steps.marcador.outputs.pendiente == 'true'
         run: |
           set -euo pipefail
+          # init-plantilla.yml se excluye: es la herramienta, no el resultado, y
+          # ya no puede borrarse a si mismo (ver el paso de sustitucion).
           residuos="$(grep -rniE 'desdemovil|DM-B3|PLANTILLA:' \
-            --exclude-dir=.git --exclude-dir=plantilla . \
+            --exclude-dir=.git --exclude-dir=plantilla \
+            --exclude=init-plantilla.yml . \
             | grep -v 'template_name=DesdeMovil' || true)"
           if [ -n "${residuos}" ]; then
             echo "::error::Quedan residuos de la plantilla tras la inicializacion."
@@ -177,6 +183,15 @@ jobs:
           git commit -m "Inicializar la plantilla para ${GITHUB_REPOSITORY}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
+      # No puede borrarse a si mismo (es un fichero de .github/workflows/), asi
+      # que se apaga por la API. El marcador ya lo dejaba inerte; esto ademas
+      # evita un run vacio en cada push.
+      - name: Apagar este workflow
+        if: steps.marcador.outputs.pendiente == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow disable init-plantilla.yml || echo "No se pudo deshabilitar; queda inerte por el marcador."
+
       # Un commit hecho con GITHUB_TOKEN no dispara workflows por push, asi que
       # Pages se lanza explicitamente por workflow_dispatch (esto si esta permitido).
       # Tiene que ser sobre la rama por defecto: el entorno github-pages solo
@@ -196,6 +211,7 @@ jobs:
             echo "- Proyecto: \`${GITHUB_REPOSITORY#*/}\`"
             echo "- Owner: \`${GITHUB_REPOSITORY%%/*}\`"
             echo "- Documentacion heredada apartada a \`docs/plantilla/\`."
-            echo "- Marcador \`.plantilla-pendiente\` y este workflow: borrados."
+            echo "- Marcador \`.plantilla-pendiente\`: borrado."
+            echo "- \`init-plantilla.yml\`: deshabilitado (no puede borrarse solo; borralo a mano si quieres)."
             echo "- Pages: lanzado \`pages.yml\`; la URL sera https://${GITHUB_REPOSITORY%%/*}.github.io/${GITHUB_REPOSITORY#*/}/"
           } >> "$GITHUB_STEP_SUMMARY"

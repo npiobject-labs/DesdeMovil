@@ -103,6 +103,7 @@
     <tr><td>El repo nuevo sigue con el nombre de la plantilla</td><td><code>init-plantilla.yml</code> no llegó a lanzarse: Actions → Inicializar plantilla → Run workflow.</td></tr>
     <tr><td><code>Create Pages site failed… Resource not accessible by integration</code></td><td>Falta cambiar Source a «GitHub Actions». El <code>enablement: true</code> del workflow no basta: el <code>GITHUB_TOKEN</code> no puede crear el sitio.</td></tr>
     <tr><td><code>init-plantilla.yml</code> falla en «Comprobar que no queda ningun residuo»</td><td>Quedó algo de la plantilla fuera de <code>docs/plantilla/</code>. El log lista fichero y línea.</td></tr>
+    <tr><td><code>init-plantilla.yml</code> falla en «Commit y push» con <code>without workflows permission</code></td><td>El commit toca algo bajo <code>.github/workflows/</code> y <code>GITHUB_TOKEN</code> no puede: GitHub rechaza el push entero. El workflow no debe editar ni borrar nada de esa carpeta.</td></tr>
     <tr><td>Fly despliega pero la app no es tuya</td><td>El nombre de app es único en todo Fly.io y estaba cogido; <code>apps create</code> lo calla con <code>|| true</code>. Define la variable <code>FLY_APP</code>.</td></tr>
     <tr><td><code>deploy.yml</code> verde pero sin URL</td><td>Es el camino «Fly no configurado». Falta el secreto <code>FLY_API_TOKEN</code>.</td></tr>
     <tr><td><code>/salud</code> devuelve otro SHA</td><td>Estás mirando un despliegue anterior; comprueba el run del SHA que enviaste.</td></tr>
