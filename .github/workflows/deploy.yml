@@ -78,11 +78,16 @@ jobs:
           FLY_APP: ${{ steps.app.outputs.app }}
         run: flyctl apps create "${FLY_APP}" --org personal || true
 
-      - name: Fijar BUILD_ID con el SHA del commit
+      # PROYECTO es lo que responde GET /; asi app/ no lleva el nombre incrustado.
+      - name: Fijar BUILD_ID y PROYECTO
         if: steps.fly.outputs.configurado == 'true'
         env:
           FLY_APP: ${{ steps.app.outputs.app }}
-        run: flyctl secrets set "BUILD_ID=${GITHUB_SHA}" --app "${FLY_APP}" --stage
+        run: |
+          flyctl secrets set \
+            "BUILD_ID=${GITHUB_SHA}" \
+            "PROYECTO=${GITHUB_REPOSITORY#*/}" \
+            --app "${FLY_APP}" --stage
 
       - name: Desplegar en Fly.io
         if: steps.fly.outputs.configurado == 'true'

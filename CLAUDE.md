@@ -43,6 +43,7 @@ Pages está siempre activo. Fly solo si existe el secreto `FLY_API_TOKEN`: sin �
 - Todo cambio termina en commit + push a `main`. Mensajes de commit en español, imperativo.
 - Backend en `app/` (Rust, axum + tokio). `GET /` devuelve texto plano; `GET /salud` devuelve `{"ok":true,"build":"<BUILD_ID>"}`, donde `BUILD_ID` es el SHA que inyecta el workflow.
 - `app/fly.toml` no lleva clave `app`: el nombre se pasa con `--app` desde `deploy.yml`.
+- `app/` no lleva el nombre del proyecto en ninguna parte: el paquete se llama `backend` y `GET /` responde con el secreto `PROYECTO`, que `deploy.yml` fija junto a `BUILD_ID`. No hay nada que sustituir ahí al clonar la plantilla.
 - Mocks estáticos en `docs/`. `docs/index.html` es el mock vivo; los anteriores se archivan en `docs/mocks/NNN-nombre.html`.
 - Cada mock lleva `<meta name="build" content="DM-B3-AAAAMMDD-NNN">` con un número nuevo en cada iteración.
 - Nunca pongas claves, endpoints internos ni datos reales en `docs/`: el sitio es público.
@@ -59,6 +60,17 @@ Pages está siempre activo. Fly solo si existe el secreto `FLY_API_TOKEN`: sin �
 
 - `pages.yml` da por bueno el despliegue con el paso `deploy-pages`.
 - `deploy.yml` tiene un paso final que hace `curl` a `/salud` y falla el run si la respuesta no contiene el SHA del commit.
+
+**Pages solo se puede verificar desde `main`** [VERIFICADO]. El entorno `github-pages` únicamente admite despliegues desde la rama por defecto, así que lanzar `pages.yml` con `workflow_dispatch` sobre una rama de trabajo da un run en `failure` **con cero pasos ejecutados**: no es un fallo del workflow, es la protección del entorno. Si trabajas en una rama, el mock no se valida hasta que el cambio llega a `main`. `deploy.yml` no tiene esa restricción y sí se puede lanzar sobre una rama para probar el backend antes de mergear.
+
+Dos diagnósticos que ahorran tiempo:
+
+| Síntoma en el log | Causa |
+|---|---|
+| `Create Pages site failed. Resource not accessible by integration` | Falta **Settings → Pages → Source: GitHub Actions**. Paso manual, ningún agente puede hacerlo. |
+| Job `deploy` en `failure` sin un solo paso, sobre una rama que no es `main` | Protección del entorno `github-pages`, ver arriba. Mergea y relanza. |
+
+No des por inicializado un repo solo porque no exista `.plantilla-pendiente`: un repo creado desde una copia antigua de la plantilla nunca tuvo ese marcador. Compruébalo buscando el nombre de la plantilla en el repo.
 
 No anuncies "puedes probarlo" hasta confirmar por la API de GitHub Actions que el run del workflow para el SHA que acabas de enviar está en `success`. Si en 5 minutos no está, avisa del fallo con la causa leída en los logs, no del éxito. Al avisar, da siempre: SHA, URL y número de `build`.
 
