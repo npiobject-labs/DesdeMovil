@@ -1,0 +1,83 @@
+name: Desplegar backend en Fly.io
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fly-deploy
+  cancel-in-progress: false
+
+env:
+  FLY_APP: desdemovil-npi
+  FLY_REGION: mad
+
+jobs:
+  desplegar:
+    name: Construir y desplegar
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Comprobar que existe el token de Fly
+        run: |
+          if [ -z "${FLY_API_TOKEN}" ]; then
+            echo "::error::Falta el secreto FLY_API_TOKEN en el repositorio."
+            exit 1
+          fi
+          echo "Token presente (valor oculto)."
+
+      - name: Instalar flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Crear la app si no existe
+        run: flyctl apps create "${FLY_APP}" --org personal || true
+
+      - name: Fijar BUILD_ID con el SHA del commit
+        run: flyctl secrets set "BUILD_ID=${GITHUB_SHA}" --app "${FLY_APP}" --stage
+
+      - name: Desplegar en Fly.io
+        run: flyctl deploy app --remote-only --ha=false
+
+      - name: Verificar /salud
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          url="https://${FLY_APP}.fly.dev/salud"
+          echo "Verificando ${url} (se espera build=${SHA})"
+          for intento in $(seq 1 10); do
+            respuesta="$(curl -fsS --max-time 20 "${url}" || true)"
+            echo "Intento ${intento}/10: ${respuesta:-<sin respuesta>}"
+            if printf '%s' "${respuesta}" | grep -q "${SHA}"; then
+              echo "OK: /salud responde con el build ${SHA}"
+              exit 0
+            fi
+            if [ "${intento}" -lt 10 ]; then
+              sleep 15
+            fi
+          done
+          echo "::error::/salud no devolvio el SHA ${SHA} tras 10 intentos (150 s)."
+          exit 1
+
+      - name: Resumen del despliegue
+        if: success()
+        run: |
+          {
+            echo "### Backend desplegado en Fly.io"
+            echo ""
+            echo "- App: \`${FLY_APP}\` (region \`${FLY_REGION}\`)"
+            echo "- URL: https://${FLY_APP}.fly.dev/"
+            echo "- Salud: https://${FLY_APP}.fly.dev/salud"
+            echo "- Build (SHA): \`${GITHUB_SHA}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
