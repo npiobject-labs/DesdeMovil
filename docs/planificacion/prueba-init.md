@@ -71,6 +71,36 @@ Consecuencias, todas buenas menos la primera:
 - El `workflow_dispatch` de `init-plantilla.yml` y la frase de `ARRANQUE.md` («si al crear el repo no llegó a lanzarse, la sesión lo lanza desde Actions») pasan de ser el camino esperado a ser una red de seguridad que normalmente no hace falta. Se quedan: no estorban.
 - El aviso de `ARRANQUE.md` de que **el primer run sale en rojo** queda confirmado, y con el matiz exacto que dice: cae `pages.yml` —falla en `Configure Pages`, no en el despliegue— mientras `deploy.yml` termina en verde sin token. Un solo run rojo, no dos.
 
-## Limitación de esta prueba
+## Prueba definitiva: repo generado de cero
 
-La corrección no se probó sobre un repo recién generado, sino llevando los dos workflows corregidos a `PruebaInit` y dejando que el push disparara la inicialización con el marcador todavía puesto. Lo que falló era el token con el que corre el workflow, y eso es idéntico en los dos casos: el run corrió como `GITHUB_TOKEN` y su push pasó. **[SUPUESTO]** que un repo generado de cero se comporta igual; plan B para confirmarlo: crear otro repo desde la plantilla, que ahora ya sale bien a la primera.
+La verificación anterior tenía una pega: la corrección llegó a `PruebaInit` por un push mío, no dentro de la plantilla, así que quedaba **[SUPUESTO]** que un repo generado de cero se comportara igual. Se ha comprobado borrando `PruebaInit` y creándolo otra vez con *Use this template*, ya con la plantilla corregida y **sin tocar nada**:
+
+| Run | Evento | Commit | Resultado |
+|---|---|---|---|
+| [34039428339](https://github.com/npiobject/PruebaInit/actions/runs/34039428339) `init-plantilla.yml` | `push`, `run_number: 1` | `e8e0e62` (*Initial commit*) | **success** |
+| [34039428323](https://github.com/npiobject/PruebaInit/actions/runs/34039428323) `deploy.yml` | `push`, `run_number: 1` | `e8e0e62` | **success**, vía «Fly no configurado» |
+| [34039428319](https://github.com/npiobject/PruebaInit/actions/runs/34039428319) `pages.yml` | `push`, `run_number: 1` | `e8e0e62` | failure en `Configure Pages`, Pages sin activar a propósito |
+
+La inicialización se completó sola y a la primera, 13 segundos después de crear el repo, en el commit `3049bae`. Comprobado en el árbol publicado:
+
+- El commit **no toca ni un fichero de `.github/workflows/`** (`git show --name-only` no devuelve nada bajo esa ruta), que era la causa del fallo.
+- Backend: `pruebainit-backend` en `Cargo.toml`, `Cargo.lock` y `Dockerfile`; usuario `pruebainit`; `GET /` y log → `PruebaInit backend`.
+- Mock: `PI-B1-20260905-001`, título `PruebaInit · mock 0`; la regla de `CLAUDE.md` con `PI-B1-AAAAMMDD-NNN`.
+- **Parámetros** rellenada (`PruebaInit` / `npiobject` / `derivada`) con el id de Drive vacío.
+- `docs/plantilla/` con los 8 documentos heredados; `docs/planificacion/` con solo su `README.md` y `sesiones/`.
+- Marcador borrado, ningún comentario `# PLANTILLA` en todo el repo, y `init-plantilla.yml` en `disabled_manually`.
+
+Los únicos rastros de la plantilla son los tres queridos: el enlace *Use this template* de `ARRANQUE.md`, la cita de origen del `README.md` generado y el propio `init-plantilla.yml`.
+
+El **[SUPUESTO]** queda cerrado: la plantilla inicializa un proyecto nuevo sin intervención, con un solo paso manual pendiente (activar Pages).
+
+### Nota sobre Pages
+
+El error del primer run se leyó entero y es, literalmente, el que documenta `ARRANQUE.md`:
+
+```
+##[warning]Get Pages site failed. Error: Not Found
+##[error]Create Pages site failed. Error: Resource not accessible by integration
+```
+
+Confirmado también que `enablement: true` no basta: el `GITHUB_TOKEN` del job llega con `Pages: write` y aun así no puede **crear** el sitio. El `workflow_dispatch` que lanza `init-plantilla.yml` al terminar falla por lo mismo mientras Pages siga sin activar; en cuanto se cambia Source a «GitHub Actions», basta relanzarlo.
