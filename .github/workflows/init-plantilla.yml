@@ -95,6 +95,32 @@ jobs:
           sed -i "s/desdemovil/${USUARIO}/g" app/Dockerfile
           echo "  backend renombrado a ${SLUG}-backend"
 
+          # El sed deja el paquete propio en el sitio del nombre viejo, y el
+          # primer "cargo build" lo recoloca: un diff que el usuario no ha
+          # hecho. Se reordena aqui, igual que hace cargo (por nombre y version).
+          # El bloque va indentado por el YAML y Python no lo tolera: se quita
+          # el sangrado al escribirlo, conservando el relativo.
+          sed -E 's/^ {10}//' > "${RUNNER_TEMP}/ordenar_lock.py" <<'ORDENAR'
+          import re
+          ruta = "app/Cargo.lock"
+          texto = open(ruta, encoding="utf-8").read()
+          corte = texto.index("[[package]]")
+          cabecera, cuerpo = texto[:corte], texto[corte:]
+          bloques = [b for b in cuerpo.split("\n\n") if b.strip()]
+          def clave(bloque):
+              nombre = re.search(r'^name = "(.*)"$', bloque, re.M)
+              version = re.search(r'^version = "(.*)"$', bloque, re.M)
+              return (nombre.group(1) if nombre else "", version.group(1) if version else "")
+          ordenados = sorted(bloques, key=clave)
+          if ordenados == bloques:
+              print("  Cargo.lock ya estaba ordenado")
+          else:
+              open(ruta, "w", encoding="utf-8").write(
+                  cabecera + "\n\n".join(b.rstrip("\n") for b in ordenados) + "\n")
+              print("  Cargo.lock reordenado")
+          ORDENAR
+          python3 "${RUNNER_TEMP}/ordenar_lock.py"
+
           # Prefijo del numero de build de los mocks, en la regla y en el mock vivo.
           sed -i "s/DM-B3/${PREFIJO}-B1/g" CLAUDE.md docs/index.html docs/guia.html
           echo "  prefijo de build: ${PREFIJO}-B1"
