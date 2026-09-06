@@ -17,7 +17,7 @@ concurrency:
 
 env:
   FLY_APP: desdemovil-npi
-  FLY_REGION: mad
+  FLY_REGION: cdg
 
 jobs:
   desplegar:
