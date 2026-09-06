@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260906-002">
+<meta name="build" content="DM-B3-20260906-003">
 <title>DesdeMovil · guía</title>
 <style>
   :root { color-scheme: light dark; --bg:#fafafa; --fg:#1a1a1a; --mut:#5b5b5b; --bd:#e0e0e0; --card:#fff; --acc:#0b6bcb; }
@@ -66,6 +66,7 @@
   <li>El agente consulta la API de GitHub Actions y no avisa hasta que el run del SHA está en <code>success</code>.</li>
   <li>Cierre: resumen de 5 líneas en <code>docs/planificacion/sesiones/AAAAMMDD-HHMM.md</code>, y copia a Drive si está configurado.</li>
 </ol>
+<p><code>docs/planificacion/</code> es la carpeta de este proyecto y en un repo generado arranca vacía; el historial de la plantilla queda apartado en <code>docs/plantilla/</code>, como referencia de solo lectura. <code>pages.yml</code> solo se puede verificar en <code>main</code>: el entorno <code>github-pages</code> únicamente despliega desde la rama por defecto.</p>
 <div class="nota">Un aviso de «ya puedes probarlo» sin SHA, URL y número de <code>build</code> no vale. Es la única señal de que la verificación se hizo de verdad.</div>
 
 <h2>Pages</h2>
@@ -99,7 +100,10 @@
   <thead><tr><th>Síntoma</th><th>Causa</th></tr></thead>
   <tbody>
     <tr><td>Pages sirve el README, no el mock</td><td>Falta cambiar Source a «GitHub Actions».</td></tr>
-    <tr><td>El repo nuevo sigue diciendo «DesdeMovil»</td><td><code>init-plantilla.yml</code> no llegó a lanzarse: Actions → Inicializar plantilla → Run workflow.</td></tr>
+    <tr><td>El repo nuevo sigue con el nombre de la plantilla</td><td><code>init-plantilla.yml</code> no llegó a lanzarse: Actions → Inicializar plantilla → Run workflow.</td></tr>
+    <tr><td><code>Create Pages site failed… Resource not accessible by integration</code></td><td>Falta cambiar Source a «GitHub Actions». El <code>enablement: true</code> del workflow no basta: el <code>GITHUB_TOKEN</code> no puede crear el sitio.</td></tr>
+    <tr><td><code>init-plantilla.yml</code> falla en «Comprobar que no queda ningun residuo»</td><td>Quedó algo de la plantilla fuera de <code>docs/plantilla/</code>. El log lista fichero y línea.</td></tr>
+    <tr><td>Fly despliega pero la app no es tuya</td><td>El nombre de app es único en todo Fly.io y estaba cogido; <code>apps create</code> lo calla con <code>|| true</code>. Define la variable <code>FLY_APP</code>.</td></tr>
     <tr><td><code>deploy.yml</code> verde pero sin URL</td><td>Es el camino «Fly no configurado». Falta el secreto <code>FLY_API_TOKEN</code>.</td></tr>
     <tr><td><code>/salud</code> devuelve otro SHA</td><td>Estás mirando un despliegue anterior; comprueba el run del SHA que enviaste.</td></tr>
     <tr><td><code>CONNECT tunnel failed, 403</code> en la sesión</td><td>Normal: el sandbox no alcanza Pages ni Fly. Verifica por la API de Actions.</td></tr>
