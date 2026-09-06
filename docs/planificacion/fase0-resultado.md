@@ -1,4 +1,4 @@
-# DesdeMovil — Fase 0: resultado
+# DesdeMovil — Fase 0: resultado (FINAL, OK)
 
 **Fecha:** 2026-09-05
 **Repositorio:** https://github.com/npiobject/DesdeMovil
@@ -16,36 +16,31 @@
 | SHA | Descripción |
 |---|---|
 | `82c817e` | Mock `docs/index.html` + workflow de Pages |
-| `1810265` | `configure-pages` con `enablement: true` (intento de auto-habilitar Pages) |
+| `1810265` | `configure-pages` con `enablement: true` |
 
 ## Estado del workflow
 
-| Run | SHA | Resultado | Causa |
+| Run | SHA | Evento | Resultado |
 |---|---|---|---|
-| [#1](https://github.com/npiobject/DesdeMovil/actions/runs/33987990711) | `82c817e` | ❌ failure | `Get Pages site failed ... Not Found` — Pages no está habilitado en el repo |
-| [#2](https://github.com/npiobject/DesdeMovil/actions/runs/33988024125) | `1810265` | ❌ failure | `Create Pages site failed. Resource not accessible by integration` — el `GITHUB_TOKEN` del workflow no tiene permiso para crear el sitio |
+| [#1](https://github.com/npiobject/DesdeMovil/actions/runs/33987990711) | `82c817e` | push | ❌ failure — `Get Pages site failed… Not Found` (Pages no habilitado) |
+| [#2](https://github.com/npiobject/DesdeMovil/actions/runs/33988024125) | `1810265` | push | ❌ failure — `Create Pages site failed. Resource not accessible by integration` |
+| [#3](https://github.com/npiobject/DesdeMovil/actions/runs/33988504572) | `1810265` | workflow_dispatch | ✅ **success** — tras activar Settings → Pages → Source: GitHub Actions |
 
-**Conclusión:** el YAML es correcto; el bloqueo es de configuración del repositorio, no de código.
+Pasos del run #3, todos en verde: Checkout → Configure Pages → Upload docs artifact → Deploy to GitHub Pages.
 
-## URL de Pages (prevista, aún no publicada)
+## URL de Pages (publicada)
 
 https://npiobject.github.io/DesdeMovil/
 
-## Acción manual pendiente (única)
+Debe servir el mock con `build = DM-B3-20260905-001`.
 
-En **Settings → Pages** del repositorio `npiobject/DesdeMovil`:
+## Conclusión
 
-1. **Build and deployment → Source**: seleccionar **GitHub Actions** (no "Deploy from a branch").
-2. Guardar.
-3. Volver a lanzar el workflow: **Actions → "Deploy docs to GitHub Pages" → Run workflow** (rama `main`),
-   o hacer cualquier push a `main`.
+Fase 0 cerrada. El pipeline "push a `main` → publica `docs/` en Pages" queda operativo:
+cualquier commit posterior sobre `main` que toque `docs/` se despliega automáticamente.
 
-Opcionalmente, si el fallo persistiera por permisos del token:
-**Settings → Actions → General → Workflow permissions** → "Read and write permissions".
+`enablement: true` ya no es necesario (el sitio existe), pero es inocuo y protege ante un repositorio nuevo.
 
-Una vez habilitado, `enablement: true` deja de ser necesario pero es inocuo (el sitio ya existirá).
+## Adenda (sesión desde el móvil, 2026-09-05 ~23:00)
 
-## Verificación posterior
-
-Con Pages ya activo, comprobar en la respuesta de `GET /repos/npiobject/DesdeMovil/pages`
-que `status: built` y que el HTML servido contiene `DM-B3-20260905-001`.
+Incógnita 5 resuelta: una sesión nueva creada desde la app móvil (pestaña Code, repo seleccionado) hizo commit y push a `main` de `tools/aterrizar.ps1`, `tools/estado.ps1` y `docs/planificacion/*` tomados de Drive. Fase 0 cerrada sin suposiciones pendientes.

@@ -16,7 +16,9 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  # PLANTILLA: nombre de la app en Fly.io. Debe coincidir con "app" en app/fly.toml.
   FLY_APP: desdemovil-npi
+  # PLANTILLA: region de Fly.io. Debe coincidir con "primary_region" en app/fly.toml.
   FLY_REGION: cdg
 
 jobs:

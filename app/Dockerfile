@@ -24,6 +24,7 @@ RUN useradd --system --create-home --uid 10001 desdemovil
 USER desdemovil
 WORKDIR /app
 
+# PLANTILLA: "desdemovil-backend" es el "name" del paquete en app/Cargo.toml.
 COPY --from=builder /src/target/release/desdemovil-backend /usr/local/bin/desdemovil-backend
 
 ENV PUERTO=8080
