@@ -15,12 +15,6 @@ concurrency:
   group: fly-deploy
   cancel-in-progress: false
 
-env:
-  # PLANTILLA: nombre de la app en Fly.io. Debe coincidir con "app" en app/fly.toml.
-  FLY_APP: desdemovil-npi
-  # PLANTILLA: region de Fly.io. Debe coincidir con "primary_region" en app/fly.toml.
-  FLY_REGION: cdg
-
 jobs:
   desplegar:
     name: Construir y desplegar
@@ -28,32 +22,78 @@ jobs:
     timeout-minutes: 30
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      # Variable de repositorio opcional; si existe, manda sobre el nombre derivado.
+      FLY_APP_VAR: ${{ vars.FLY_APP }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Comprobar que existe el token de Fly
+      # Fly es opcional: sin secreto el workflow termina en verde con un aviso.
+      - name: Comprobar si Fly esta configurado
+        id: fly
         run: |
           if [ -z "${FLY_API_TOKEN}" ]; then
-            echo "::error::Falta el secreto FLY_API_TOKEN en el repositorio."
+            echo "configurado=false" >> "$GITHUB_OUTPUT"
+            echo "Fly no configurado: ver ARRANQUE.md, seccion Fly" >> "$GITHUB_STEP_SUMMARY"
+            echo "Fly no configurado: ver ARRANQUE.md, seccion Fly"
+          else
+            echo "configurado=true" >> "$GITHUB_OUTPUT"
+            echo "Token presente (valor oculto)."
+          fi
+
+      # Nombre de la app: variable FLY_APP si existe; si no, <repo>-<owner> en
+      # minusculas, saneado a [a-z0-9-] y recortado a 30 caracteres.
+      - name: Determinar el nombre de la app
+        id: app
+        if: steps.fly.outputs.configurado == 'true'
+        run: |
+          if [ -n "${FLY_APP_VAR}" ]; then
+            app="${FLY_APP_VAR}"
+            origen="variable de repositorio FLY_APP"
+          else
+            nombre="${GITHUB_REPOSITORY#*/}"
+            owner="${GITHUB_REPOSITORY%%/*}"
+            app="$(printf '%s-%s' "${nombre}" "${owner}" \
+              | tr '[:upper:]' '[:lower:]' \
+              | tr -c 'a-z0-9-' '-' \
+              | cut -c1-30 \
+              | sed 's/-*$//')"
+            origen="derivado de ${GITHUB_REPOSITORY}"
+          fi
+          if [ -z "${app}" ]; then
+            echo "::error::No se pudo determinar el nombre de la app de Fly."
             exit 1
           fi
-          echo "Token presente (valor oculto)."
+          echo "App de Fly: ${app} (${origen})"
+          echo "app=${app}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        if: steps.fly.outputs.configurado == 'true'
+        uses: actions/checkout@v4
 
       - name: Instalar flyctl
+        if: steps.fly.outputs.configurado == 'true'
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Crear la app si no existe
+        if: steps.fly.outputs.configurado == 'true'
+        env:
+          FLY_APP: ${{ steps.app.outputs.app }}
         run: flyctl apps create "${FLY_APP}" --org personal || true
 
       - name: Fijar BUILD_ID con el SHA del commit
+        if: steps.fly.outputs.configurado == 'true'
+        env:
+          FLY_APP: ${{ steps.app.outputs.app }}
         run: flyctl secrets set "BUILD_ID=${GITHUB_SHA}" --app "${FLY_APP}" --stage
 
       - name: Desplegar en Fly.io
-        run: flyctl deploy app --remote-only --ha=false
+        if: steps.fly.outputs.configurado == 'true'
+        env:
+          FLY_APP: ${{ steps.app.outputs.app }}
+        run: flyctl deploy app --app "${FLY_APP}" --remote-only --ha=false
 
       - name: Verificar /salud
+        if: steps.fly.outputs.configurado == 'true'
         env:
+          FLY_APP: ${{ steps.app.outputs.app }}
           SHA: ${{ github.sha }}
         run: |
           url="https://${FLY_APP}.fly.dev/salud"
@@ -73,12 +113,15 @@ jobs:
           exit 1
 
       - name: Resumen del despliegue
-        if: success()
+        if: success() && steps.fly.outputs.configurado == 'true'
+        env:
+          FLY_APP: ${{ steps.app.outputs.app }}
         run: |
+          region="$(sed -n 's/^primary_region *= *"\(.*\)"/\1/p' app/fly.toml)"
           {
             echo "### Backend desplegado en Fly.io"
             echo ""
-            echo "- App: \`${FLY_APP}\` (region \`${FLY_REGION}\`)"
+            echo "- App: \`${FLY_APP}\` (region \`${region}\`)"
             echo "- URL: https://${FLY_APP}.fly.dev/"
             echo "- Salud: https://${FLY_APP}.fly.dev/salud"
             echo "- Build (SHA): \`${GITHUB_SHA}\`"

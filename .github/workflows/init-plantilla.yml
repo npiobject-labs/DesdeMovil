@@ -1,0 +1,108 @@
+# Inicializacion automatica de un repo creado desde la plantilla.
+#
+# NO se ejecuta nunca en la plantilla misma: el job exige que el repo no sea
+# template Y que exista el marcador .plantilla-pendiente en la raiz. Tras
+# sustituir nombre y owner, borra el marcador y se borra a si mismo.
+name: Inicializar plantilla
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: init-plantilla
+  cancel-in-progress: false
+
+jobs:
+  inicializar:
+    # Primera barrera: la plantilla original tiene is_template == true.
+    if: github.event.repository.is_template == false
+    name: Sustituir nombre y owner
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Segunda barrera: solo hay algo que hacer si queda el marcador.
+      - name: Comprobar el marcador
+        id: marcador
+        run: |
+          if [ -f .plantilla-pendiente ]; then
+            echo "pendiente=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "pendiente=false" >> "$GITHUB_OUTPUT"
+            echo "Sin marcador: el repo ya estaba inicializado, no se toca nada."
+          fi
+
+      - name: Sustituir nombre y owner
+        if: steps.marcador.outputs.pendiente == 'true'
+        run: |
+          set -euo pipefail
+          NOMBRE="${GITHUB_REPOSITORY#*/}"
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          echo "Inicializando como ${OWNER}/${NOMBRE}"
+
+          # El enlace "Use this template" debe seguir apuntando a la plantilla
+          # original, asi que se aparta antes de sustituir y se restaura despues.
+          if [ -f ARRANQUE.md ]; then
+            sed -i 's|template_name=DesdeMovil&template_owner=npiobject|@@PLANTILLA_ORIGEN@@|g' ARRANQUE.md
+          fi
+
+          # La seccion "Parametros" de CLAUDE.md lleva el nombre y el owner de
+          # ejemplo, asi que queda rellenada por esta misma sustitucion.
+          for f in CLAUDE.md README.md ARRANQUE.md docs/index.html docs/guia.html tools/*.ps1; do
+            [ -f "$f" ] || continue
+            sed -i -e "s/DesdeMovil/${NOMBRE}/g" -e "s/npiobject/${OWNER}/g" "$f"
+            echo "  sustituido: $f"
+          done
+
+          if [ -f ARRANQUE.md ]; then
+            sed -i 's|@@PLANTILLA_ORIGEN@@|template_name=DesdeMovil\&template_owner=npiobject|g' ARRANQUE.md
+          fi
+
+          # El id de Drive de la plantilla no se hereda: cada proyecto pone el suyo.
+          sed -i -E 's#^(\| Carpeta de Drive \(id\) \|).*#\1  |#' CLAUDE.md
+          echo "  seccion Parametros rellenada; id de Drive vaciado"
+
+          rm -f .plantilla-pendiente
+          rm -f .github/workflows/init-plantilla.yml
+
+      - name: Commit y push
+        if: steps.marcador.outputs.pendiente == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nada que commitear."
+            exit 0
+          fi
+          git commit -m "Inicializar la plantilla para ${GITHUB_REPOSITORY}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      # Un commit hecho con GITHUB_TOKEN no dispara workflows por push, asi que
+      # Pages se lanza explicitamente por workflow_dispatch (esto si esta permitido).
+      - name: Lanzar la publicacion de Pages
+        if: steps.marcador.outputs.pendiente == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pages.yml --ref "${GITHUB_REF_NAME}"
+
+      - name: Resumen
+        if: steps.marcador.outputs.pendiente == 'true'
+        run: |
+          {
+            echo "### Plantilla inicializada"
+            echo ""
+            echo "- Proyecto: \`${GITHUB_REPOSITORY#*/}\`"
+            echo "- Owner: \`${GITHUB_REPOSITORY%%/*}\`"
+            echo "- Marcador \`.plantilla-pendiente\` y este workflow: borrados."
+            echo "- Pages: lanzado \`pages.yml\`; la URL sera https://${GITHUB_REPOSITORY%%/*}.github.io/${GITHUB_REPOSITORY#*/}/"
+          } >> "$GITHUB_STEP_SUMMARY"

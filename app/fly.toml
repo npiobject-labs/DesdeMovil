@@ -1,7 +1,6 @@
-# PLANTILLA: "desdemovil-npi" es el nombre de la app en Fly.io. Cambialo aqui y en
-# .github/workflows/deploy.yml (variable FLY_APP); los dos valores deben coincidir.
-app = "desdemovil-npi"
-# PLANTILLA: region de Fly.io. "mad" esta deprecada; alternativas europeas: cdg, ams, lhr.
+# Sin clave "app": el nombre lo decide .github/workflows/deploy.yml y se pasa con
+# --app (variable de repositorio FLY_APP si existe, si no <repo>-<owner>).
+# Region de Fly.io. "mad" esta deprecada; alternativas europeas: cdg, ams, lhr.
 primary_region = "cdg"
 
 [build]

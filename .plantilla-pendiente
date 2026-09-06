@@ -1,0 +1,8 @@
+Marcador de plantilla sin inicializar.
+
+Mientras este fichero exista y el repo NO sea una plantilla,
+.github/workflows/init-plantilla.yml sustituye el nombre y el owner de ejemplo
+por los reales, rellena la seccion "Parametros" de CLAUDE.md, borra este
+fichero y se borra a si mismo.
+
+No lo edites ni lo borres a mano en un proyecto recien creado.

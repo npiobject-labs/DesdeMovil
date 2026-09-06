@@ -3,7 +3,6 @@
 #      pwsh -File tools\aterrizar.ps1 -Proyecto MiProyecto -Owner miusuario
 #      pwsh -File tools\aterrizar.ps1 -Root 'D:\dev\MiProyecto'
 param(
-  # PLANTILLA: cambia estos dos valores por defecto al clonar la plantilla.
   [string]$Proyecto = 'DesdeMovil',
   [string]$Owner    = 'npiobject',
 
@@ -13,25 +12,51 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 
+# $ErrorActionPreference no detiene a los ejecutables externos: tras cada git hay
+# que mirar $LASTEXITCODE y abortar antes de imprimir el resumen.
+function Assert-Git([string]$Que) {
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "$Proyecto : ERROR - $Que fallo con codigo $LASTEXITCODE. Se aborta." -ForegroundColor Red
+    exit 1
+  }
+}
+
 $Repo = Join-Path $Root 'repo'
 New-Item -ItemType Directory -Force -Path $Root | Out-Null
 
-if (-not (Test-Path (Join-Path $Repo '.git'))) {
-  git clone --branch $Rama $Remote $Repo
-} else {
-  git -C $Repo fetch --prune origin
-  git -C $Repo reset --hard "origin/$Rama"
-  git -C $Repo clean -fdx
+if (Test-Path (Join-Path $Repo '.git')) {
+  & git -C $Repo fetch --prune origin
+  Assert-Git 'git fetch'
+  & git -C $Repo reset --hard "origin/$Rama"
+  Assert-Git 'git reset --hard'
+  & git -C $Repo clean -fdx
+  Assert-Git 'git clean'
+}
+else {
+  # repo\ sin .git: solo se clona si no existe o esta vacia.
+  if (Test-Path $Repo) {
+    $contenido = @(Get-ChildItem -LiteralPath $Repo -Force)
+    if ($contenido.Count -gt 0) {
+      Write-Host "$Proyecto : $Repo existe, no es un clon de git y NO esta vacia. Contiene:"
+      foreach ($item in $contenido) { Write-Host "  $($item.Name)" }
+      Write-Host "$Proyecto : ERROR - no se toca nada. Vacia o aparta esa carpeta y vuelve a ejecutar." -ForegroundColor Red
+      exit 1
+    }
+  }
+  & git clone --branch $Rama $Remote $Repo
+  Assert-Git 'git clone'
 }
 
-$sha = git -C $Repo rev-parse --short HEAD
+$sha = & git -C $Repo rev-parse --short HEAD
+Assert-Git 'git rev-parse'
+
 Write-Host "$Proyecto : repo/ = origin/$Rama @ $sha"
 Write-Host "  local  : $Repo"
 Write-Host "  remoto : $Remote"
 
 $Drive = Join-Path $Root 'drive'
 if (Test-Path $Drive) {
-  Write-Host "  drive/ : $((Get-ChildItem $Drive -Recurse -File).Count) ficheros (sincronizado por Google Drive de escritorio)"
+  Write-Host "  drive/ : $(@(Get-ChildItem -LiteralPath $Drive -Recurse -File).Count) ficheros"
 } else {
-  Write-Host "  drive/ : no existe. Crea la carpeta con Google Drive de escritorio apuntando a 'Mi unidad\$Proyecto', o pide a Cowork que la vuelque."
+  Write-Host "  drive/ : no configurado (opcional)"
 }
