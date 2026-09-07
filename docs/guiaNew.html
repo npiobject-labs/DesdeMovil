@@ -324,7 +324,7 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
   <div class="step" data-id="a2"><input type="checkbox"><div>
     <h3>Siguientes veces y comprobación</h3>
     <p>Desde la copia local: <code>tools\aterrizar.ps1</code> vuelve a dejarla igual que <code>main</code>. <code>tools\estado.ps1</code> dice <b>AL DIA</b> o <b>DESACTUALIZADO</b> sin tocar nada.</p>
-    <p class="see"><b>Prueba de confianza:</b> borra un fichero cualquiera de <code>repo\</code>, ejecuta <code>aterrizar.ps1</code> y debe reaparecer. Ejecútalo dos veces seguidas y la segunda no debe cambiar nada. Probado el 6 sep 2026 con DesdeMovil y PruebaPlantilla.</p>
+    <p class="see"><b>Prueba de confianza:</b> borra un fichero cualquiera de <code>repo\</code>, ejecuta <code>aterrizar.ps1</code> y debe reaparecer. Ejecútalo dos veces seguidas y la segunda no debe cambiar nada. <b>[SUPUESTO]</b> los scripts de PowerShell no se han llegado a ejecutar nunca: no hay <code>pwsh</code> en el sandbox de las sesiones, así que esta es la comprobación pendiente en el primer PC donde se usen.</p>
     <p class="note">Esta guía, guardada en <code>C - Desarrollo\DesdeMovil\guia.html</code> (fuera de <code>repo\</code>), es el punto de partida en el PC. La copia viva está en <code>docs/guia.html</code> del repo y publicada en Pages.</p>
   </div></div>
 </section>
@@ -340,7 +340,7 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
     <tr><td>Fly: "Not authorized" o "app not found" al desplegar</td><td>Token con alcance de app en vez de organización, o token caducado</td><td>Crea un token de organización nuevo y reemplaza el secreto.</td></tr>
     <tr><td>Pages: "Create Pages site failed… Resource not accessible by integration"</td><td>Pages no estaba activado y el workflow no puede activarlo. En el primer run tras "Use this template" es lo esperado.</td><td>Paso 2 de "Crear el proyecto". La inicialización relanza Pages sola; si no, Actions → workflow de Pages → Run workflow.</td></tr>
     <tr><td>En Actions aparece "pages build and deployment" con "Build with Jekyll"</td><td>Pages sigue en "Deploy from a branch"</td><td>Settings → Pages → Source: GitHub Actions.</td></tr>
-    <tr><td>El workflow "Inicializar plantilla" falla en el paso final de comprobación</td><td>Quedó algún resto de la plantilla ("PLANTILLA:", nombre antiguo) fuera de <code>docs/plantilla/</code></td><td>El log dice en qué fichero. Pídele a la sesión que lo corrija y relance el workflow.</td></tr>
+    <tr><td>El workflow "Inicializar plantilla" falla en el paso final de comprobación</td><td>Quedó algún resto de la plantilla (un marcador <code>PLANTILLA</code>, el nombre antiguo) fuera de <code>docs/plantilla/</code></td><td>El log dice en qué fichero. Pídele a la sesión que lo corrija y relance el workflow.</td></tr>
     <tr><td>Fly: el despliegue falla sin motivo claro justo después de crear la app</td><td>El nombre derivado ya existe en otra cuenta de Fly</td><td>Define la variable <code>FLY_APP</code> con otro nombre y relanza.</td></tr>
     <tr><td>El aterrizaje dice que <code>repo\</code> existe y no es un repositorio</td><td>Quedó algún fichero suelto dentro</td><td>Vacía la carpeta (o renómbrala) y repite. Cierra antes cualquier editor o ventana que la tenga abierta.</td></tr>
     <tr><td>Tras la inicialización automática, Pages no se publicó</td><td>Un commit hecho por el propio workflow no dispara otros workflows</td><td>El workflow de inicialización ya lanza Pages al terminar; si no ocurrió, Actions → workflow de Pages → Run workflow, o pídeselo a la sesión.</td></tr>
@@ -393,14 +393,14 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
 </section>
 
 <footer>
-  <p>Plantilla: <a href="https://github.com/npiobject/DesdeMovil" target="_blank" rel="noopener">github.com/npiobject/DesdeMovil</a> · Proyecto de referencia validado: <a href="https://npiobject.github.io/PruebaPlantilla/" target="_blank" rel="noopener">PruebaPlantilla</a> (Pages) y <a href="https://pruebaplantilla-npi.fly.dev/salud" target="_blank" rel="noopener">pruebaplantilla-npi.fly.dev/salud</a> (Fly).</p>
+  <p>Plantilla: <a href="https://github.com/npiobject/DesdeMovil" target="_blank" rel="noopener">github.com/npiobject/DesdeMovil</a>.</p>
   <p>Versión 3 (guiaNew): recoge la plantilla simplificada y el portado de mejoras desde <code>PruebaPlantilla</code> y <code>proyecto_2</code> (inicialización completa con comprobación de restos, primer run en rojo, detección del modo antiguo de Pages, unicidad global de nombres en Fly, <code>docs/plantilla/</code>). Complementa a <code>docs/guiaFable.html</code>, la versión en prosa que mantiene la sesión de Code.</p>
 </footer>
 </div>
 
 <script>
 (function(){
-  var KEY='guia-desdemovil-v2';
+  var KEY='guia-v2';
   var state={};
   try{state=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){state={}}
   var pn=document.getElementById('pn');
