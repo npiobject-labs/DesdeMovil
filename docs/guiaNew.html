@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build" content="DM-B3-20260907-006">
 <title>Guía DesdeMovil</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -121,7 +127,8 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
 @media (max-width:520px){h1{font-size:1.9rem}.wrap{padding:0 .9rem 4rem}.step{gap:.55rem}}
 @media (prefers-reduced-motion: reduce){.bar i{transition:none}}
 </style>
-
+</head>
+<body>
 <div class="topbar">
   <div class="in">
     <span class="brand">Guía DesdeMovil</span>
@@ -325,7 +332,7 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
     <h3>Siguientes veces y comprobación</h3>
     <p>Desde la copia local: <code>tools\aterrizar.ps1</code> vuelve a dejarla igual que <code>main</code>. <code>tools\estado.ps1</code> dice <b>AL DIA</b> o <b>DESACTUALIZADO</b> sin tocar nada.</p>
     <p class="see"><b>Prueba de confianza:</b> borra un fichero cualquiera de <code>repo\</code>, ejecuta <code>aterrizar.ps1</code> y debe reaparecer. Ejecútalo dos veces seguidas y la segunda no debe cambiar nada. <b>[SUPUESTO]</b> los scripts de PowerShell no se han llegado a ejecutar nunca: no hay <code>pwsh</code> en el sandbox de las sesiones, así que esta es la comprobación pendiente en el primer PC donde se usen.</p>
-    <p class="note">Esta guía, guardada en <code>C - Desarrollo\DesdeMovil\guia.html</code> (fuera de <code>repo\</code>), es el punto de partida en el PC. La copia viva está en <code>docs/guia.html</code> del repo y publicada en Pages.</p>
+    <p class="note">La copia viva de esta guía está en <code>docs/guiaNew.html</code> del repo y publicada en Pages. Si la guardas en el PC, fuera de <code>repo\</code>: <code>aterrizar.ps1</code> borra todo lo que sobra dentro de <code>repo\</code>.</p>
   </div></div>
 </section>
 
@@ -393,7 +400,7 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
 </section>
 
 <footer>
-  <p>Plantilla: <a href="https://github.com/npiobject/DesdeMovil" target="_blank" rel="noopener">github.com/npiobject/DesdeMovil</a>.</p>
+  <p>Plantilla: <a href="https://github.com/npiobject/DesdeMovil" target="_blank" rel="noopener">github.com/npiobject/DesdeMovil</a>. Con el móvil en la mano y sin explicaciones: <a href="guiaFableMini.html">guiaFableMini.html</a>. El método y cuándo compensa: <a href="guiaFable.html">guiaFable.html</a>.</p>
   <p>Versión 3 (guiaNew): recoge la plantilla simplificada y el portado de mejoras desde <code>PruebaPlantilla</code> y <code>proyecto_2</code> (inicialización completa con comprobación de restos, primer run en rojo, detección del modo antiguo de Pages, unicidad global de nombres en Fly, <code>docs/plantilla/</code>). Complementa a <code>docs/guiaFable.html</code>, la versión en prosa que mantiene la sesión de Code.</p>
 </footer>
 </div>
@@ -485,3 +492,6 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
   applyName();render();
 })();
 </script>
+
+</body>
+</html>
