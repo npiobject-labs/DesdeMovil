@@ -22,7 +22,7 @@ No hay nada que rellenar. `.github/workflows/init-plantilla.yml` deja el repo en
 | Nombre y owner | `CLAUDE.md`, `README.md`, `ARRANQUE.md`, `docs/*.html`, `tools/*.ps1`, `app/src/main.rs` |
 | Paquete del backend (`<slug>-backend`) | `app/Cargo.toml`, `app/Cargo.lock`, `app/Dockerfile` |
 | Usuario del runtime | `app/Dockerfile` |
-| Prefijo del `build` (iniciales: `CasaVerde` → `CV-B1`) | `CLAUDE.md`, `docs/index.html`, `docs/guia.html` |
+| Prefijo del `build` (iniciales: `CasaVerde` → `CV-B1`) | `CLAUDE.md`, `docs/*.html` |
 | Sección **Parámetros** rellenada, id de Drive vaciado | `CLAUDE.md` |
 | Documentación heredada apartada a `docs/plantilla/` | `docs/planificacion/` queda limpia, con su `README.md` |
 
@@ -62,4 +62,4 @@ Crea `%USERPROFILE%\C - Desarrollo\DesdeMovil\repo` con un clon de `main`. Es id
 
 ---
 
-Guía extendida: [`docs/guiaFable.html`](docs/guiaFable.html) (revisada) · anterior: [`docs/guia.html`](docs/guia.html) · Reglas para los agentes: [`CLAUDE.md`](CLAUDE.md)
+Guías: [`docs/guiaFableMini.html`](docs/guiaFableMini.html) (checklist de arranque, para el móvil) · [`docs/guiaNew.html`](docs/guiaNew.html) (el recorrido entero, paso a paso) · [`docs/guiaFable.html`](docs/guiaFable.html) (el método explicado y cuándo compensa) · Reglas para los agentes: [`CLAUDE.md`](CLAUDE.md)
