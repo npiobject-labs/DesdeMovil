@@ -9,7 +9,7 @@ Flujo "PC arranca, móvil continúa": el desarrollo, la revisión y las pruebas 
 | Proyecto | `DesdeMovil` |
 | Owner de GitHub | `npiobject-labs` |
 | App de Fly.io | `derivada` |
-| Carpeta de Drive (id) | `1-0wWhp_-rrSgxKrr0AN34dg_Y2nAPK2J` |
+| Carpeta de Drive (id) | `10437HObdpr75FWMAhUlGzbJf9JKURHIT` |
 
 Esta tabla la rellena sola `.github/workflows/init-plantilla.yml` en el primer push de un repo creado desde la plantilla; no hay nada que tocar a mano salvo el id de Drive.
 
