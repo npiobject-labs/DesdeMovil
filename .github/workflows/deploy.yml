@@ -76,7 +76,7 @@ jobs:
         if: steps.fly.outputs.configurado == 'true'
         env:
           FLY_APP: ${{ steps.app.outputs.app }}
-        run: flyctl apps create "${FLY_APP}" --org personal || true
+        run: flyctl apps create "${FLY_APP}" --org desdemovil || true
 
       - name: Fijar BUILD_ID con el SHA del commit
         if: steps.fly.outputs.configurado == 'true'
