@@ -4,7 +4,7 @@
 #      pwsh -File tools\aterrizar.ps1 -Root 'D:\dev\MiProyecto'
 param(
   [string]$Proyecto = 'DesdeMovil',
-  [string]$Owner    = 'npiobject',
+  [string]$Owner    = 'npiobject-labs',
 
   [string]$Remote   = "https://github.com/$Owner/$Proyecto.git",
   [string]$Root     = (Join-Path $env:USERPROFILE "C - Desarrollo\$Proyecto"),

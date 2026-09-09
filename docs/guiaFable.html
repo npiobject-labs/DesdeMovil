@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260906-005">
+<meta name="build" content="DM-B3-20260909-010">
 <title>DesdeMovil · guía revisada</title>
 <style>
   :root { color-scheme: light dark; --bg:#fafafa; --fg:#1a1a1a; --mut:#5b5b5b; --bd:#e0e0e0; --card:#fff; --acc:#0b6bcb; --ok:#1a7f37; --ko:#b42318; }
@@ -36,7 +36,7 @@
 <main>
 
 <h1>DesdeMovil · guía revisada</h1>
-<p class="sub">El método «PC arranca, móvil continúa», después de probarlo de verdad. Arranque rápido en <a href="https://github.com/npiobject/DesdeMovil/blob/main/ARRANQUE.md">ARRANQUE.md</a>.</p>
+<p class="sub">El método «PC arranca, móvil continúa», después de probarlo de verdad. Arranque rápido en <a href="https://github.com/npiobject-labs/DesdeMovil/blob/main/ARRANQUE.md">ARRANQUE.md</a>.</p>
 
 <nav><ul>
   <li><a href="#idea">La idea</a></li>
@@ -70,7 +70,7 @@
   <li><strong>Cero instalación y cero PC encendido.</strong> Cada sesión arranca con el repo clonado y las herramientas listas. El coste de contexto entre sesiones es nulo porque el contexto vive en <code>CLAUDE.md</code> y en <code>docs/planificacion/</code>, no en la memoria de nadie.</li>
   <li><strong>La verificación es un contrato, no una opinión.</strong> El agente no puede decir «ya funciona»: tiene que citar SHA, URL y <code>build</code> de un run en <code>success</code>. Eso elimina la fuente principal de trabajo perdido, que es el «creo que está».</li>
   <li><strong>Un proyecto nuevo son dos clics.</strong> Crear el repo desde la plantilla y cambiar un desplegable. Todo lo demás lo hace <code>init-plantilla.yml</code>, y falla el run si deja algún rastro.</li>
-  <li><strong>Lo opcional no estorba.</strong> Sin token de Fly, <code>deploy.yml</code> termina en verde y no hace nada. Sin id de Drive, el paso se omite. No hay checks rojos permanentes por piezas que no usas.</li>
+  <li><strong>Lo opcional no estorba.</strong> Sin token de Fly —repo privado o fuera de la organización— <code>deploy.yml</code> termina en verde y no hace nada. Sin id de Drive, el paso se omite. No hay checks rojos permanentes por piezas que no usas.</li>
 </ul>
 
 <h3>Lo que cuesta</h3>
@@ -146,7 +146,7 @@ por el run del workflow antes de avisar. Cierra con el resumen de cinco líneas.
 <h3>Por qué no se borra a sí mismo</h3>
 <p>Porque no puede. <code>GITHUB_TOKEN</code> no tiene permiso para crear ni modificar nada bajo <code>.github/workflows/</code>, y si el commit toca un solo fichero de esa carpeta GitHub <strong>rechaza el push entero</strong>: se perdería toda la inicialización. Por eso el workflow no edita ni borra nada de ahí; borra el marcador <code>.plantilla-pendiente</code> y se deshabilita por la API. Queda en el repo, apagado.</p>
 <h3>El primer run sale en rojo</h3>
-<p><em>Use this template</em> dispara los tres workflows con el commit inicial, antes de que hayas tocado Settings. Cae <code>pages.yml</code> en <code>Configure Pages</code>; <code>deploy.yml</code> termina en verde sin token; <code>init-plantilla.yml</code> hace su trabajo y relanza Pages al acabar. Un solo run rojo, y no es un problema.</p>
+<p><em>Use this template</em> dispara los tres workflows con el commit inicial, antes de que hayas tocado Settings. Cae <code>pages.yml</code> en <code>Configure Pages</code>; <code>deploy.yml</code> despliega ya, con el token heredado de la organización; <code>init-plantilla.yml</code> hace su trabajo y relanza Pages al acabar. Un solo run rojo, y no es un problema.</p>
 
 <h2 id="sesion">Ciclo de una sesión</h2>
 <ol>
@@ -178,7 +178,7 @@ por el run del workflow antes de avisar. Cierra con el resumen de cinco líneas.
 <p><code>docs/index.html</code> es el mock vivo; los anteriores se archivan en <code>docs/mocks/NNN-nombre.html</code>. Cada uno lleva <code>&lt;meta name="build"&gt;</code> con un número nuevo, que es lo que se cita al avisar. El sitio es público: ahí no van claves, endpoints internos ni datos reales.</p>
 
 <h2 id="fly">Fly (opcional)</h2>
-<p><code>deploy.yml</code> mira primero si existe el secreto <code>FLY_API_TOKEN</code>. Si no existe, termina en verde con el aviso «Fly no configurado» y no despliega nada. Se activa a mitad de proyecto guardando el token en <strong>Settings → Secrets and variables → Actions</strong>; nunca en un fichero ni en el chat. El agente no puede crear secretos: ese paso es tuyo.</p>
+<p><code>deploy.yml</code> mira primero si existe el secreto <code>FLY_API_TOKEN</code>. Ya no se crea uno por proyecto: es un <strong>secreto de la organización <code>npiobject-labs</code></strong> y lo heredan todos sus repos <strong>públicos</strong>, así que el workflow despliega sin que actives nada. En un repo privado (plan Free) o fuera de la organización el secreto no llega, y entonces sí termina en verde con el aviso «Fly no configurado» sin desplegar nada.</p>
 <h3>Nombre de la app</h3>
 <p>Sale de la variable de repositorio <code>FLY_APP</code> si existe; si no, <code>&lt;repo&gt;-&lt;owner&gt;</code> en minúsculas, saneado y recortado a 30 caracteres. El nombre es <strong>único en todo Fly.io</strong>: si está cogido por otra cuenta, <code>flyctl apps create</code> lo calla con <code>|| true</code> y el fallo asoma más tarde, en el <code>deploy</code>, con un mensaje que no apunta a la causa. El sufijo del owner existe para que eso no pase.</p>
 <h3>Verificación</h3>
@@ -196,7 +196,7 @@ por el run del workflow antes de avisar. Cierra con el resumen de cinco líneas.
 </ul>
 
 <h2 id="pc">Aterrizar en el PC</h2>
-<pre><code>&amp; ([scriptblock]::Create((irm https://raw.githubusercontent.com/npiobject/DesdeMovil/main/tools/aterrizar.ps1)))</code></pre>
+<pre><code>&amp; ([scriptblock]::Create((irm https://raw.githubusercontent.com/npiobject-labs/DesdeMovil/main/tools/aterrizar.ps1)))</code></pre>
 <p>Crea <code>%USERPROFILE%\C - Desarrollo\DesdeMovil\repo</code> con un clon de <code>main</code>. Es idempotente y sobrescribe sin preguntar (<code>reset --hard</code> + <code>clean -fdx</code>): la copia local es un espejo de solo lectura. Si <code>repo\</code> existe con ficheros y no es un clon, no toca nada, lista lo que hay y termina con error. <code>tools\estado.ps1</code> responde a «¿estoy al día?». Ambos aceptan <code>-Proyecto</code>, <code>-Owner</code>, <code>-Remote</code>, <code>-Root</code> y <code>-Rama</code>.</p>
 
 <h2 id="errores">Errores frecuentes</h2>
@@ -208,7 +208,7 @@ por el run del workflow antes de avisar. Cierra con el resumen de cinco líneas.
     <tr><td>El repo nuevo sigue con el nombre de la plantilla</td><td><code>init-plantilla.yml</code> no llegó a lanzarse o falló: mira su run. Relanzar: Actions → Inicializar plantilla → Run workflow.</td></tr>
     <tr><td><code>init-plantilla.yml</code> falla en «Comprobar que no queda ningun residuo»</td><td>Quedó algo de la plantilla fuera de <code>docs/plantilla/</code>. El log lista fichero y línea.</td></tr>
     <tr><td><code>init-plantilla.yml</code> falla en «Commit y push» con <code>without workflows permission</code></td><td>El commit toca algo bajo <code>.github/workflows/</code>; <code>GITHUB_TOKEN</code> no puede y GitHub rechaza el push entero.</td></tr>
-    <tr><td><code>deploy.yml</code> verde pero sin URL</td><td>Camino «Fly no configurado»: falta el secreto <code>FLY_API_TOKEN</code>.</td></tr>
+    <tr><td><code>deploy.yml</code> verde pero sin URL</td><td>Camino «Fly no configurado»: el secreto de organización <code>FLY_API_TOKEN</code> no llega al repo, por privado o por estar fuera de <code>npiobject-labs</code>.</td></tr>
     <tr><td>Fly despliega pero la app no es tuya</td><td>Nombre de app cogido en Fly.io; <code>apps create</code> lo calla. Define la variable <code>FLY_APP</code>.</td></tr>
     <tr><td><code>/salud</code> devuelve otro SHA</td><td>Estás mirando un despliegue anterior, o la máquina despertando; comprueba el run del SHA que enviaste.</td></tr>
     <tr><td>El mock no cambia al recargar</td><td>Caché del navegador. Mira el <code>build</code> en el código fuente; recarga forzada.</td></tr>
@@ -218,13 +218,13 @@ por el run del workflow antes de avisar. Cierra con el resumen de cinco líneas.
 </table>
 
 <h2>De dónde sale esto</h2>
-<p>Todo lo de arriba se probó, y lo que falló está contado con sus runs: <a href="https://github.com/npiobject/DesdeMovil/blob/main/docs/planificacion/portado-hijos.md">portado-hijos.md</a> (lo que se aprendió de los dos primeros proyectos generados), <a href="https://github.com/npiobject/DesdeMovil/blob/main/docs/planificacion/prueba-init.md">prueba-init.md</a> (la primera inicialización real y el fallo del push) y los resúmenes de <code>docs/planificacion/sesiones/</code>.</p>
+<p>Todo lo de arriba se probó, y lo que falló está contado con sus runs: <a href="https://github.com/npiobject-labs/DesdeMovil/blob/main/docs/planificacion/portado-hijos.md">portado-hijos.md</a> (lo que se aprendió de los dos primeros proyectos generados), <a href="https://github.com/npiobject-labs/DesdeMovil/blob/main/docs/planificacion/prueba-init.md">prueba-init.md</a> (la primera inicialización real y el fallo del push) y los resúmenes de <code>docs/planificacion/sesiones/</code>.</p>
 
 <footer>
-  <a href="https://github.com/npiobject/DesdeMovil">npiobject/DesdeMovil</a> ·
+  <a href="https://github.com/npiobject-labs/DesdeMovil">npiobject-labs/DesdeMovil</a> ·
   <a href="index.html">mock</a> ·
   <a href="guiaNew.html">guía paso a paso</a> ·
-  <a href="https://github.com/npiobject/DesdeMovil/blob/main/CLAUDE.md">CLAUDE.md</a>
+  <a href="https://github.com/npiobject-labs/DesdeMovil/blob/main/CLAUDE.md">CLAUDE.md</a>
 </footer>
 
 </main>
