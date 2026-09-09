@@ -7,7 +7,7 @@ Flujo "PC arranca, móvil continúa": el desarrollo, la revisión y las pruebas 
 | Parámetro | Valor |
 |---|---|
 | Proyecto | `DesdeMovil` |
-| Owner de GitHub | `npiobject` |
+| Owner de GitHub | `npiobject-labs` |
 | App de Fly.io | `derivada` |
 | Carpeta de Drive (id) | `1-0wWhp_-rrSgxKrr0AN34dg_Y2nAPK2J` |
 
@@ -18,7 +18,7 @@ Esta tabla la rellena sola `.github/workflows/init-plantilla.yml` en el primer p
 
 ## Fuente de verdad
 
-El repositorio `npiobject/DesdeMovil`, rama `main`, es la **única** fuente de verdad, tanto para el código como para la documentación de `docs/planificacion/`. Todo lo que importe vive aquí y se edita aquí.
+El repositorio `npiobject-labs/DesdeMovil`, rama `main`, es la **única** fuente de verdad, tanto para el código como para la documentación de `docs/planificacion/`. Todo lo que importe vive aquí y se edita aquí.
 
 Google Drive es **opcional** y, cuando está configurado, **solo un destino de copias**, nunca un origen:
 
@@ -33,10 +33,10 @@ La carpeta local del PC es un espejo de solo lectura. Nunca la trates como orige
 
 | Qué | URL | Despliegue |
 |---|---|---|
-| Mock estático (Pages) | https://npiobject.github.io/DesdeMovil/ | `.github/workflows/pages.yml` en push a `main` |
+| Mock estático (Pages) | https://npiobject-labs.github.io/DesdeMovil/ | `.github/workflows/pages.yml` en push a `main` |
 | Backend (Fly.io, opcional) | `https://<app de Fly>.fly.dev/` · `/salud` | `.github/workflows/deploy.yml` en push a `main` que toque `app/**` |
 
-Pages está siempre activo. Fly solo si existe el secreto `FLY_API_TOKEN`: sin él, `deploy.yml` termina en verde con el aviso "Fly no configurado" y no despliega nada.
+Pages está siempre activo. Fly también: `FLY_API_TOKEN` es un secreto de la organización `npiobject-labs` y lo heredan sus repos **públicos**, así que `deploy.yml` despliega sin configurar nada. Si el repo fuera privado (plan Free) o viviera fuera de la organización, el secreto no llega y `deploy.yml` termina en verde con el aviso "Fly no configurado" sin desplegar nada.
 
 ## Código
 
@@ -63,14 +63,14 @@ Pages está siempre activo. Fly solo si existe el secreto `FLY_API_TOKEN`: sin �
 
 No anuncies "puedes probarlo" hasta confirmar por la API de GitHub Actions que el run del workflow para el SHA que acabas de enviar está en `success`. Si en 5 minutos no está, avisa del fallo con la causa leída en los logs, no del éxito. Al avisar, da siempre: SHA, URL y número de `build`.
 
-Si necesitas comprobar algo desde la sesión, hazlo contra la API de GitHub (`https://api.github.com/repos/npiobject/DesdeMovil/actions/runs/...`), que sí es accesible.
+Si necesitas comprobar algo desde la sesión, hazlo contra la API de GitHub (`https://api.github.com/repos/npiobject-labs/DesdeMovil/actions/runs/...`), que sí es accesible.
 
 `pages.yml` solo se puede validar en `main`: el entorno `github-pages` únicamente despliega desde la rama por defecto, así que un `workflow_dispatch` sobre una rama de trabajo no sirve de verificación. `deploy.yml` sí acepta cualquier rama.
 
 ## Despliegue
 
 - Estático: GitHub Pages vía `.github/workflows/pages.yml` (push a `main` publica `docs/`). Requiere **Settings → Pages → Source: GitHub Actions** una vez a mano. Se aplica también a este repo: el sitio de la plantilla estuvo sirviendo el README hasta que se hizo.
-- Backend (opcional): Fly.io vía `.github/workflows/deploy.yml`, con el token en el secreto `FLY_API_TOKEN` del repositorio. Nunca lo imprimas en los logs.
+- Backend (opcional): Fly.io vía `.github/workflows/deploy.yml`. `FLY_API_TOKEN` **llega heredado de la organización `npiobject-labs`** (secreto de organización, repos públicos); no hay que crear ni guardar ningún token por proyecto. Nunca lo imprimas en los logs.
 - Si el proyecto usa además un VPS con rama `release`, solo tocas `release` cuando el usuario lo pida explícitamente.
 - No intentes SSH, scp, rsync ni curl al VPS, a Fly ni a `*.github.io` desde la sesión: el sandbox los bloquea.
 

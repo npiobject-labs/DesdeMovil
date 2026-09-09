@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260907-007">
+<meta name="build" content="DM-B3-20260909-009">
 <title>Arranque DesdeMovil</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -58,28 +58,28 @@ footer{margin-top:2rem;font-size:.8rem;color:var(--mute)}
 <h2>Crear · desde el móvil</h2>
 <ol>
 <li class="s" data-id="1"><input type="checkbox"><div><b>1 · Crear el repo desde la plantilla</b>
-<p><a class="L" data-href="https://github.com/new?template_name=DesdeMovil&template_owner=npiobject" href="https://github.com/new?template_name=DesdeMovil&template_owner=npiobject" target="_blank" rel="noopener">github.com/new?template_name=DesdeMovil&amp;template_owner=npiobject</a> → nombre <code class="P">MiProyecto</code>, Public, Create. Con sesión en GitHub como <code>npiobject</code>.</p>
+<p><a class="L" data-href="https://github.com/new?template_name=DesdeMovil&template_owner=npiobject-labs" href="https://github.com/new?template_name=DesdeMovil&template_owner=npiobject-labs" target="_blank" rel="noopener">github.com/new?template_name=DesdeMovil&amp;template_owner=npiobject-labs</a> → Owner <code>npiobject-labs</code>, nombre <code class="P">MiProyecto</code>, <b>Public</b> (si no, no hereda <code>FLY_API_TOKEN</code>), Create.</p>
 <p>El workflow <b>Inicializar plantilla</b> renombra todo solo. El primer run de Pages sale en rojo: es normal.</p></div></li>
 
 <li class="s" data-id="2"><input type="checkbox"><div><b>2 · Pages → origen "GitHub Actions"</b>
-<p><a class="L" data-href="https://github.com/npiobject/{P}/settings/pages" href="https://github.com/npiobject/MiProyecto/settings/pages" target="_blank" rel="noopener">github.com/npiobject/<span class="P">MiProyecto</span>/settings/pages</a> → Source: cambia <i>Deploy from a branch</i> por <b>GitHub Actions</b>.</p>
+<p><a class="L" data-href="https://github.com/npiobject-labs/{P}/settings/pages" href="https://github.com/npiobject-labs/MiProyecto/settings/pages" target="_blank" rel="noopener">github.com/npiobject-labs/<span class="P">MiProyecto</span>/settings/pages</a> → Source: cambia <i>Deploy from a branch</i> por <b>GitHub Actions</b>.</p>
 <p class="warn">Si lo dejas como viene, verás el README en vez del mock.</p></div></li>
 
 <li class="s" data-id="3"><input type="checkbox"><div><b>3 · Primera sesión de Code</b>
-<p>App de Claude → <b>Code</b> → repo <code>npiobject/<span class="P">MiProyecto</span></code> → pega:</p>
+<p>App de Claude → <b>Code</b> → repo <code>npiobject-labs/<span class="P">MiProyecto</span></code> → pega:</p>
 <div class="block"><pre id="t1">Verifica que el proyecto quedó inicializado y que Pages responde. Si sigue existiendo .plantilla-pendiente, lanza el workflow "Inicializar plantilla" y espera. Dime SHA, URL de Pages y build.</pre><button class="copy" data-for="t1" type="button">Copiar</button></div>
-<p>Listo cuando <a class="L" data-href="https://npiobject.github.io/{P}/" href="https://npiobject.github.io/MiProyecto/" target="_blank" rel="noopener">npiobject.github.io/<span class="P">MiProyecto</span>/</a> muestra "<span class="P">MiProyecto</span> · mock 0".</p></div></li>
+<p>Listo cuando <a class="L" data-href="https://npiobject-labs.github.io/{P}/" href="https://npiobject-labs.github.io/MiProyecto/" target="_blank" rel="noopener">npiobject-labs.github.io/<span class="P">MiProyecto</span>/</a> muestra "<span class="P">MiProyecto</span> · mock 0".</p></div></li>
 </ol>
 
 <h2>Después · solo si hace falta</h2>
 <ul class="mini" style="list-style:none;padding:0;margin:0">
-<li><b>Fly (backend):</b> <a href="https://fly.io/tokens" target="_blank" rel="noopener">fly.io/tokens</a> → token de <i>organización</i> → guardarlo en <a class="L" data-href="https://github.com/npiobject/{P}/settings/secrets/actions" href="https://github.com/npiobject/MiProyecto/settings/secrets/actions" target="_blank" rel="noopener">Secrets</a> como <code>FLY_API_TOKEN</code> → Actions → <i>Desplegar backend en Fly.io</i> → Run workflow. URL: <code>https://<span class="Pl">miproyecto</span>-npiobject.fly.dev/salud</code>.</li>
+<li><b>Fly (backend):</b> nada que activar. <code>FLY_API_TOKEN</code> es secreto de la organización <code>npiobject-labs</code> y lo heredan sus repos <b>públicos</b>: el siguiente push que toque <code>app/**</code> despliega (o Actions → <i>Desplegar backend en Fly.io</i> → Run workflow). URL: <code>https://<span class="Pl">miproyecto</span>-npiobject-labs.fly.dev/salud</code>.</li>
 <li><b>Drive (copias):</b> carpeta normal en Mi unidad → id de la URL → pedir a la sesión: "pon este id en Parámetros de CLAUDE.md".</li>
-<li><b>Aterrizar en el PC:</b> PowerShell → <code>&amp; ([scriptblock]::Create((irm https://raw.githubusercontent.com/npiobject/DesdeMovil/main/tools/aterrizar.ps1))) -Proyecto <span class="P">MiProyecto</span></code>. Deja <code>C - Desarrollo\<span class="P">MiProyecto</span>\repo</code>. No editar ahí.</li>
-<li><b>Borrar el proyecto:</b> Fly (app + token) → GitHub (Settings → Danger Zone) → carpeta de Drive → sesiones de Code y carpeta del PC.</li>
+<li><b>Aterrizar en el PC:</b> PowerShell → <code>&amp; ([scriptblock]::Create((irm https://raw.githubusercontent.com/npiobject-labs/DesdeMovil/main/tools/aterrizar.ps1))) -Proyecto <span class="P">MiProyecto</span></code>. Deja <code>C - Desarrollo\<span class="P">MiProyecto</span>\repo</code>. No editar ahí.</li>
+<li><b>Borrar el proyecto:</b> Fly (solo la app; el token es de la organización y no se revoca) → GitHub (Settings → Danger Zone) → carpeta de Drive → sesiones de Code y carpeta del PC.</li>
 </ul>
 
-<footer>Guía completa con explicaciones: <code>docs/guiaNew.html</code> en <a href="https://github.com/npiobject/DesdeMovil" target="_blank" rel="noopener">npiobject/DesdeMovil</a>. Las casillas se guardan en este navegador.</footer>
+<footer>Guía completa con explicaciones: <code>docs/guiaNew.html</code> en <a href="https://github.com/npiobject-labs/DesdeMovil" target="_blank" rel="noopener">npiobject-labs/DesdeMovil</a>. Las casillas se guardan en este navegador.</footer>
 </div>
 <script>
 (function(){

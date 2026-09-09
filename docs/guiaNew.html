@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260907-006">
+<meta name="build" content="DM-B3-20260909-008">
 <title>Guía DesdeMovil</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -161,12 +161,12 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
 
 <div class="wrap">
 <header>
-  <div class="eyebrow">Método DesdeMovil · plantilla npiobject/DesdeMovil</div>
+  <div class="eyebrow">Método DesdeMovil · plantilla npiobject-labs/DesdeMovil</div>
   <h1>Crear y desarrollar un proyecto desde el móvil, con el PC apagado</h1>
   <p class="lede">Todo lo que hay que hacer, en orden, para arrancar un proyecto nuevo desde la plantilla y trabajarlo desde la app de Claude en el móvil. El código y la documentación viven en GitHub; GitHub Pages publica los mocks; Fly.io y Google Drive son opcionales. El PC solo entra al final, para aterrizar una copia.</p>
   <div class="meta">
     <span>Versión 3 (guiaNew) · 6 sep 2026 · plantilla con portado de los proyectos hijos</span>
-    <span>Cuenta GitHub: <code>npiobject</code></span>
+    <span>Organización GitHub: <code>npiobject-labs</code></span>
     <span>Las casillas se guardan en este navegador</span>
   </div>
 </header>
@@ -187,14 +187,14 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
   <div class="step" data-id="c1"><input type="checkbox"><div>
     <h3>GitHub conectado a Claude Code en la nube<button class="help" type="button" aria-label="Ayuda">?<span class="tip">Claude Code en la nube es la versión de Claude que trabaja sobre un repositorio de GitHub en un servidor de Anthropic. Se maneja desde claude.ai/code o desde la pestaña Code de la app del móvil, y sigue funcionando con el PC apagado.</span></button></h3>
     <p class="where">Dónde: <a href="https://claude.ai/code" target="_blank" rel="noopener">claude.ai/code</a> (en la app, el icono <code>&lt;/&gt;</code> del panel lateral; en el móvil, pestaña <b>Code</b>).</p>
-    <p>La primera vez pide "Sign in with GitHub". Autoriza con la cuenta <code>npiobject</code>. A partir de ahí, el selector "Seleccionar repositorio…" bajo la caja de texto lista todos tus repos.</p>
-    <p class="see"><b>Cómo saber que está bien:</b> al abrir claude.ai/code ves "Seleccionar repositorio…" y al pulsarlo aparece <code>npiobject/DesdeMovil</code>.</p>
+    <p>La primera vez pide "Sign in with GitHub". Autoriza con tu cuenta personal, la que es miembro de la organización <code>npiobject-labs</code>. A partir de ahí, el selector "Seleccionar repositorio…" bajo la caja de texto lista los repos de la organización.</p>
+    <p class="see"><b>Cómo saber que está bien:</b> al abrir claude.ai/code ves "Seleccionar repositorio…" y al pulsarlo aparece <code>npiobject-labs/DesdeMovil</code>.</p>
   </div></div>
 
   <div class="step" data-id="c2"><input type="checkbox"><div>
-    <h3>Cuenta de Fly.io (solo si algún proyecto va a tener backend)</h3>
-    <p class="where">Dónde: <a href="https://fly.io/dashboard" target="_blank" rel="noopener">fly.io/dashboard</a>, organización <b>Personal</b>.</p>
-    <p>No hace falta crear nada más ahora. El token se crea por proyecto, cuando toque, en la fase "Fly a mitad de proyecto".</p>
+    <h3>Fly.io (solo si algún proyecto va a tener backend)</h3>
+    <p class="where">Dónde: <a href="https://fly.io/dashboard" target="_blank" rel="noopener">fly.io/dashboard</a>.</p>
+    <p>No hay nada que preparar por proyecto. <code>FLY_API_TOKEN</code> es un <b>secreto de la organización <code>npiobject-labs</code></b> y lo heredan todos sus repos públicos: ya no se crea un token de Fly por proyecto.</p>
   </div></div>
 
   <div class="step" data-id="c3"><input type="checkbox"><div>
@@ -211,17 +211,17 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
 
   <div class="step" data-id="p1"><input type="checkbox"><div>
     <h3>1 · Generar el repositorio desde la plantilla<button class="help" type="button" aria-label="Ayuda">?<span class="tip">Una plantilla de GitHub es un repositorio marcado como "template". Al generar uno nuevo desde ella se copian todos sus ficheros, sin historial, y el nuevo repo es tuyo por completo.</span></button></h3>
-    <p class="where">Dónde: <a class="L" data-href="https://github.com/new?template_name=DesdeMovil&template_owner=npiobject" href="https://github.com/new?template_name=DesdeMovil&template_owner=npiobject" target="_blank" rel="noopener">github.com/new?template_name=DesdeMovil&amp;template_owner=npiobject</a> (con sesión iniciada en GitHub como <code>npiobject</code>).</p>
+    <p class="where">Dónde: <a class="L" data-href="https://github.com/new?template_name=DesdeMovil&template_owner=npiobject-labs" href="https://github.com/new?template_name=DesdeMovil&template_owner=npiobject-labs" target="_blank" rel="noopener">github.com/new?template_name=DesdeMovil&amp;template_owner=npiobject-labs</a> (con sesión iniciada en GitHub). En <b>Owner</b> elige <b><code>npiobject-labs</code></b>, no tu cuenta personal, y déjalo <b>Public</b>: de ahí hereda el repo el secreto <code>FLY_API_TOKEN</code> de la organización. En el plan Free, un repo privado no recibe los secretos de la organización.</p>
     <p>Ese enlace abre el formulario de "Create a new repository" con la plantilla ya elegida. Rellena solo <b>Repository name</b> con <code class="P">MiProyecto</code>, déjalo <b>Public</b> (Pages gratuito exige repo público) y pulsa <b>Create repository</b>.</p>
-    <p class="note">Si en la portada de <code>npiobject/DesdeMovil</code> no ves el botón verde "Use this template", es que no has iniciado sesión en GitHub en ese navegador. El enlace de arriba evita buscar el botón.</p>
-    <p class="see"><b>Qué debes ver:</b> el repo nuevo en <code>github.com/npiobject/<span class="P">MiProyecto</span></code> con los mismos ficheros que la plantilla (<code>ARRANQUE.md</code>, <code>CLAUDE.md</code>, <code>docs/</code>, <code>app/</code>, <code>tools/</code>). Al cabo de un minuto, el workflow <b>Inicializar plantilla</b> deja el repo entero con tu nombre: sustituye "DesdeMovil" y el owner en <code>README.md</code>, <code>CLAUDE.md</code>, <code>ARRANQUE.md</code>, <code>tools/*.ps1</code>, <code>docs/*.html</code> y <code>app/src/main.rs</code>; renombra el paquete del backend (<code>&lt;slug&gt;-backend</code> en <code>app/Cargo.toml</code>, <code>Cargo.lock</code> y <code>Dockerfile</code>); fija el prefijo de los builds con las iniciales del proyecto (<code>CasaVerde</code> → <code>CV-B1-…</code>); rellena la tabla <b>Parámetros</b> de <code>CLAUDE.md</code> con el id de Drive vacío; aparta la documentación heredada de la plantilla a <code>docs/plantilla/</code> (solo lectura) y deja <code>docs/planificacion/</code> limpia para tu proyecto. Al final hace un <code>grep</code> de todo lo que huela a plantilla y <b>falla el run si encuentra restos</b>: ese grep es el checklist, no hace falta revisar ficheros a mano. Después borra el marcador <code>.plantilla-pendiente</code>, se deshabilita a sí mismo por la API (no puede borrarse: <code>GITHUB_TOKEN</code> no tiene permiso para tocar <code>.github/workflows/</code>) y relanza Pages.</p>
-    <p class="warn"><b>El primer run de Pages sale en rojo, y es normal.</b> "Use this template" dispara el workflow de Pages con el commit inicial, antes de que hayas hecho el paso 2. Ese run falla con <code>Create Pages site failed… Resource not accessible by integration</code>. No lo arregles: el workflow de inicialización relanza Pages al terminar, ya con el origen correcto. (El de Fly, en cambio, termina en verde: sin token no despliega.)</p>
+    <p class="note">Si en la portada de <code>npiobject-labs/DesdeMovil</code> no ves el botón verde "Use this template", es que no has iniciado sesión en GitHub en ese navegador. El enlace de arriba evita buscar el botón.</p>
+    <p class="see"><b>Qué debes ver:</b> el repo nuevo en <code>github.com/npiobject-labs/<span class="P">MiProyecto</span></code> con los mismos ficheros que la plantilla (<code>ARRANQUE.md</code>, <code>CLAUDE.md</code>, <code>docs/</code>, <code>app/</code>, <code>tools/</code>). Al cabo de un minuto, el workflow <b>Inicializar plantilla</b> deja el repo entero con tu nombre: sustituye "DesdeMovil" y el owner en <code>README.md</code>, <code>CLAUDE.md</code>, <code>ARRANQUE.md</code>, <code>tools/*.ps1</code>, <code>docs/*.html</code> y <code>app/src/main.rs</code>; renombra el paquete del backend (<code>&lt;slug&gt;-backend</code> en <code>app/Cargo.toml</code>, <code>Cargo.lock</code> y <code>Dockerfile</code>); fija el prefijo de los builds con las iniciales del proyecto (<code>CasaVerde</code> → <code>CV-B1-…</code>); rellena la tabla <b>Parámetros</b> de <code>CLAUDE.md</code> con el id de Drive vacío; aparta la documentación heredada de la plantilla a <code>docs/plantilla/</code> (solo lectura) y deja <code>docs/planificacion/</code> limpia para tu proyecto. Al final hace un <code>grep</code> de todo lo que huela a plantilla y <b>falla el run si encuentra restos</b>: ese grep es el checklist, no hace falta revisar ficheros a mano. Después borra el marcador <code>.plantilla-pendiente</code>, se deshabilita a sí mismo por la API (no puede borrarse: <code>GITHUB_TOKEN</code> no tiene permiso para tocar <code>.github/workflows/</code>) y relanza Pages.</p>
+    <p class="warn"><b>El primer run de Pages sale en rojo, y es normal.</b> "Use this template" dispara el workflow de Pages con el commit inicial, antes de que hayas hecho el paso 2. Ese run falla con <code>Create Pages site failed… Resource not accessible by integration</code>. No lo arregles: el workflow de inicialización relanza Pages al terminar, ya con el origen correcto. (El de Fly, en cambio, despliega: el token le llega heredado de la organización.)</p>
     <p class="note">Si en Actions no aparece ese run, lánzalo a mano: <b>Actions → Inicializar plantilla → Run workflow</b>. También lo hará la sesión de Code del paso 3 si lo encuentra pendiente.</p>
   </div></div>
 
   <div class="step" data-id="p2"><input type="checkbox"><div>
     <h3>2 · Activar GitHub Pages con origen "GitHub Actions"<button class="help" type="button" aria-label="Ayuda">?<span class="tip">GitHub Pages publica una carpeta del repo como web pública. El "origen" dice quién la construye: con "GitHub Actions" es nuestro workflow el que publica docs/; con "Deploy from a branch" lo hace GitHub a su manera y saca el README.</span></button></h3>
-    <p class="where">Dónde: <a class="L" data-href="https://github.com/npiobject/{P}/settings/pages" href="https://github.com/npiobject/MiProyecto/settings/pages" target="_blank" rel="noopener">github.com/npiobject/<span class="P">MiProyecto</span>/settings/pages</a></p>
+    <p class="where">Dónde: <a class="L" data-href="https://github.com/npiobject-labs/{P}/settings/pages" href="https://github.com/npiobject-labs/MiProyecto/settings/pages" target="_blank" rel="noopener">github.com/npiobject-labs/<span class="P">MiProyecto</span>/settings/pages</a></p>
     <p>En <b>Build and deployment → Source</b>, despliega el menú y elige <b>GitHub Actions</b>. No hay botón de guardar: al elegirlo queda hecho.</p>
     <p class="warn"><b>Este es el error más fácil de cometer.</b> El menú viene de fábrica en "Deploy from a branch". Si lo dejas así, GitHub publica la raíz del repo con su constructor antiguo: tendrás un enlace que funciona pero muestra el README, no el mock de <code>docs/</code>. Si te pasa, vuelve aquí y cambia el origen; la siguiente publicación lo corrige.</p>
     <p class="see"><b>Qué debes ver:</b> bajo "Source" pone "GitHub Actions" y desaparece el selector de rama.</p>
@@ -230,10 +230,10 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
 
   <div class="step" data-id="p3"><input type="checkbox"><div>
     <h3>3 · Primera sesión de Code: comprobar que todo responde<button class="help" type="button" aria-label="Ayuda">?<span class="tip">Una sesión es una conversación de Claude Code ligada a un repositorio concreto. Cada vez que empiezas una eliges el repo en el selector; no se puede cambiar después.</span></button></h3>
-    <p class="where">Dónde: app de Claude → pestaña <b>Code</b> → "Seleccionar repositorio…" → <code>npiobject/<span class="P">MiProyecto</span></code>, rama <code>main</code>.</p>
+    <p class="where">Dónde: app de Claude → pestaña <b>Code</b> → "Seleccionar repositorio…" → <code>npiobject-labs/<span class="P">MiProyecto</span></code>, rama <code>main</code>.</p>
     <p>Pega esta instrucción tal cual:</p>
     <div class="block"><pre id="t1">Verifica que el proyecto quedó inicializado y que Pages responde. Si sigue existiendo .plantilla-pendiente, lanza el workflow "Inicializar plantilla" y espera a que termine. Dime SHA, URL de Pages y número de build.</pre><button class="btn copy" data-for="t1">Copiar</button></div>
-    <p class="see"><b>Qué debes ver:</b> la sesión responde con la URL <a class="L" data-href="https://npiobject.github.io/{P}/" href="https://npiobject.github.io/MiProyecto/" target="_blank" rel="noopener">npiobject.github.io/<span class="P">MiProyecto</span>/</a> y, al abrirla en el móvil, la página dice "<span class="P">MiProyecto</span> · mock 0" con un build que empieza por las iniciales de tu proyecto. Si muestra un README, revisa el paso 2. En el repo, <code>docs/planificacion/</code> debe estar vacía salvo su <code>README.md</code>, y lo heredado de la plantilla en <code>docs/plantilla/</code>.</p>
+    <p class="see"><b>Qué debes ver:</b> la sesión responde con la URL <a class="L" data-href="https://npiobject-labs.github.io/{P}/" href="https://npiobject-labs.github.io/MiProyecto/" target="_blank" rel="noopener">npiobject-labs.github.io/<span class="P">MiProyecto</span>/</a> y, al abrirla en el móvil, la página dice "<span class="P">MiProyecto</span> · mock 0" con un build que empieza por las iniciales de tu proyecto. Si muestra un README, revisa el paso 2. En el repo, <code>docs/planificacion/</code> debe estar vacía salvo su <code>README.md</code>, y lo heredado de la plantilla en <code>docs/plantilla/</code>.</p>
     <p class="note">En Actions verás también el workflow <b>Desplegar backend en Fly.io</b> terminando en verde con el aviso "Fly no configurado". Es lo esperado: Fly es opcional y se activa en la fase de más abajo cuando haga falta.</p>
   </div></div>
 </section>
@@ -260,7 +260,7 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
 
   <div class="step" data-id="d2"><input type="checkbox"><div>
     <h3>Cuándo fiarte de "ya puedes probarlo"<button class="help" type="button" aria-label="Ayuda">?<span class="tip">SHA: identificador de 40 caracteres (se citan los 7 primeros) del commit exacto que se ha publicado. Build: número que lleva cada mock en su etiqueta meta, para saber de un vistazo qué versión estás viendo. Run: una ejecución de un workflow, con su marca verde o roja.</span></button></h3>
-    <p>Solo cuando el aviso trae el SHA del commit y el número de build, y el workflow está en verde. Puedes comprobarlo tú en <a class="L" data-href="https://github.com/npiobject/{P}/actions" href="https://github.com/npiobject/MiProyecto/actions" target="_blank" rel="noopener">la pestaña Actions del repo</a>: el último run de "Deploy docs to GitHub Pages" debe tener la marca verde.</p>
+    <p>Solo cuando el aviso trae el SHA del commit y el número de build, y el workflow está en verde. Puedes comprobarlo tú en <a class="L" data-href="https://github.com/npiobject-labs/{P}/actions" href="https://github.com/npiobject-labs/MiProyecto/actions" target="_blank" rel="noopener">la pestaña Actions del repo</a>: el último run de "Deploy docs to GitHub Pages" debe tener la marca verde.</p>
     <p class="note">La sesión no puede abrir tu web desde su sandbox<button class="help" type="button" aria-label="Ayuda">?<span class="tip">El sandbox es el entorno aislado donde trabaja la sesión de Code. Tiene salida a GitHub, pero no a tu web publicada ni a Fly. No es un fallo: es la política de red de ese entorno.</span></button> (bloquea <code>*.github.io</code> y Fly). Por eso quien verifica es el workflow, y la sesión solo lee su resultado. Si una sesión dice "no puedo acceder a la URL", es normal; lo que importa es el run.</p>
   </div></div>
 
@@ -274,28 +274,22 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
 <!-- FASE 3 -->
 <section class="phase" id="f3">
   <div class="phase-head"><span class="phase-n">Opcional · cuando haga falta</span><h2>Fly.io a mitad de proyecto</h2></div>
-  <p class="when">El día que el proyecto necesita un servidor propio (API, base de datos, algo que no cabe en una página estática). Nada de lo hecho hasta entonces cambia: el repo ya trae <code>app/</code> con un servicio Rust mínimo y el workflow de despliegue, dormido a la espera del token.</p>
+  <p class="when">El día que el proyecto necesita un servidor propio (API, base de datos, algo que no cabe en una página estática). Nada de lo hecho hasta entonces cambia: el repo ya trae <code>app/</code> con un servicio Rust mínimo y el workflow de despliegue, con el token ya en la mano.</p>
 
   <div class="step" data-id="y1"><input type="checkbox"><div>
-    <h3>1 · Crear un token de Fly<button class="help" type="button" aria-label="Ayuda">?<span class="tip">Un token es una clave larga que autoriza a un programa a actuar en tu nombre. El de "organización" puede crear apps nuevas; el de "app" solo toca una app que ya exista. GitHub lo guardará cifrado como "secreto" y solo el workflow lo verá.</span></button></h3>
-    <p class="where">Dónde: <a href="https://fly.io/tokens" target="_blank" rel="noopener">fly.io/tokens</a> → <b>Create Token</b> (o, si tienes flyctl en algún sitio, <code>fly tokens create org</code>).</p>
-    <p>Elige alcance de <b>organización</b> (Personal), no de una app concreta: la app aún no existe y el token tiene que poder crearla. Nombre reconocible, por ejemplo <code>github-<span class="P">MiProyecto</span></code>. Caducidad larga.</p>
-    <p class="warn"><b>Se muestra una sola vez.</b> Cópialo entero (empieza por <code>FlyV1</code> y lleva espacios dentro). Si cierras sin copiar, revócalo y crea otro. No lo pegues nunca en una sesión de Claude ni en un fichero del repo.</p>
-  </div></div>
-
-  <div class="step" data-id="y2"><input type="checkbox"><div>
-    <h3>2 · Guardarlo como secreto del repo</h3>
-    <p class="where">Dónde: <a class="L" data-href="https://github.com/npiobject/{P}/settings/secrets/actions" href="https://github.com/npiobject/MiProyecto/settings/secrets/actions" target="_blank" rel="noopener">github.com/npiobject/<span class="P">MiProyecto</span>/settings/secrets/actions</a></p>
-    <p><b>New repository secret</b> (el de "Repository secrets", no el de "Environment secrets"). Name: <code>FLY_API_TOKEN</code>, exactamente así. Secret: el token. <b>Add secret</b>.</p>
-    <p class="see"><b>Qué debes ver:</b> <code>FLY_API_TOKEN</code> en la lista, con un candado. GitHub no vuelve a enseñar el valor; eso es normal.</p>
+    <h3>1 · Comprobar que no hay nada que activar<button class="help" type="button" aria-label="Ayuda">?<span class="tip">Un secreto de organización es una clave guardada una sola vez en la organización de GitHub, que todos sus repos pueden usar sin copiarla. Solo la ve el workflow, nunca aparece en los logs.</span></button></h3>
+    <p class="where">Dónde: <a class="L" data-href="https://github.com/npiobject-labs/{P}/settings/secrets/actions" href="https://github.com/npiobject-labs/MiProyecto/settings/secrets/actions" target="_blank" rel="noopener">github.com/npiobject-labs/<span class="P">MiProyecto</span>/settings/secrets/actions</a></p>
+    <p><code>FLY_API_TOKEN</code> es un <b>secreto de organización</b> de <code>npiobject-labs</code>: lo heredan todos sus repos públicos. No crees ningún token de Fly ni ningún secreto de repositorio; ya no hace falta.</p>
+    <p class="warn"><b>El repo tiene que ser público.</b> En el plan Free de GitHub los secretos de organización no llegan a los repos privados: ahí <code>deploy.yml</code> terminaría en verde con el aviso "Fly no configurado" y no desplegaría nada.</p>
+    <p class="see"><b>Qué debes ver:</b> en esa pantalla, <code>FLY_API_TOKEN</code> bajo <b>Organization secrets</b>. Si solo lo ves bajo <i>Repository secrets</i>, es un resto de la forma antigua y puedes borrarlo.</p>
   </div></div>
 
   <div class="step" data-id="y3"><input type="checkbox"><div>
-    <h3>3 · Lanzar el primer despliegue</h3>
-    <p>Dos formas, elige una. Desde la sesión de Code:</p>
-    <div class="block"><pre id="t5">Ya está guardado FLY_API_TOKEN. Lanza el workflow de despliegue a Fly sobre main, espera al run, verifica por API que termina en verde y dime la URL de la app y la respuesta de /salud.</pre><button class="btn copy" data-for="t5">Copiar</button></div>
+    <h3>2 · Lanzar el primer despliegue</h3>
+    <p>El siguiente push que toque <code>app/</code> despliega solo. Para forzarlo, dos formas: desde la sesión de Code,</p>
+    <div class="block"><pre id="t5">Lanza el workflow de despliegue a Fly sobre main, espera al run, verifica por API que termina en verde y dime la URL de la app y la respuesta de /salud.</pre><button class="btn copy" data-for="t5">Copiar</button></div>
     <p>O a mano: pestaña <b>Actions</b> del repo → <b>Desplegar backend en Fly.io</b> → <b>Run workflow</b> sobre <code>main</code>.</p>
-    <p>El nombre de la app lo deriva el workflow como <code>&lt;repo&gt;-&lt;owner&gt;</code> en minúsculas, con todo lo que no sea letra, número o guion convertido en guion y recortado a 30 caracteres: para este proyecto, <code><span class="Pl">miproyecto</span>-npiobject</code>. Si prefieres otro, crea antes la variable de repositorio <code>FLY_APP</code> (misma pantalla que los secretos, pestaña <b>Variables</b>) y anótalo en la fila "App de Fly.io" de la tabla Parámetros de <code>CLAUDE.md</code>. Los nombres son únicos en <b>todo Fly.io</b>, no solo en tu cuenta: por eso el derivado lleva el owner de sufijo. Si aun así el nombre ya está cogido, la creación no protesta y el fallo aparece más tarde, en el paso de despliegue, con un mensaje que no apunta a la causa; la salida es definir <code>FLY_APP</code> con otro nombre y relanzar.</p>
+    <p>El nombre de la app lo deriva el workflow como <code>&lt;repo&gt;-&lt;owner&gt;</code> en minúsculas, con todo lo que no sea letra, número o guion convertido en guion y recortado a 30 caracteres: para este proyecto, <code><span class="Pl">miproyecto</span>-npiobject-labs</code>. Si prefieres otro, crea antes la variable de repositorio <code>FLY_APP</code> (misma pantalla que los secretos, pestaña <b>Variables</b>, esta sí del repo) y anótalo en la fila "App de Fly.io" de la tabla Parámetros de <code>CLAUDE.md</code>. Los nombres son únicos en <b>todo Fly.io</b>, no solo en tu cuenta: por eso el derivado lleva el owner de sufijo. Si aun así el nombre ya está cogido, la creación no protesta y el fallo aparece más tarde, en el paso de despliegue, con un mensaje que no apunta a la causa; la salida es definir <code>FLY_APP</code> con otro nombre y relanzar.</p>
     <p class="note">El primer despliegue tarda varios minutos porque compila Rust desde cero. Los siguientes van rápidos. A partir de aquí, cada push que toque <code>app/</code> despliega solo.</p>
     <p class="see"><b>Qué debes ver:</b> <code>https://&lt;app&gt;.fly.dev/salud</code> responde <code>{"ok":true,"build":"&lt;SHA del commit&gt;"}</code>. El resumen del run en Actions muestra el nombre exacto de la app y la URL.</p>
   </div></div>
@@ -323,7 +317,7 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
   <div class="step" data-id="a1"><input type="checkbox"><div>
     <h3>Primera vez: una línea en PowerShell<button class="help" type="button" aria-label="Ayuda">?<span class="tip">Aterrizar es traer al PC una copia exacta de lo que hay en GitHub. Es idempotente: ejecutarlo dos veces deja el mismo resultado. Y es destructivo a propósito: lo local se sobrescribe, porque en el PC nunca se edita.</span></button></h3>
     <p>Descarga el script de aterrizaje desde el repo y lo ejecuta. Deja el proyecto en <code>C:\Users\&lt;tú&gt;\C - Desarrollo\<span class="P">MiProyecto</span>\repo</code>.</p>
-    <div class="block"><pre id="t7">& ([scriptblock]::Create((irm https://raw.githubusercontent.com/npiobject/DesdeMovil/main/tools/aterrizar.ps1))) -Proyecto <span class="P">MiProyecto</span></pre><button class="btn copy" data-for="t7">Copiar</button></div>
+    <div class="block"><pre id="t7">& ([scriptblock]::Create((irm https://raw.githubusercontent.com/npiobject-labs/DesdeMovil/main/tools/aterrizar.ps1))) -Proyecto <span class="P">MiProyecto</span></pre><button class="btn copy" data-for="t7">Copiar</button></div>
     <p>Si PowerShell bloquea la ejecución: antepón <code>powershell -ExecutionPolicy Bypass -Command</code> y la línea entre comillas. Requiere <code>git</code> instalado.</p>
     <p class="warn"><b>La carpeta <code>repo\</code> debe estar vacía o no existir</b> la primera vez. Si tiene cualquier fichero (un script guardado a mano, por ejemplo), el aterrizaje lo dice y se detiene sin tocar nada: vacíala y repite. No guardes nada dentro de <code>repo\</code>: cada aterrizaje borra lo que no esté en GitHub.</p>
   </div></div>
@@ -343,8 +337,8 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
     <tr><th>Lo que ves</th><th>Causa</th><th>Qué hacer</th></tr>
     <tr><td>La URL de Pages muestra el README, no el mock</td><td>Pages con origen "Deploy from a branch"</td><td>Settings → Pages → Source: GitHub Actions. Espera al siguiente run.</td></tr>
     <tr><td>La sesión dice "GitHub access to this repository is not enabled for this session"</td><td>La sesión se creó sin seleccionar el repo (o desde una carpeta local de Cowork)</td><td>Crea otra sesión en claude.ai/code eligiendo el repo en el selector. No se puede añadir en caliente.</td></tr>
-    <tr><td>El run de Fly termina en verde pero dice "Fly no configurado"</td><td>No existe el secreto <code>FLY_API_TOKEN</code></td><td>Es lo normal antes de activar Fly. Sigue la fase "Fly a mitad de proyecto".</td></tr>
-    <tr><td>Fly: "Not authorized" o "app not found" al desplegar</td><td>Token con alcance de app en vez de organización, o token caducado</td><td>Crea un token de organización nuevo y reemplaza el secreto.</td></tr>
+    <tr><td>El run de Fly termina en verde pero dice "Fly no configurado"</td><td>El secreto de organización no llega al repo: es privado (plan Free) o está fuera de <code>npiobject-labs</code></td><td>Hazlo público en Settings, o muévelo a la organización. No crees un secreto de repositorio.</td></tr>
+    <tr><td>Fly: "Not authorized" o "app not found" al desplegar</td><td>El token heredado caducó o se revocó en Fly.io</td><td>Se arregla una sola vez para todos los proyectos: renueva el secreto <code>FLY_API_TOKEN</code> en la organización <code>npiobject-labs</code>.</td></tr>
     <tr><td>Pages: "Create Pages site failed… Resource not accessible by integration"</td><td>Pages no estaba activado y el workflow no puede activarlo. En el primer run tras "Use this template" es lo esperado.</td><td>Paso 2 de "Crear el proyecto". La inicialización relanza Pages sola; si no, Actions → workflow de Pages → Run workflow.</td></tr>
     <tr><td>En Actions aparece "pages build and deployment" con "Build with Jekyll"</td><td>Pages sigue en "Deploy from a branch"</td><td>Settings → Pages → Source: GitHub Actions.</td></tr>
     <tr><td>El workflow "Inicializar plantilla" falla en el paso final de comprobación</td><td>Quedó algún resto de la plantilla (un marcador <code>PLANTILLA</code>, el nombre antiguo) fuera de <code>docs/plantilla/</code></td><td>El log dice en qué fichero. Pídele a la sesión que lo corrija y relance el workflow.</td></tr>
@@ -362,16 +356,16 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
   <p class="when">Un proyecto toca cuatro herramientas. Bórralo en este orden y no quedará nada colgando ni consumiendo cuota.</p>
 
   <div class="step" data-id="e1"><input type="checkbox"><div>
-    <h3>1 · Fly.io: la app y su token<button class="help" type="button" aria-label="Ayuda">?<span class="tip">Una app de Fly es un servidor pequeño con su URL propia. Mientras existe puede consumir cuota; por eso se borra al terminar el proyecto, junto con el token que la creó.</span></button></h3>
-    <p class="where">Dónde: <a href="https://fly.io/dashboard" target="_blank" rel="noopener">fly.io/dashboard</a> → la app (<code><span class="Pl">miproyecto</span>-npiobject</code> o el nombre que pusieras en <code>FLY_APP</code>) → <b>Settings → Delete app</b>. Confirma escribiendo el nombre.</p>
-    <p>Luego <a href="https://fly.io/tokens" target="_blank" rel="noopener">fly.io/tokens</a>: marca el token que creaste para este proyecto y <b>Revoke Selected</b>. Al borrar la app se liberan sus máquinas, volúmenes e IPs; comprueba en el dashboard que la lista de apps ya no la muestra.</p>
+    <h3>1 · Fly.io: la app<button class="help" type="button" aria-label="Ayuda">?<span class="tip">Una app de Fly es un servidor pequeño con su URL propia. Mientras existe puede consumir cuota; por eso se borra al terminar el proyecto.</span></button></h3>
+    <p class="where">Dónde: <a href="https://fly.io/dashboard" target="_blank" rel="noopener">fly.io/dashboard</a> → la app (<code><span class="Pl">miproyecto</span>-npiobject-labs</code> o el nombre que pusieras en <code>FLY_APP</code>) → <b>Settings → Delete app</b>. Confirma escribiendo el nombre.</p>
+    <p>Al borrar la app se liberan sus máquinas, volúmenes e IPs; comprueba en el dashboard que la lista de apps ya no la muestra. <b>No se revoca ningún token</b>: <code>FLY_API_TOKEN</code> es de la organización y lo usan los demás proyectos.</p>
     <p class="note">Si nunca activaste Fly en este proyecto, no hay nada que borrar aquí.</p>
   </div></div>
 
   <div class="step" data-id="e2"><input type="checkbox"><div>
     <h3>2 · GitHub: el repositorio</h3>
-    <p class="where">Dónde: <a class="L" data-href="https://github.com/npiobject/{P}/settings" href="https://github.com/npiobject/MiProyecto/settings" target="_blank" rel="noopener">github.com/npiobject/<span class="P">MiProyecto</span>/settings</a> → al final de la página, <b>Danger Zone → Delete this repository</b>.</p>
-    <p>Con el repo se van su sitio de Pages, sus secretos (<code>FLY_API_TOKEN</code>), variables y workflows. No hay que borrarlos por separado. Por eso Fly va antes: una vez borrado el repo ya no tienes a mano el nombre de la app.</p>
+    <p class="where">Dónde: <a class="L" data-href="https://github.com/npiobject-labs/{P}/settings" href="https://github.com/npiobject-labs/MiProyecto/settings" target="_blank" rel="noopener">github.com/npiobject-labs/<span class="P">MiProyecto</span>/settings</a> → al final de la página, <b>Danger Zone → Delete this repository</b>.</p>
+    <p>Con el repo se van su sitio de Pages, sus variables y sus workflows. El secreto <code>FLY_API_TOKEN</code> no: vive en la organización y sigue ahí para los demás proyectos. Por eso Fly va antes: una vez borrado el repo ya no tienes a mano el nombre de la app.</p>
   </div></div>
 
   <div class="step" data-id="e3"><input type="checkbox"><div>
@@ -394,13 +388,13 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
     <li><b>La copia del PC es de solo lectura.</b> No se edita ahí; no existe camino PC → nube. Aterrizar sobrescribe sin preguntar, y eso es lo que lo hace seguro.</li>
     <li><b>Drive es un espejo.</b> Solo recibe copias; nunca se borra ni se renombra nada allí; nunca se toma nada de Drive como origen.</li>
     <li><b>No se avisa sin verificar.</b> "Puedes probarlo" solo con el run en verde, SHA y build.</li>
-    <li><b>Los secretos no pasan por el chat.</b> Tokens y claves van a Settings → Secrets del repo, nunca a una sesión ni a un fichero.</li>
+    <li><b>Los secretos no pasan por el chat.</b> Tokens y claves van a Settings → Secrets, del repo o de la organización, nunca a una sesión ni a un fichero.</li>
     <li><b>Lo que hay en <code>docs/</code> es público.</b> Sin claves, sin endpoints internos, sin datos reales en los mocks.</li>
   </ul>
 </section>
 
 <footer>
-  <p>Plantilla: <a href="https://github.com/npiobject/DesdeMovil" target="_blank" rel="noopener">github.com/npiobject/DesdeMovil</a>. Con el móvil en la mano y sin explicaciones: <a href="guiaFableMini.html">guiaFableMini.html</a>. El método y cuándo compensa: <a href="guiaFable.html">guiaFable.html</a>.</p>
+  <p>Plantilla: <a href="https://github.com/npiobject-labs/DesdeMovil" target="_blank" rel="noopener">github.com/npiobject-labs/DesdeMovil</a>. Con el móvil en la mano y sin explicaciones: <a href="guiaFableMini.html">guiaFableMini.html</a>. El método y cuándo compensa: <a href="guiaFable.html">guiaFable.html</a>.</p>
   <p>Versión 3 (guiaNew): recoge la plantilla simplificada y el portado de mejoras desde <code>PruebaPlantilla</code> y <code>proyecto_2</code> (inicialización completa con comprobación de restos, primer run en rojo, detección del modo antiguo de Pages, unicidad global de nombres en Fly, <code>docs/plantilla/</code>). Complementa a <code>docs/guiaFable.html</code>, la versión en prosa que mantiene la sesión de Code.</p>
 </footer>
 </div>
