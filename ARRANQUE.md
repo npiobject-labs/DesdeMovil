@@ -7,6 +7,18 @@
    Si lo dejas como está tendrás un enlace que funciona pero que muestra el README en vez del mock; y si el workflow corre antes de este cambio, falla con `Create Pages site failed. Error: Resource not accessible by integration` (precedido de un *warning* `Get Pages site failed… Not Found`). El `enablement: true` de `configure-pages` **no** sustituye a este paso: el `GITHUB_TOKEN` no tiene permiso para crear el sitio.
    Cómo saber si se te olvidó: en **Actions** aparece un run `pages build and deployment` con `Build with Jekyll` tras cada push. Ese constructor solo corre en el modo antiguo; con Source en «GitHub Actions» no existe.
 
+### O de una vez, con el script
+
+`tools/nuevo-proyecto.ps1`, en esta plantilla, hace los dos pasos y unos cuantos más: crea el repositorio, espera a la inicialización, activa Pages, crea la carpeta de Drive y la app de Fly, anota los parámetros en `CLAUDE.md` y lanza el primer despliegue. Necesita [gh](https://cli.github.com) autenticado con los permisos `repo` y `workflow`.
+
+```powershell
+.\nuevo-proyecto.ps1 miproyecto
+.\nuevo-proyecto.ps1 miproyecto -SinDrive -SinFly   # solo repo y Pages
+.\nuevo-proyecto.ps1 miproyecto -Eliminar           # deshace todo lo anterior
+```
+
+El nombre admite minúsculas, dígitos y guiones, hasta 15 caracteres. El script vive en la plantilla y se ejecuta desde su carpeta, no desde un proyecto: `init-plantilla.yml` lo borra en cada hijo, donde no tendría uso. Para Drive necesita el Apps Script publicado y sus dos variables de entorno; sin ellas, esa parte se omite sola.
+
 > **El primer run en rojo es normal.** *Use this template* dispara `pages.yml` con el commit inicial, antes de que hayas tocado Settings, así que ese run falla. El historial de Actions arranca en rojo y no es un problema: `init-plantilla.yml` relanza Pages al terminar. (`deploy.yml` no falla: con el token de la organización a mano, despliega; sin él termina en verde con el aviso "Fly no configurado".)
 
 Y ya. Abre una sesión en [claude.ai/code](https://claude.ai/code) con el repo seleccionado y pide:
