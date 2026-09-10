@@ -75,6 +75,18 @@ En PowerShell:
 
 Crea `%USERPROFILE%\C - Desarrollo\DesdeMovil\repo` con un clon de `main`. Es idempotente y **sobrescribe** la copia local sin preguntar (`reset --hard` + `clean -fdx`): el PC es un espejo de solo lectura. Para saber si estás al día, `tools\estado.ps1`.
 
+Sirve igual la primera vez y las siguientes: no hace falta tener el repo para bajarlo, porque el comando se descarga el script suelto y este hace el clon.
+
+### Probar la app sin desplegar
+
+Con el repo ya en el PC y [Rust](https://rustup.rs) instalado:
+
+```powershell
+pwsh -File tools\arrancar.ps1
+```
+
+Compila el backend, lo levanta en `localhost:8080`, sirve `docs/` en `localhost:8081` y abre el navegador; Ctrl+C para los dos. Servidas desde `localhost`, las páginas llaman a ese backend en vez de al de Fly. Acepta `-PuertoApi`, `-PuertoWeb`, `-Release` y `-SinNavegador`.
+
 ---
 
 Guías: [`docs/guiaFableMini.html`](docs/guiaFableMini.html) (checklist de arranque, para el móvil) · [`docs/guiaNew.html`](docs/guiaNew.html) (el recorrido entero, paso a paso) · [`docs/guiaFable.html`](docs/guiaFable.html) (el método explicado y cuándo compensa) · Reglas para los agentes: [`CLAUDE.md`](CLAUDE.md)

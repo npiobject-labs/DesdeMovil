@@ -1,7 +1,13 @@
 use axum::{http::header, response::IntoResponse, routing::get, Json, Router};
 use serde_json::json;
 
-const PUERTO: u16 = 8080;
+// Fly siempre usa 8080; PUERTO solo lo fija tools/arrancar.ps1 al probar en el PC.
+fn puerto() -> u16 {
+    std::env::var("PUERTO")
+        .ok()
+        .and_then(|p| p.parse().ok())
+        .unwrap_or(8080)
+}
 
 async fn raiz() -> &'static str {
     "DesdeMovil backend"
@@ -25,7 +31,7 @@ async fn main() {
         .route("/salud", get(salud))
         .route("/holamundo", get(holamundo));
 
-    let direccion = format!("0.0.0.0:{PUERTO}");
+    let direccion = format!("0.0.0.0:{}", puerto());
     let listener = tokio::net::TcpListener::bind(&direccion)
         .await
         .unwrap_or_else(|e| panic!("no se pudo abrir {direccion}: {e}"));
