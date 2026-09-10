@@ -90,6 +90,9 @@ jobs:
           # y el owner de ejemplo, asi que queda rellenada por esta sustitucion.
           for f in CLAUDE.md README.md ARRANQUE.md docs/*.html tools/*.ps1 app/src/main.rs; do
             [ -f "$f" ] || continue
+            # nuevo-proyecto.ps1 crea proyectos DESDE la plantilla: su -Plantilla
+            # y su -FlyOrg tienen que seguir nombrandola. Se borra mas abajo.
+            case "$f" in tools/nuevo-proyecto.ps1) continue;; esac
             # El owner de la plantilla es la organizacion "npiobject-labs", y
             # "npiobject" a secas aparece en textos heredados. Los dos pasan por
             # un marcador antes de escribir el owner real: sustituirlos en
@@ -178,6 +181,11 @@ jobs:
           # la plantilla (su esquema sigue documentado en docs/bitacora/README.md).
           rm -f docs/bitacora/ejemplo.json
           echo "  docs/bitacora/ejemplo.json borrado: bitacora vacia"
+
+          # La herramienta de alta vive en la plantilla, que es de donde nacen
+          # los proyectos; dentro de un proyecto ya creado no tiene uso.
+          rm -f tools/nuevo-proyecto.ps1
+          echo "  tools/nuevo-proyecto.ps1 borrado: solo vive en la plantilla"
 
       # El checklist real de la inicializacion: si queda cualquier rastro de la
       # plantilla fuera de docs/plantilla/, el run falla y se ve en Actions.

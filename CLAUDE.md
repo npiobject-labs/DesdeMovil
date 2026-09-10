@@ -85,6 +85,7 @@ Si necesitas comprobar algo desde la sesión, hazlo contra la API de GitHub (`ht
 - Solo a petición y solo con Claude Desktop conectado: `tools/aterrizar.ps1` (idempotente, sobrescribe la copia local sin preguntar). "¿Estoy al día?" = `tools/estado.ps1`. Ambos aceptan `-Proyecto`, `-Owner`, `-Remote`, `-Root` y `-Rama`.
 - `tools/arrancar.ps1` levanta la app entera en el PC sin tocar la nube: compila el backend, lo sirve en `localhost:8080` y publica `docs/` en `localhost:8081`. Acepta `-PuertoApi`, `-PuertoWeb`, `-Release` y `-SinNavegador`. Necesita Rust; no necesita Docker.
 - `tools/eliminar.ps1` borra el proyecto entero: app de Fly, repositorio y copia local. Sin `-Confirmar` solo enseña el plan; con él pide escribir el nombre. Drive y las sesiones quedan a mano. Solo se ejecuta si el usuario lo pide explícitamente.
+- `tools/nuevo-proyecto.ps1` solo existe en esta plantilla: da de alta un proyecto entero (repositorio, Pages, Drive, Fly y parámetros) y con `-Eliminar` lo da de baja. `init-plantilla.yml` lo borra en los proyectos hijos y no le aplica las sustituciones de nombre, porque sus valores por defecto nombran a la plantilla y a la organización de Fly.
 - Servidas desde `localhost`, las páginas de `docs/` llaman al backend local en vez de al de Fly, tomando el puerto de `?api=` (8080 por defecto). En Pages no cambia nada.
 
 ## Cierre de sesión
