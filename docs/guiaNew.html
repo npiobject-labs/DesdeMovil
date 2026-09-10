@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260909-008">
+<meta name="build" content="DM-B3-20260910-009">
 <title>Guía DesdeMovil</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -358,6 +358,8 @@ Push, verifica que Pages queda en verde, y sube la copia a Drive.</pre><button c
 <section class="phase" id="f8">
   <div class="phase-head"><span class="phase-n">Cuando un proyecto sobra</span><h2>Eliminar un proyecto sin dejar restos</h2></div>
   <p class="when">Un proyecto toca cuatro herramientas. Bórralo en este orden y no quedará nada colgando ni consumiendo cuota.</p>
+
+  <p class="note">Con el repo aterrizado en el PC, <code>tools\eliminar.ps1</code> hace los tres primeros pasos: <code>pwsh -File tools\eliminar.ps1</code> enseña el plan sin tocar nada, y <code>-Confirmar</code> lo ejecuta pidiéndote el nombre del proyecto. Necesita <code>flyctl</code> y <code>gh</code>; lo que falte lo deja anotado como pendiente. Drive y las sesiones siguen siendo a mano.</p>
 
   <div class="step" data-id="e1"><input type="checkbox"><div>
     <h3>1 · Fly.io: la app<button class="help" type="button" aria-label="Ayuda">?<span class="tip">Una app de Fly es un servidor pequeño con su URL propia. Mientras existe puede consumir cuota; por eso se borra al terminar el proyecto.</span></button></h3>
