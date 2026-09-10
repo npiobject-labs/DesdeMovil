@@ -34,6 +34,7 @@ La carpeta local del PC es un espejo de solo lectura. Nunca la trates como orige
 | Qué | URL | Despliegue |
 |---|---|---|
 | Mock estático (Pages) | https://npiobject-labs.github.io/DesdeMovil/ | `.github/workflows/pages.yml` en push a `main` |
+| Bitácora (Pages) | https://npiobject-labs.github.io/DesdeMovil/bitacora.html | idem; el índice lo genera `pages.yml` |
 | Backend (Fly.io, opcional) | `https://<app de Fly>.fly.dev/` · `/salud` | `.github/workflows/deploy.yml` en push a `main` que toque `app/**` |
 
 Pages está siempre activo. Fly también: `FLY_API_TOKEN` es un secreto de la organización `npiobject-labs` y lo heredan sus repos **públicos**, así que `deploy.yml` despliega sin configurar nada. Si el repo fuera privado (plan Free) o viviera fuera de la organización, el secreto no llega y `deploy.yml` termina en verde con el aviso "Fly no configurado" sin desplegar nada.
@@ -81,3 +82,27 @@ Si necesitas comprobar algo desde la sesión, hazlo contra la API de GitHub (`ht
 ## Cierre de sesión
 
 - Termina cada sesión con un resumen de 5 líneas (qué cambió, SHA, URL para probar, resultado en Drive, qué falta), guárdalo en el repo en `docs/planificacion/sesiones/AAAAMMDD-HHMM.md` y, si hay id de Drive, sube copia a Drive en `sesiones/`.
+- Además, entrada nueva en `docs/bitacora/AAAAMMDD-HHMM.json` (ver sección **Bitácora**).
+
+## Bitácora
+
+Página pública: https://npiobject-labs.github.io/DesdeMovil/bitacora.html · formato en `docs/bitacora/README.md`.
+
+BITACORA: al cerrar sesión, además del resumen en docs/planificacion/sesiones/,
+crea SIEMPRE un fichero nuevo docs/bitacora/AAAAMMDD-HHMM.json. Nunca edites ni
+borres entradas anteriores, y nunca toques docs/bitacora.html ni
+docs/bitacora/index.json (lo genera el workflow de Pages).
+
+Campos: fecha (ISO con zona), titulo, objetivo, prompts (array de objetos con
+texto y nota opcional), cambios (array), sha, sha_completo, run (id del run de
+Actions), mock (ruta relativa al mock archivado de esa sesión), build, pagina,
+fly (URL de /salud o null), pendiente (array), enlaces (array de {texto,url}),
+notas. Obligatorios: fecha y titulo; el workflow falla si faltan.
+
+Los prompts son una transcripción fiel de lo que pidió el usuario en esa sesión,
+en sus términos, no un resumen de lo que hiciste. Si la sesión fue larga y la
+transcripción es aproximada, dilo en el campo notas.
+
+docs/ es público: nunca copies a la bitácora prompts que contengan claves,
+rutas internas, datos personales o nombres de clientes. Si un prompt los
+contiene, resúmelo en su lugar y anótalo en notas.

@@ -154,7 +154,7 @@ por el run del workflow antes de avisar. Cierra con el resumen de cinco líneas.
   <li>El agente lee <code>CLAUDE.md</code> y trabaja en incrementos pequeños.</li>
   <li>Cada incremento: push a <code>main</code> → los workflows despliegan y <em>verifican</em>.</li>
   <li>El agente consulta la API de GitHub Actions y no avisa hasta que el run del SHA está en <code>success</code>.</li>
-  <li>Cierre: resumen de cinco líneas en <code>docs/planificacion/sesiones/AAAAMMDD-HHMM.md</code>, y copia a Drive si está configurado.</li>
+  <li>Cierre: resumen de cinco líneas en <code>docs/planificacion/sesiones/AAAAMMDD-HHMM.md</code>, entrada nueva en <code>docs/bitacora/AAAAMMDD-HHMM.json</code> (publicada en <a href="bitacora.html">bitacora.html</a>), y copia a Drive si está configurado.</li>
 </ol>
 <p><code>docs/planificacion/</code> es la carpeta del proyecto; en un repo generado arranca vacía, con la historia de la plantilla apartada en <code>docs/plantilla/</code>. Ahí va todo lo que la próxima sesión necesita saber: es la memoria del proyecto.</p>
 <div class="nota">Un aviso de «ya puedes probarlo» sin SHA, URL y número de <code>build</code> no vale. Es la única señal de que la verificación se hizo de verdad.</div>

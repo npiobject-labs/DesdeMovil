@@ -266,8 +266,12 @@ footer{padding:2rem 0 0;font-size:.84rem;color:var(--mute)}
 
   <div class="step" data-id="d3"><input type="checkbox"><div>
     <h3>Al terminar cada sesión</h3>
-    <p>Pide el cierre: la sesión escribe un resumen de cinco líneas (qué cambió, SHA, URL, estado de Drive, qué falta) en <code>docs/planificacion/sesiones/</code>. Es lo que leerá la siguiente sesión para continuar, así que no lo saltes.</p>
-    <div class="block"><pre id="t4">Cierra la sesión: resumen de 5 líneas en docs/planificacion/sesiones/ con fecha y hora, push, y verifica.</pre><button class="btn copy" data-for="t4">Copiar</button></div>
+    <p>Pide el cierre: la sesión escribe un resumen de cinco líneas (qué cambió, SHA, URL, estado de Drive, qué falta) en <code>docs/planificacion/sesiones/</code> y una entrada nueva en <code>docs/bitacora/AAAAMMDD-HHMM.json</code>. El resumen es lo que leerá la siguiente sesión para continuar, así que no lo saltes.</p>
+    <p>La entrada aparece en la <a class="L" data-href="https://npiobject-labs.github.io/{P}/bitacora.html" href="https://npiobject-labs.github.io/MiProyecto/bitacora.html" target="_blank" rel="noopener">bitácora del proyecto</a> (<code>npiobject-labs.github.io/<span class="P">MiProyecto</span>/bitacora.html</code>): sesiones en orden inverso, con buscador, lo que se pidió, qué cambió y enlaces al commit, al run y al mock de ese día. Es pública y no necesita cuenta.</p>
+    <div class="block"><pre id="t4">Cierra la sesión: resumen de 5 líneas en docs/planificacion/sesiones/ y entrada
+nueva en docs/bitacora/AAAAMMDD-HHMM.json con objetivo, los prompts de esta
+sesión, qué cambió, SHA, run de Actions, mock archivado y URL de Fly si aplica.
+Push, verifica que Pages queda en verde, y sube la copia a Drive.</pre><button class="btn copy" data-for="t4">Copiar</button></div>
   </div></div>
 </section>
 

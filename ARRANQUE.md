@@ -32,6 +32,21 @@ No se borra a sí mismo porque no puede: `GITHUB_TOKEN` no tiene permiso para mo
 
 Resultado: https://npiobject-labs.github.io/DesdeMovil/ sirviendo el mock de `docs/`.
 
+## Trabajo diario: la bitácora
+
+Cada sesión de Code termina con una entrada nueva en `docs/bitacora/AAAAMMDD-HHMM.json` y queda publicada, sin cuenta de Claude ni de GitHub, en:
+
+https://npiobject-labs.github.io/DesdeMovil/bitacora.html
+
+Sesiones en orden inverso, con buscador: lo que se pidió (con botón de copiar), qué cambió, y enlaces al commit, al run que lo publicó, al mock archivado de ese día y al servidor si estaba activo. El índice lo genera `pages.yml`; nadie edita la página a mano. Formato en [`docs/bitacora/README.md`](docs/bitacora/README.md). Prompt de cierre:
+
+```
+Cierra la sesión: resumen de 5 líneas en docs/planificacion/sesiones/ y entrada
+nueva en docs/bitacora/AAAAMMDD-HHMM.json con objetivo, los prompts de esta
+sesión, qué cambió, SHA, run de Actions, mock archivado y URL de Fly si aplica.
+Push, verifica que Pages queda en verde, y sube la copia a Drive.
+```
+
 ## Si a mitad del proyecto necesitas Fly
 
 No hay nada que activar: **`FLY_API_TOKEN` es un secreto de organización de `npiobject-labs`** y lo heredan todos sus repos públicos. Ya no se crea un token de Fly por proyecto ni se guarda como secreto del repo.

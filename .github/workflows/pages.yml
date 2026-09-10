@@ -26,6 +26,56 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Generar el índice de la bitácora
+        run: |
+          python3 - <<'PY'
+          import json, os, glob, datetime, sys
+
+          carpeta = 'docs/bitacora'
+          os.makedirs(carpeta, exist_ok=True)
+
+          entradas, errores = [], []
+          for ruta in sorted(glob.glob(os.path.join(carpeta, '*.json'))):
+              nombre = os.path.basename(ruta)
+              if nombre == 'index.json':
+                  continue
+              try:
+                  with open(ruta, encoding='utf-8') as f:
+                      e = json.load(f)
+              except Exception as ex:
+                  errores.append(f'{nombre}: no es JSON válido ({ex})')
+                  continue
+              if not isinstance(e, dict):
+                  errores.append(f'{nombre}: la entrada debe ser un objeto JSON')
+                  continue
+              for campo in ('fecha', 'titulo'):
+                  if not e.get(campo):
+                      errores.append(f'{nombre}: falta el campo obligatorio "{campo}"')
+              e['_fichero'] = nombre
+              entradas.append(e)
+
+          if errores:
+              for m in errores:
+                  print(f'::error file={carpeta}::{m}')
+              sys.exit('Bitácora: hay entradas mal formadas. Corrígelas y vuelve a publicar.')
+
+          entradas.sort(key=lambda e: str(e.get('fecha', '')), reverse=True)
+
+          repo = os.environ.get('GITHUB_REPOSITORY', '')
+          owner, _, nombre_repo = repo.partition('/')
+          salida = {
+              'proyecto': nombre_repo or 'proyecto',
+              'owner': owner,
+              'repo': repo,
+              'generado': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'),
+              'entradas': entradas,
+          }
+          with open(os.path.join(carpeta, 'index.json'), 'w', encoding='utf-8') as f:
+              json.dump(salida, f, ensure_ascii=False, indent=1)
+
+          print(f'Bitácora: {len(entradas)} entradas indexadas.')
+          PY
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
