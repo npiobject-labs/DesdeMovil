@@ -59,7 +59,7 @@ Opcional: define la variable de repositorio (**Settings → Secrets and variable
 
 El **nombre de app es único en todo Fly.io**, no solo en tu cuenta. Si el que toca ya está cogido por otra cuenta, `flyctl apps create` no protesta —el workflow lo ignora con `|| true`— y el fallo aparece más tarde, en el paso de `deploy`, con un mensaje que no apunta a la causa. El nombre derivado lleva el owner de sufijo justamente para que eso no pase; si aun así choca, define `FLY_APP`.
 
-Queda `https://<APP>.fly.dev/` (texto plano) y `https://<APP>.fly.dev/salud` devolviendo `{"ok":true,"build":"<SHA>"}`. La verificación no la haces tú: el propio workflow hace `curl` a `/salud` y falla el run si la respuesta no contiene el SHA del commit desplegado.
+Queda `https://<APP>.fly.dev/` (texto plano), `https://<APP>.fly.dev/salud` devolviendo `{"ok":true,"build":"<SHA>"}` y `https://<APP>.fly.dev/holamundo` devolviendo `holamundo`. La prueba de que **frontend y backend hablan entre sí** es https://npiobject-labs.github.io/DesdeMovil/holamundo.html: Pages llama a las dos rutas desde el navegador y muestra la respuesta y el build desplegado. La verificación no la haces tú: el propio workflow hace `curl` a `/salud` y falla el run si la respuesta no contiene el SHA del commit desplegado.
 
 ## Si quieres copias en Drive
 

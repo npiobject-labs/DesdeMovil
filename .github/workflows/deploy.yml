@@ -112,6 +112,21 @@ jobs:
           echo "::error::/salud no devolvio el SHA ${SHA} tras 10 intentos (150 s)."
           exit 1
 
+      # Lo que consume docs/holamundo.html desde Pages: cuerpo exacto y CORS.
+      - name: Verificar /holamundo
+        if: steps.fly.outputs.configurado == 'true'
+        env:
+          FLY_APP: ${{ steps.app.outputs.app }}
+        run: |
+          url="https://${FLY_APP}.fly.dev/holamundo"
+          cabeceras="$(curl -fsS --max-time 20 -D - -o /tmp/cuerpo "${url}")"
+          cuerpo="$(cat /tmp/cuerpo)"
+          echo "Respuesta: ${cuerpo}"
+          [ "${cuerpo}" = "holamundo" ] || { echo "::error::/holamundo devolvio '${cuerpo}'"; exit 1; }
+          printf '%s' "${cabeceras}" | grep -qi '^access-control-allow-origin: \*' \
+            || { echo "::error::/holamundo sin cabecera CORS"; exit 1; }
+          echo "OK: /holamundo responde 'holamundo' con CORS"
+
       - name: Resumen del despliegue
         if: success() && steps.fly.outputs.configurado == 'true'
         env:
@@ -124,5 +139,7 @@ jobs:
             echo "- App: \`${FLY_APP}\` (region \`${region}\`)"
             echo "- URL: https://${FLY_APP}.fly.dev/"
             echo "- Salud: https://${FLY_APP}.fly.dev/salud"
+            echo "- Hola mundo: https://${FLY_APP}.fly.dev/holamundo"
+            echo "- Comprobacion desde Pages: https://${GITHUB_REPOSITORY%%/*}.github.io/${GITHUB_REPOSITORY#*/}/holamundo.html"
             echo "- Build (SHA): \`${GITHUB_SHA}\`"
           } >> "$GITHUB_STEP_SUMMARY"

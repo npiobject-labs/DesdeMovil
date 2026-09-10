@@ -1,5 +1,5 @@
-use axum::{routing::get, Json, Router};
-use serde_json::{json, Value};
+use axum::{http::header, response::IntoResponse, routing::get, Json, Router};
+use serde_json::json;
 
 const PUERTO: u16 = 8080;
 
@@ -7,16 +7,23 @@ async fn raiz() -> &'static str {
     "DesdeMovil backend"
 }
 
-async fn salud() -> Json<Value> {
+// Prueba "hola mundo" consumida desde Pages (otro origen): CORS abierto.
+async fn holamundo() -> impl IntoResponse {
+    ([(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")], "holamundo")
+}
+
+// /salud tambien se lee desde Pages (docs/holamundo.html): misma cabecera.
+async fn salud() -> impl IntoResponse {
     let build = std::env::var("BUILD_ID").unwrap_or_else(|_| "dev".to_string());
-    Json(json!({ "ok": true, "build": build }))
+    ([(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")], Json(json!({ "ok": true, "build": build })))
 }
 
 #[tokio::main]
 async fn main() {
     let app = Router::new()
         .route("/", get(raiz))
-        .route("/salud", get(salud));
+        .route("/salud", get(salud))
+        .route("/holamundo", get(holamundo));
 
     let direccion = format!("0.0.0.0:{PUERTO}");
     let listener = tokio::net::TcpListener::bind(&direccion)

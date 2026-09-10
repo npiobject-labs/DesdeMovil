@@ -35,7 +35,8 @@ La carpeta local del PC es un espejo de solo lectura. Nunca la trates como orige
 |---|---|---|
 | Mock estático (Pages) | https://npiobject-labs.github.io/DesdeMovil/ | `.github/workflows/pages.yml` en push a `main` |
 | Bitácora (Pages) | https://npiobject-labs.github.io/DesdeMovil/bitacora.html | idem; el índice lo genera `pages.yml` |
-| Backend (Fly.io, opcional) | `https://<app de Fly>.fly.dev/` · `/salud` | `.github/workflows/deploy.yml` en push a `main` que toque `app/**` |
+| Backend (Fly.io, opcional) | `https://<app de Fly>.fly.dev/` · `/salud` · `/holamundo` | `.github/workflows/deploy.yml` en push a `main` que toque `app/**` |
+| Comprobación del backend (Pages) | https://npiobject-labs.github.io/DesdeMovil/holamundo.html | página estática que llama a `/holamundo` y `/salud` desde el navegador |
 
 Pages está siempre activo. Fly también: `FLY_API_TOKEN` es un secreto de la organización `npiobject-labs` y lo heredan sus repos **públicos**, así que `deploy.yml` despliega sin configurar nada. Si el repo fuera privado (plan Free) o viviera fuera de la organización, el secreto no llega y `deploy.yml` termina en verde con el aviso "Fly no configurado" sin desplegar nada.
 
@@ -43,6 +44,8 @@ Pages está siempre activo. Fly también: `FLY_API_TOKEN` es un secreto de la or
 
 - Todo cambio termina en commit + push a `main`. Mensajes de commit en español, imperativo.
 - Backend en `app/` (Rust, axum + tokio). `GET /` devuelve texto plano; `GET /salud` devuelve `{"ok":true,"build":"<BUILD_ID>"}`, donde `BUILD_ID` es el SHA que inyecta el workflow.
+- `GET /holamundo` devuelve `holamundo` en texto plano; `/holamundo` y `/salud` llevan `Access-Control-Allow-Origin: *` porque los consume `docs/holamundo.html` desde Pages (otro origen). Si añades más rutas para el frontend, ponles la misma cabecera. `deploy.yml` verifica las dos rutas y falla si cambian.
+- `docs/holamundo.html` toma el nombre de la app de Fly del `<meta name="fly-app">` (`<repo>-<owner>`, como lo deriva `deploy.yml`). Si el proyecto define `FLY_APP` con otro nombre, actualiza ese `content` en el mismo commit.
 - `app/fly.toml` no lleva clave `app`: el nombre se pasa con `--app` desde `deploy.yml`.
 - Mocks estáticos en `docs/`. `docs/index.html` es el mock vivo; los anteriores se archivan en `docs/mocks/NNN-nombre.html`.
 - Cada mock lleva `<meta name="build" content="DM-B3-AAAAMMDD-NNN">` con un número nuevo en cada iteración.
