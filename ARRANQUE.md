@@ -87,6 +87,17 @@ pwsh -File tools\arrancar.ps1
 
 Compila el backend, lo levanta en `localhost:8080`, sirve `docs/` en `localhost:8081` y abre el navegador; Ctrl+C para los dos. Servidas desde `localhost`, las páginas llaman a ese backend en vez de al de Fly. Acepta `-PuertoApi`, `-PuertoWeb`, `-Release` y `-SinNavegador`.
 
+## Eliminar el proyecto
+
+Con el repo aterrizado, en PowerShell:
+
+```powershell
+pwsh -File tools\eliminar.ps1            # enseña el plan, no borra nada
+pwsh -File tools\eliminar.ps1 -Confirmar # borra, pidiendo el nombre del proyecto
+```
+
+Hace tres de los cuatro pasos, en el orden que toca: la app de Fly (con `flyctl`), el repositorio (con `gh`, que necesita el permiso `delete_repo`) y la copia local entera. Lo que falte por no tener esas herramientas lo deja anotado como pendiente con su enlace. Acepta `-SinFly`, `-SinRepo` y `-SinLocal`. La carpeta de Drive y las sesiones de `claude.ai/code` se borran a mano: el script no tiene credenciales para eso.
+
 ---
 
 Guías: [`docs/guiaFableMini.html`](docs/guiaFableMini.html) (checklist de arranque, para el móvil) · [`docs/guiaNew.html`](docs/guiaNew.html) (el recorrido entero, paso a paso) · [`docs/guiaFable.html`](docs/guiaFable.html) (el método explicado y cuándo compensa) · Reglas para los agentes: [`CLAUDE.md`](CLAUDE.md)
