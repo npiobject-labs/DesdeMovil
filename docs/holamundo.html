@@ -45,8 +45,13 @@
   </main>
   <script>
     const meta = document.querySelector('meta[name="fly-app"]').content;
-    const app = new URLSearchParams(location.search).get('app') || meta;
-    const base = 'https://' + app + '.fly.dev';
+    const parametros = new URLSearchParams(location.search);
+    const app = parametros.get('app') || meta;
+    // Servida desde el PC por tools/arrancar.ps1: el backend es el local, no el de Fly.
+    const enLocal = ['localhost', '127.0.0.1'].includes(location.hostname);
+    const base = enLocal
+      ? location.protocol + '//' + location.hostname + ':' + (parametros.get('api') || '8080')
+      : 'https://' + app + '.fly.dev';
     const enlace = document.getElementById('url');
     enlace.href = base; enlace.textContent = base;
 
