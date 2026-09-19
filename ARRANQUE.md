@@ -7,6 +7,22 @@
    Si lo dejas como está tendrás un enlace que funciona pero que muestra el README en vez del mock; y si el workflow corre antes de este cambio, falla con `Create Pages site failed. Error: Resource not accessible by integration` (precedido de un *warning* `Get Pages site failed… Not Found`). El `enablement: true` de `configure-pages` **no** sustituye a este paso: el `GITHUB_TOKEN` no tiene permiso para crear el sitio.
    Cómo saber si se te olvidó: en **Actions** aparece un run `pages build and deployment` con `Build with Jekyll` tras cada push. Ese constructor solo corre en el modo antiguo; con Source en «GitHub Actions» no existe.
 
+### O de una vez, con el script
+
+`tools/nuevo-proyecto-V1.ps1`, en esta plantilla, hace los dos pasos de arriba y unos cuantos más: crea el repositorio, espera a la inicialización, activa Pages, reserva la app de Fly, anota los parámetros en `CLAUDE.md`, deja el clon local y comprueba por HTTP que Pages responde y que `/salud` devuelve el SHA. Necesita [gh](https://cli.github.com) autenticado con los permisos `repo` y `workflow`; `flyctl` es opcional.
+
+```powershell
+.\nuevo-proyecto-V1.ps1                              # interactivo: lo pregunta todo
+.\nuevo-proyecto-V1.ps1 inversion -Simular           # enseña el plan, no crea nada
+.\nuevo-proyecto-V1.ps1 inversion -DriveId 1AbC... -Local 'D:\Proyectos\inversion'
+```
+
+El nombre admite minúsculas, dígitos y guiones, hasta 15 caracteres, y se sanea solo. La carpeta de Drive la creas tú y pasas su id con `-DriveId`; sin él, la fila de `CLAUDE.md` queda vacía. Si algo falla a mitad, dice qué quedó a medias y cómo retomarlo o deshacerlo.
+
+Su pareja es `tools/eliminar-proyecto-V1.ps1`, que borra app de Fly, repositorio y clon local de cualquier proyecto, sin necesidad de tener el clon delante. Simula por defecto: sin `-Confirmar` solo enseña el inventario.
+
+Los dos **viven solo en la plantilla** y se ejecutan desde su carpeta, no desde un proyecto: `init-plantilla.yml` los borra en cada hijo, donde no tendrían uso.
+
 > **El primer run en rojo es normal.** *Use this template* dispara `pages.yml` con el commit inicial, antes de que hayas tocado Settings, así que ese run falla. El historial de Actions arranca en rojo y no es un problema: `init-plantilla.yml` relanza Pages al terminar. (`deploy.yml` no falla: con el token de la organización a mano, despliega; sin él termina en verde con el aviso "Fly no configurado".)
 
 Y ya. Abre una sesión en [claude.ai/code](https://claude.ai/code) con el repo seleccionado y pide:

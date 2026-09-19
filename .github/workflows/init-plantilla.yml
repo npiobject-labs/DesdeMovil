@@ -90,6 +90,13 @@ jobs:
           # y el owner de ejemplo, asi que queda rellenada por esta sustitucion.
           for f in CLAUDE.md README.md ARRANQUE.md docs/*.html tools/*.ps1 app/src/main.rs; do
             [ -f "$f" ] || continue
+            # Las herramientas de alta y baja crean proyectos DESDE la plantilla:
+            # su -Plantilla, su -FlyOrg y su lista de protegidos tienen que
+            # seguir nombrandola, o en el hijo apuntarian al propio hijo. Se
+            # borran mas abajo; si algun dia dejaran de borrarse, el paso
+            # antirresiduos lo cantaria en rojo en vez de dejarlas rotas en
+            # silencio.
+            case "$f" in tools/nuevo-proyecto-V1.ps1|tools/eliminar-proyecto-V1.ps1) continue;; esac
             # El owner de la plantilla es la organizacion "npiobject-labs", y
             # "npiobject" a secas aparece en textos heredados. Los dos pasan por
             # un marcador antes de escribir el owner real: sustituirlos en
@@ -174,10 +181,23 @@ jobs:
           mkdir -p docs/planificacion/sesiones
           : > docs/planificacion/sesiones/.gitkeep
 
-          # La bitacora del hijo empieza vacia: fuera la entrada de ejemplo de
-          # la plantilla (su esquema sigue documentado en docs/bitacora/README.md).
-          rm -f docs/bitacora/ejemplo.json
-          echo "  docs/bitacora/ejemplo.json borrado: bitacora vacia"
+          # La bitacora del hijo empieza vacia: fuera TODAS las entradas de la
+          # plantilla, no solo el ejemplo (su esquema sigue documentado en
+          # docs/bitacora/README.md). Las entradas nombran a la plantilla, asi
+          # que heredarlas ademas haria fallar el paso antirresiduos.
+          rm -f docs/bitacora/*.json
+          echo "  docs/bitacora/*.json borrados: bitacora vacia"
+
+          # ingenieriaInversa/ documenta COMO se construyo la plantilla: es
+          # historia suya, como docs/plantilla/, y nombra al proyecto original
+          # de arriba abajo. El hijo empieza sin ella.
+          rm -rf ingenieriaInversa
+          echo "  ingenieriaInversa/ borrada: es historia de la plantilla"
+
+          # Las herramientas de alta y baja viven en la plantilla, que es de
+          # donde nacen los proyectos; dentro de un hijo no tienen uso.
+          rm -f tools/nuevo-proyecto-V1.ps1 tools/eliminar-proyecto-V1.ps1
+          echo "  tools/*-proyecto-V1.ps1 borrados: solo viven en la plantilla"
 
       # El checklist real de la inicializacion: si queda cualquier rastro de la
       # plantilla fuera de docs/plantilla/, el run falla y se ve en Actions.
