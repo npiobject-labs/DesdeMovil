@@ -311,7 +311,7 @@ $txtDrive = "sin Drive: la fila de CLAUDE.md queda vacia"
 if ($DriveId) { $txtDrive = "https://drive.google.com/drive/folders/$DriveId  (solo se apunta el id)" }
 $txtLocal = $Local
 if ($localTemporal) { $txtLocal = "temporal, se borra al acabar (-SinLocal)" }
-elseif ($localEsClon) { $txtLocal = "$Local  (ya es clon de $repo: se actualiza)" }
+elseif ($localEsClon) { $txtLocal = "$Local  (ya es clon de ${repo}: se actualiza)" }
 
 Write-Host ""
 Write-Host "== Plan" -ForegroundColor Cyan
