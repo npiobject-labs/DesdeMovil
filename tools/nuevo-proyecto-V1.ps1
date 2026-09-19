@@ -18,6 +18,8 @@
   .\nuevo-proyecto-V1.ps1 pruebax -SinFly              # solo repo + Pages + local
   .\nuevo-proyecto-V1.ps1 pruebax -SinEsperar          # no esperar al build de Rust
   .\nuevo-proyecto-V1.ps1 pruebax -Si -Abrir           # sin preguntar, abre las URLs al acabar
+  .\nuevo-proyecto-V1.ps1 pruebax -Init auto           # ficha INIT.txt junto a la carpeta local
+  .\nuevo-proyecto-V1.ps1 pruebax -Init "D:\fichas"    # ficha INIT.txt en esa carpeta
   .\nuevo-proyecto-V1.ps1 -Listar                      # proyectos creados desde este PC
   .\nuevo-proyecto-V1.ps1 pruebax -Eliminar            # delega en eliminar-proyecto-V1.ps1
 
@@ -47,6 +49,7 @@ param(
   [string]$FlyOrg       = "desdemovil",
   [string]$DriveId      = "",
   [string]$Local        = "",
+  [string]$Init         = "",
   [string]$Descripcion  = "",
   [string]$CommitNombre = "",
   [string]$CommitEmail  = "",
@@ -303,6 +306,33 @@ if ($SinLocal) {
   }
 }
 
+# La ficha INIT.txt tambien se resuelve AHORA: si la ruta es imposible, mejor
+# saberlo antes de crear el repo que despues de cinco minutos de trabajo.
+$initPath   = ""
+$initDentro = $false
+if ($Init) {
+  if ($Init -eq "auto") {
+    # Junto a la carpeta local, nunca dentro: lo que cuelga del clon y no esta
+    # en GitHub se lo lleva por delante el primer aterrizar.ps1.
+    if ($localTemporal) { Falla "-Init auto necesita carpeta local; quita -SinLocal o da una ruta a -Init" }
+    $padre = Split-Path -Parent $Local
+    if (-not $padre) { $padre = $Local }   # $Local colgando de la raiz de una unidad
+    $initPath = Join-Path $padre "INIT.txt"
+  } else {
+    $initPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Init)
+    # Sin extension, o terminada en barra, se entiende como carpeta.
+    if ($initPath.EndsWith("\") -or (Test-Path -LiteralPath $initPath -PathType Container) -or
+        -not [System.IO.Path]::GetExtension($initPath)) {
+      $initPath = Join-Path $initPath "INIT.txt"
+    }
+  }
+  $raiz = [System.IO.Path]::GetPathRoot($initPath)
+  if ($raiz -and -not (Test-Path -LiteralPath $raiz)) { Falla "La unidad '$raiz' de -Init no existe." }
+  if (-not $localTemporal -and $initPath.StartsWith($Local.TrimEnd("\") + "\", "OrdinalIgnoreCase")) {
+    $initDentro = $true
+  }
+}
+
 # ---------------------------------------------------------------- Plan y confirmacion
 $txtFly = "$flyApp (en la org '$FlyOrg')"
 if ($SinFly)       { $txtFly = "omitida (-SinFly)" }
@@ -321,6 +351,8 @@ Write-Host "   Pages        : https://$Owner.github.io/$Nombre/"
 Write-Host "   App de Fly   : $txtFly"
 Write-Host "   Carpeta local: $txtLocal"
 Write-Host "   Drive        : $txtDrive"
+if ($initPath) { Write-Host "   Ficha INIT   : $initPath" }
+if ($initDentro) { Aviso "La ficha cae dentro del clon: el proximo aterrizar.ps1 la borrara. Mejor fuera." }
 if ($Owner -ne "npiobject-labs" -and -not $SinFly) {
   Aviso "Owner '$Owner': FLY_API_TOKEN es secreto de la org npiobject-labs. Fuera de ella deploy.yml no desplegara."
 }
@@ -503,6 +535,28 @@ $resumen | ConvertTo-Json | Set-Content $registro -Encoding UTF8
 Write-Host ""
 Write-Host "================ $Nombre listo en $($resumen.duracion_min) min ================" -ForegroundColor Green
 $resumen.GetEnumerator() | ForEach-Object { "{0,-17} {1}" -f $_.Key, $_.Value } | Write-Host
+
+# ---------------------------------------------------------------- Ficha INIT.txt
+# Mismo contenido que el registro de creados, pero en texto plano y donde el
+# usuario quiera. Nunca aborta: el proyecto ya esta creado y no se pierde por
+# una ruta mal dada.
+if ($initPath) {
+  try {
+    $dirI = Split-Path -Parent $initPath
+    if ($dirI -and -not (Test-Path -LiteralPath $dirI)) { New-Item -ItemType Directory -Force $dirI | Out-Null }
+    $ficha = @("Proyecto $Nombre", ("=" * 64), "")
+    $ficha += $resumen.GetEnumerator() | ForEach-Object { "{0,-17} {1}" -f $_.Key, $_.Value }
+    $ficha += @("", "Ficha generada por nuevo-proyecto-V1.ps1.",
+                "Los mismos datos, en JSON: $registro",
+                "Todos los proyectos creados: .\nuevo-proyecto-V1.ps1 -Listar")
+    $ficha | Set-Content -LiteralPath $initPath -Encoding UTF8
+    Write-Host ""
+    Ok "Ficha guardada en $initPath"
+    if ($initDentro) { Aviso "Esta dentro del clon: el proximo aterrizar.ps1 la borrara." }
+  } catch {
+    Aviso "No se pudo escribir la ficha en ${initPath}: $($_.Exception.Message)"
+  }
+}
 
 if ($Abrir) {
   Start-Process $resumen.comprobacion
