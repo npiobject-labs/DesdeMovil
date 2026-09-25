@@ -377,13 +377,22 @@ function Principal {
     Falla "Tu usuario '$login' no administra la organizacion '$Org'." @("Entra en GitHub con la cuenta que creo la organizacion, o pide a quien la creo que te haga 'Owner'.")
   }
   Ok "Organizacion $Org encontrada; tienes permiso de administracion"
-  $inst = Gh @("api", "orgs/$Org/installations", "-q", ".installations[].app_slug") -SoloSalida
-  $claude = ($inst.ok -and ($inst.texto -match "claude"))
-  if ($claude) { Ok "Claude ya tiene permiso en $Org" }
+  # La app de GitHub de Claude, en la organizacion. Si solo tiene permiso en
+  # "los repositorios elegidos", el de esta app hay que anadirselo al crearlo:
+  # pasa desde la segunda app de la misma organizacion.
+  $jqClaude = '.installations[] | select(.app_slug | test("claude")) | [.id, .repository_selection] | @tsv'
+  $inst = Gh @("api", "orgs/$Org/installations", "--jq", $jqClaude) -SoloSalida
+  $claudeId = ""; $claudeSel = ""
+  if ($inst.ok -and $inst.texto) { $p = (($inst.texto -split "`n")[0]).Trim() -split "`t"; $claudeId = $p[0]; if ($p.Count -gt 1) { $claudeSel = $p[1] } }
+  $claude = [bool]$claudeId
+  $claudeUrl = "https://github.com/apps/claude/installations/new"
+  if ($claude) { $claudeUrl = "https://github.com/organizations/$Org/settings/installations/$claudeId" }
+  if ($claude -and $claudeSel -eq "all") { Ok "Claude ya tiene permiso en $Org (en todos sus repositorios)" }
+  elseif ($claude) { Ok "Claude tiene permiso en $Org en los repositorios elegidos; le anado el de esta app" }
   else {
     Aviso "Claude aun no tiene permiso en $Org. No hace falta para montar la app;"
     Aviso "hara falta para pedirle cosas. Dale permiso aqui (elige $Org):"
-    Dice  "https://github.com/apps/claude/installations/new"
+    Dice  $claudeUrl
   }
 
   # ------------------------------------------------------------ 3/6 Fly.io
@@ -453,6 +462,16 @@ function Principal {
   }
   $script:hecho.repo = $script:repo
   $creado = (Gh @("api", "repos/$($script:repo)", "-q", ".created_at") -SoloSalida).texto
+  if ($claude -and $claudeSel -ne "all") {
+    $rid = (Gh @("api", "repos/$($script:repo)", "-q", ".id") -SoloSalida).texto
+    $add = Gh @("api", "-X", "PUT", "user/installations/$claudeId/repositories/$rid", "--silent")
+    if ($add.ok) { Ok "Claude tiene acceso a $($script:repo)" }
+    else {
+      $claude = $false
+      Aviso "No he podido dar a Claude acceso a $($script:repo). Anadelo aqui, en 'Repository access':"
+      Dice  $claudeUrl
+    }
+  }
 
   $okVars = (Gh @("variable", "set", "FLY_APP", "-R", $script:repo, "--body", $flyApp)).ok
   $okVars = (Gh @("variable", "set", "FLY_ORG", "-R", $script:repo, "--body", $FlyOrg)).ok -and $okVars
@@ -626,7 +645,7 @@ function Principal {
   Write-Host ("================ {0} lista en {1} min ================" -f $App, $mins) -ForegroundColor Green
   foreach ($l in $lineas) { Dice $l }
   Dice ("Copia       " + $carpeta)
-  if (-not $claude) { Write-Host ""; Aviso "Falta dar permiso a Claude: https://github.com/apps/claude/installations/new" }
+  if (-not $claude) { Write-Host ""; Aviso "Falta dar permiso a Claude en $($script:repo): $claudeUrl" }
 
   Write-Host ""
   Fuerte "Ya puedes apagar el PC. Vuelve al movil: el paso 7 se marca"

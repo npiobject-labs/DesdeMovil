@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260925-007">
+<meta name="build" content="DM-B3-20260925-010">
 <meta name="description" content="Peripatéticos: monta tu app una vez en el PC y desarróllala para siempre desde el móvil, hablando.">
 <!-- La app de Fly de esta misma plantilla: la usa la demo de la portada. -->
 <meta name="fly-app" content="desdemovil-npiobject-labs">
@@ -78,6 +78,14 @@ pre{font:.82rem/1.5 var(--mono);background:var(--code);border:1px solid var(--li
 .tres div{border-left:3px solid var(--acc);padding:.35rem .8rem;background:var(--acc2);border-radius:0 8px 8px 0}
 .tres b{display:block;font-family:var(--serif);font-size:1.02rem}
 .demo{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:1rem;box-shadow:var(--shadow)}
+.tus-apps{margin:0 0 1.2rem;border-color:var(--acc)}
+.tus-apps h3{margin:0 0 .5rem}
+.tus-apps ul{list-style:none;padding:0;margin:.3rem 0 .6rem}
+.tus-apps li{display:flex;justify-content:space-between;gap:.6rem;padding:.45rem 0;border-top:1px dashed var(--line);font-size:.95rem}
+.tus-apps li:first-child{border-top:0}
+.tus-apps li span{color:var(--mute);font-size:.82rem;white-space:nowrap}
+.enlaces-sec{display:flex;flex-wrap:wrap;gap:.3rem .9rem;margin:.6rem 0 0;font-size:.85rem}
+.enlaces-sec button{font:inherit;color:var(--acc);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
 table{width:100%;border-collapse:collapse;font-size:.92rem;margin:.6rem 0}
 td,th{text-align:left;padding:.5rem .3rem;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-weight:600;color:var(--ink2);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
@@ -208,10 +216,18 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     </svg>
   </div>
 
+  <div class="demo tus-apps" id="tus-apps" hidden>
+    <h3>Tus apps</h3>
+    <ul id="lista-apps"></ul>
+    <button class="btn primario ancho" type="button" id="otra-app">Montar otra app</button>
+    <p class="small ink2" style="margin:.6rem 0 0">Tus cuentas de GitHub, Fly.io y Claude están guardadas en este navegador: para la siguiente app solo eliges el nombre y su carpeta de Drive, y abres el archivo en el PC, sin volver a iniciar sesión.</p>
+    <p class="enlaces-sec"><button type="button" id="mi-enlace">Copiar enlace con mis cuentas</button><button type="button" id="olvidar">Olvidar mis datos</button></p>
+  </div>
+
   <h2 id="como">Tres pasos. Solo el segundo necesita el PC.</h2>
   <ol class="tarjetas">
-    <li><b><span class="num">1</span>Tus cuentas</b>GitHub, Fly.io y Claude, y si quieres una carpeta en tu Google Drive. Las creas tú porque llevan tu nombre. Te llevo a cada una, te digo qué escribir y compruebo que existen.</li>
-    <li><b><span class="num">2</span>El PC, una sola vez</b>Descargas un archivo, lo abres e inicias sesión dos veces en tu navegador. El PC coloca las llaves, monta tu app y te deja una copia de seguridad en tus Documentos. Luego lo puedes apagar.</li>
+    <li><b><span class="num">1</span>Tus cuentas</b>GitHub, Fly.io y Claude, y si quieres una carpeta en tu Google Drive. Las creas tú porque llevan tu nombre. Te llevo a cada una, te digo qué escribir y compruebo que existen. Solo la primera vez: para la siguiente app quedan guardadas.</li>
+    <li><b><span class="num">2</span>El PC, una sola vez</b>Descargas un archivo, lo abres e inicias sesión dos veces en tu navegador. El PC coloca las llaves, monta tu app y te deja una copia de seguridad en tus Documentos. Luego lo puedes apagar. Para cada app nueva, otro archivo y a esperar: ya no pide iniciar sesión.</li>
     <li><b><span class="num">3</span>Tu móvil, siempre</b>Le pides cosas a tu app hablando. Cada cambio se publica solo, queda anotado en una bitácora y deja su resumen en tu carpeta de Drive.</li>
   </ol>
 
@@ -467,6 +483,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     <h2>Tu app <span class="A">recetas</span> ha nacido</h2>
     <p>Tiene web, tiene servidor y responde. Todo con tu nombre y en tus cuentas.</p>
     <a class="btn grande" href="#ficha">Ver su ficha y saludarla</a>
+    <p style="margin:.7rem 0 0"><button class="btn fantasma" type="button" id="otra-app-meta" style="color:inherit;border-color:currentColor">Montar otra app</button></p>
   </div>
 </section>
 
@@ -546,7 +563,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 </section>
 
 <footer>
-  Build <code>DM-B3-20260925-007</code> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="bitacora.html">Bitácora</a> · <a href="mocks/">Versiones anteriores</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
+  Build <code>DM-B3-20260925-010</code> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="bitacora.html">Bitácora</a> · <a href="mocks/">Versiones anteriores</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
 </footer>
 </main>
 
@@ -658,6 +675,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
         b.textContent = an ? 'anotado' : 'verificado';
         if (id === 'claude' && st.verif.claude === false) { b.className = 'badge anotado'; b.textContent = 'falta permiso' }
         if (st.hechos[id] === 'omitido') { b.className = 'badge'; b.textContent = 'sin Drive' }
+        if (st.hechos[id] === 'guardado') { b.className = 'badge ok'; b.textContent = 'guardado' }
       }
       else if (e==='activo') { b.className='badge activo'; b.textContent='ahora' }
       else { b.className='badge'; b.textContent='' }
@@ -665,6 +683,8 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     document.getElementById('barra').style.width = (act/pasos.length*100)+'%';
     document.getElementById('pill-paso').textContent = act>=pasos.length ? 'Meta' : 'Paso '+(act+1)+' de '+pasos.length;
     document.getElementById('meta').hidden = act < pasos.length;
+    if (act >= pasos.length) registrarApp();
+    pintaTusApps();
     aplica();
   }
   pasos.forEach(function(p){
@@ -704,7 +724,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
       var s = slug(st.datos.nombre);
       if (!s) return Promise.resolve({estado:'err', titulo:'Necesito un nombre', texto:'Cualquiera vale: «recetas», «mi-tienda», «paseos».'});
       if (s.length < 2) return Promise.resolve({estado:'err', titulo:'Un poco más largo', texto:'Con dos letras o más.'});
-      return Promise.resolve({estado:'ok', titulo:'«'+esc(s)+'» vale como nombre', texto:'Compruebo que está libre en cuanto sepa cuál es tu organización (paso 3).'});
+      if (!(st.hechos.org && st.reales.org)) return Promise.resolve({estado:'ok', titulo:'«'+esc(s)+'» vale como nombre', texto:'Compruebo que está libre en cuanto sepa cuál es tu organización (paso 3).'});
+      // Segunda app: la organización ya se conoce, así que se mira aquí mismo.
+      var o = st.reales.org;
+      return gh('repos/' + encodeURIComponent(o) + '/' + encodeURIComponent(s)).then(function(r){
+        if (r.limite) return {estado:'anotado', titulo:'«'+esc(s)+'» vale como nombre', texto:'GitHub no me deja preguntar ahora si está libre (límite de consultas). Lo comprobará el PC.'};
+        if (r.status === 200) return {estado:'anotado', titulo:'Ya tienes una app «'+esc(s)+'» en '+esc(o), texto:'Si es de un intento anterior, el PC seguirá donde lo dejó; si no, cambia el nombre.'};
+        return {estado:'ok', titulo:'«'+esc(s)+'» está libre en '+esc(o), texto:'Aquí vivirá tu app.'};
+      });
     },
     github: function(){
       var u = limpiaCuenta(st.datos.usuario);
@@ -932,6 +959,74 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   [].forEach.call(document.querySelectorAll('.chip'), function(c){ c.addEventListener('click', function(){ q.value=c.dataset.q; g.value=c.dataset.g; m.value=c.dataset.m; prompt() }) });
   document.getElementById('copiar').addEventListener('click', function(){ copia(out.textContent, this, 'Copiar') });
 
+  // ---------------------------------------------------------------- varias apps
+  // Los pasos 2 a 5 (cuenta de GitHub, organización, Fly.io y Claude) son los
+  // mismos para todas las apps: se guardan en este navegador. Solo datos
+  // públicos (usuario y organización) y qué quedó verificado; nunca llaves.
+  function registrarApp(){
+    var d = D(); if (!d.app || !d.org) return;
+    st.perfil = { usuario: d.usuario, org: d.org, verif: { fly: !!st.verif.fly, claude: st.verif.claude === true } };
+    st.apps = st.apps || [];
+    var ya = st.apps.some(function(x){ return x.app === d.app && x.org === d.org });
+    if (!ya) { st.apps.push({ app: d.app, org: d.org, web: d.web, servidor: d.servidor, drive: !!d.drive, fecha: st.creado || new Date().toISOString() }); }
+    guardar();
+  }
+  function pintaTusApps(){
+    var caja = document.getElementById('tus-apps'), apps = st.apps || [];
+    caja.hidden = !apps.length && !(st.perfil && st.perfil.org);
+    document.getElementById('lista-apps').innerHTML = apps.map(function(x){
+      return '<li><a href="' + esc(x.web) + '" target="_blank" rel="noopener">' + esc(x.app) + '</a><span>' + esc(x.org) + ' · ' + esc(new Date(x.fecha).toLocaleDateString('es-ES')) + '</span></li>';
+    }).join('') || '<li><span>Tus cuentas están guardadas; todavía no has montado ninguna app desde este navegador.</span></li>';
+    document.getElementById('empezar').textContent = (st.perfil && st.perfil.org) ? 'Montar otra app · unos 10 minutos' : 'Empezar · unos 30 minutos';
+  }
+  // Empieza una app nueva con las cuentas guardadas. GitHub y la organización
+  // se vuelven a mirar en la API por si han cambiado; Fly y Claude se dan por
+  // buenos si la app anterior los dejó verificados.
+  function nuevaApp(){
+    var pf = st.perfil; if (!pf || !pf.org) { location.hash = '#instalar'; return }
+    st = { tema: st.tema, perfil: pf, apps: st.apps || [], datos: { usuario: pf.usuario, org: pf.org }, reales: { usuario: pf.usuario, org: pf.org }, hechos: { github: 'guardado', org: 'guardado' }, verif: {} };
+    if (pf.verif && pf.verif.fly) st.hechos.fly = 'guardado';
+    if (pf.verif && pf.verif.claude) st.hechos.claude = 'guardado';
+    guardar();
+    ['in-nombre','in-drive'].forEach(function(id){ document.getElementById(id).value = '' });
+    document.getElementById('in-usuario').value = pf.usuario || ''; document.getElementById('in-org').value = pf.org || '';
+    pasos.forEach(function(p){ p.classList.remove('abierto'); p.querySelector('.verif').hidden = true });
+    document.getElementById('linea').hidden = true;
+    pinta(); location.hash = '#instalar'; window.scrollTo(0,0);
+    revalida();
+  }
+  function revalida(){
+    var pf = st.perfil;
+    gh('users/' + encodeURIComponent(pf.usuario)).then(function(r){
+      if (r.status === 404) { delete st.hechos.github; guardar(); pinta(); verif(paso('github'), 'err', 'Ya no encuentro tu usuario «' + esc(pf.usuario) + '»', '¿Lo has cambiado? Escríbelo otra vez.') }
+    }).catch(function(){});
+    gh('orgs/' + encodeURIComponent(pf.org)).then(function(r){
+      if (r.status === 404) { delete st.hechos.org; delete st.reales.org; guardar(); pinta(); verif(paso('org'), 'err', 'Ya no encuentro la organización «' + esc(pf.org) + '»', 'Créala otra vez o escribe otra.') }
+    }).catch(function(){});
+  }
+  function enlaceCuentas(){
+    var pf = st.perfil || {}, u = new URL(location.href);
+    u.hash = ''; u.search = '?u=' + encodeURIComponent(pf.usuario || '') + '&org=' + encodeURIComponent(pf.org || '');
+    return u.href;
+  }
+  document.getElementById('otra-app').addEventListener('click', nuevaApp);
+  document.getElementById('otra-app-meta').addEventListener('click', nuevaApp);
+  document.getElementById('mi-enlace').addEventListener('click', function(){ copia(enlaceCuentas(), this, 'Copiar enlace con mis cuentas') });
+  document.getElementById('olvidar').addEventListener('click', function(){
+    if (!confirm('¿Olvidar tus cuentas y la lista de tus apps en este navegador? Tus apps no se tocan: siguen en GitHub, Fly.io y Drive.')) return;
+    delete st.perfil; delete st.apps; guardar(); pintaTusApps();
+  });
+  // Enlace con cuentas (?u=…&org=…): guarda el perfil. Si no hay un montaje a
+  // medias, prepara directamente una app nueva con ellas.
+  (function(){
+    var q = new URLSearchParams(location.search), u = limpiaCuenta(q.get('u')), o = limpiaCuenta(q.get('org'));
+    if (!u || !o) return;
+    var aMedias = Object.keys(st.hechos).length && primerPendiente() < pasos.length;
+    st.perfil = { usuario: u, org: o, verif: (st.perfil && st.perfil.org === o) ? st.perfil.verif : {} }; guardar();
+    try { history.replaceState(null, '', location.pathname + (aMedias ? location.hash : '#instalar')) } catch(e){}
+    if (!aMedias) setTimeout(nuevaApp, 0);
+  })();
+
   // ---------------------------------------------------------------- entradas, tema, reinicio
   document.getElementById('sin-drive').addEventListener('click', function(){
     var p = paso('drive'); st.hechos.drive = 'omitido'; guardar();
@@ -949,7 +1044,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   document.getElementById('tema').addEventListener('click', function(){ var o=['','light','dark']; setT(o[(o.indexOf(st.tema||'')+1)%3]) });
   document.getElementById('reiniciar').addEventListener('click', function(){
     if (!confirm('¿Empezar de nuevo? Se borra lo que has escrito en esta página (tu app y tus cuentas no se tocan).')) return;
-    st = {tema: st.tema, hechos:{}, datos:{}, reales:{}, verif:{}}; guardar(); location.hash = '#instalar'; location.reload();
+    st = {tema: st.tema, perfil: st.perfil, apps: st.apps, hechos:{}, datos:{}, reales:{}, verif:{}}; guardar(); location.hash = '#instalar'; location.reload();
   });
 
   prompt(); pinta(); ruta();
