@@ -46,7 +46,7 @@ Identificabas como crítico establecer las API keys de GitHub, de Fly y «de la 
 | Token de GitHub | `gh auth login` en el PC (flujo de dispositivo: un código de 8 letras que se teclea en el navegador) | En el PC, gestionado por `gh` | Una pantalla de GitHub con «Autorizar» |
 | Token de Fly.io | `flyctl auth login` (abre el navegador) y después `flyctl tokens create org` | Como secreto de **su** organización de GitHub, puesto por `gh secret set --org` | Una pantalla de Fly.io con «Autorizar». El token no se imprime nunca |
 | Acceso de Claude a su GitHub | OAuth desde la app de Claude | En Claude | Dos pantallas de «Autorizar» en el móvil. Es el único punto crítico que el PC no puede absorber |
-| «API key de la aplicación» | — | — | **[SUPUESTO]** La v1 no necesita ninguna: la app se sirve desde Pages y habla con Fly sin claves. Ver pregunta 5 |
+| Token de la API (`TOKEN_API`, el que en otra app se pega en «Ajustes») | Fuera de la v1. Cuando haga falta, lo genera el instalador | Secreto de Fly; al navegador llega una sola vez dentro del enlace de la ficha (`#k=…`), que la página guarda y borra de la dirección | Un enlace. Nunca una clave que copiar. Decidido el 25-sep, pregunta 5 |
 
 Corolario: el PC no es el sitio donde se «instala la app». Es **las manos** que hacen los inicios de sesión y colocan las llaves. Por eso se enciende una vez y se puede apagar para siempre. Esta es la frase que vende el paso del PC sin asustar.
 
@@ -92,7 +92,7 @@ No se ha tocado nada. Anotado para no olvidarlo:
 2. **Entrega.** Enlace único con el `.cmd` dentro (punto 3), en vez de zip. ¿De acuerdo?
 3. **Organización de GitHub.** La mantienes como guardarraíl. El mock la pide con enlace directo y la verifica; el instalador deja dentro el secreto de Fly. Alternativa: admitir cuenta personal en la v1 (una pantalla menos, pero el secreto sería por repositorio y la segunda app obligaría a repetirlo).
 4. **El PC.** Se enciende una vez, solo para las llaves, y se puede apagar. El aterrizaje local y el arranque en el PC quedan como extras para más adelante, fuera del camino del usuario no técnico. ¿Vale?
-5. **«API key de la aplicación, del frontend».** No he sabido a qué clave te refieres. Supuesto: en la v1 no hay ninguna. Si más adelante una app necesita una clave externa (un mapa, un pago), el mecanismo sería el mismo: el PC —o la sesión de Claude— la deja como secreto sin que el usuario la copie.
+5. **«API key de la aplicación, del frontend».** Resuelta el 25-sep: es el token compartido web ↔ backend (`TOKEN_API`) que en otra app se pega a mano en «Ajustes». **Fuera de la v1**: `/hola` y `/salud` son lectura sin datos y lo único que expone una API abierta es despertar la máquina. Cuando la app guarde o cambie algo, el instalador genera el token, lo deja como secreto de Fly y el usuario lo recibe una sola vez dentro del enlace de la ficha; la pantalla de «Ajustes» queda como opción avanzada, no como paso. [SUPUESTO] Un solo token, todo o nada, sin usuarios ni roles; si algún día hace falta «ve pero no borra», eso es autenticación y se diseña aparte.
 6. **Drive.** Fuera del camino crítico: se ofrece después de la meta, como extra. ¿O lo quieres dentro del recorrido?
 7. **Fly y la tarjeta.** ¿Aceptas el texto «gratis para empezar; puede pedirte tarjeta» o prefieres exigir la tarjeta desde el principio para que no haya sorpresas a mitad?
 8. **Idioma.** Solo español en la v1.
