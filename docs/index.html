@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260925-005">
+<meta name="build" content="DM-B3-20260925-007">
 <meta name="description" content="Peripatéticos: monta tu app una vez en el PC y desarróllala para siempre desde el móvil, hablando.">
 <!-- La app de Fly de esta misma plantilla: la usa la demo de la portada. -->
 <meta name="fly-app" content="desdemovil-npiobject-labs">
@@ -106,7 +106,7 @@ details.por summary{cursor:pointer;padding:.6rem .85rem;font-weight:600;font-siz
 details.por summary::-webkit-details-marker{display:none}
 details.por summary::before{content:"+";display:inline-grid;place-items:center;width:1.2rem;height:1.2rem;border-radius:50%;background:var(--acc2);color:var(--acc);font-weight:700;flex:none}
 details.por[open] summary::before{content:"–"}
-details.por > div{padding:0 .9rem .8rem;font-size:.93rem;color:var(--ink2)}
+details.por > div{padding:0 .9rem .8rem;font-size:.93rem;color:var(--ink2);overflow-wrap:anywhere}
 details.por > div p{margin:.4rem 0}
 label.campo{display:block;margin:.8rem 0 .4rem;font-weight:600;font-size:.92rem}
 input.txt,textarea.txt{width:100%;font:1rem var(--sans);padding:.7rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--bg2);color:var(--ink)}
@@ -179,7 +179,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 
 <div class="top"><div class="in">
   <a class="brand" href="#portada">Peripatéticos</a>
-  <span class="pill" id="pill-paso" hidden>Paso 1 de 6</span>
+  <span class="pill" id="pill-paso" hidden>Paso 1 de 8</span>
   <button class="ibtn" id="tema" type="button" aria-label="Cambiar tema" title="Tema">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
   </button>
@@ -210,10 +210,21 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 
   <h2 id="como">Tres pasos. Solo el segundo necesita el PC.</h2>
   <ol class="tarjetas">
-    <li><b><span class="num">1</span>Tres cuentas</b>GitHub, Fly.io y Claude. Las creas tú porque llevan tu nombre. Te llevo a cada una, te digo qué escribir y compruebo que existen.</li>
-    <li><b><span class="num">2</span>El PC, una sola vez</b>Descargas un archivo, lo abres e inicias sesión dos veces en tu navegador. El PC coloca las llaves y monta tu app. Luego lo puedes apagar para siempre.</li>
-    <li><b><span class="num">3</span>Tu móvil, siempre</b>Le pides cosas a tu app hablando. Cada cambio se publica solo y queda anotado en una bitácora que puedes leer cuando quieras.</li>
+    <li><b><span class="num">1</span>Tus cuentas</b>GitHub, Fly.io y Claude, y si quieres una carpeta en tu Google Drive. Las creas tú porque llevan tu nombre. Te llevo a cada una, te digo qué escribir y compruebo que existen.</li>
+    <li><b><span class="num">2</span>El PC, una sola vez</b>Descargas un archivo, lo abres e inicias sesión dos veces en tu navegador. El PC coloca las llaves, monta tu app y te deja una copia de seguridad en tus Documentos. Luego lo puedes apagar.</li>
+    <li><b><span class="num">3</span>Tu móvil, siempre</b>Le pides cosas a tu app hablando. Cada cambio se publica solo, queda anotado en una bitácora y deja su resumen en tu carpeta de Drive.</li>
   </ol>
+
+  <h2>Dónde queda todo</h2>
+  <p class="ink2">Todo en tus cuentas y a tu nombre. Nada queda en manos de terceros ni de esta página.</p>
+  <table>
+    <tr><th>Dónde</th><th>Qué guarda</th></tr>
+    <tr><td><b>GitHub</b></td><td>Tu app entera y su historia: cada cambio, quién lo pidió y cuándo. Es el original.</td></tr>
+    <tr><td><b>Fly.io</b></td><td>El servidor que responde por tu app, aunque tu móvil y tu PC estén apagados.</td></tr>
+    <tr><td><b>Google Drive</b></td><td>Opcional. Una carpeta tuya donde Claude deja, al terminar cada sesión, un resumen de lo que se hizo y la documentación de la app.</td></tr>
+    <tr><td><b>Tu PC</b></td><td>Una copia de seguridad en Documentos, con la ficha de tu app y accesos directos. Se pone al día con doble clic en «Actualizar copia».</td></tr>
+    <tr><td><b>Tu móvil</b></td><td>Nada que guardar: desde aquí la cambias, hablando con Claude.</td></tr>
+  </table>
 
   <h2>Una app de verdad, ahora mismo</h2>
   <div class="demo">
@@ -240,6 +251,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     <li>Un móvil con la app de <b>Claude</b> instalada.</li>
     <li>Un PC con <b>Windows 10 u 11</b>, durante media hora, una sola vez.</li>
     <li>Un correo electrónico para crear las cuentas.</li>
+    <li>Si quieres las copias en Drive, tu cuenta de Google (la del correo de Gmail vale). Es opcional.</li>
     <li>Un nombre para tu app. Lo demás lo pongo yo.</li>
   </ul>
 
@@ -247,6 +259,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   <table>
     <tr><th>Qué</th><th>Cuánto</th></tr>
     <tr><td>GitHub (donde vive tu app)</td><td>Gratis</td></tr>
+    <tr><td>Google Drive (copias, opcional)</td><td>Gratis: usa el espacio de tu cuenta de Google, y los resúmenes ocupan muy poco.</td></tr>
     <tr><td>Fly.io (el servidor)</td><td>Gratis para empezar. Puede pedirte una tarjeta al darte de alta y, si tu app crece, un ingreso de 25 $. Te avisa antes.</td></tr>
     <tr><td>Claude (tu asistente)</td><td>Suscripción mensual. Es el único coste fijo.</td></tr>
   </table>
@@ -349,9 +362,29 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     </div>
   </article>
 
-  <!-- 6 · PC -->
+  <!-- 6 · drive -->
+  <article class="paso" data-id="drive">
+    <header><span class="n">6</span><h3>Tu carpeta en Google Drive</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <p class="pide">En Google Drive, crea una carpeta llamada <b class="A">recetas</b> dentro de «Mi unidad» y pega aquí su enlace.</p>
+      <div class="acciones"><a class="btn ext" href="https://drive.google.com/drive/my-drive" target="_blank" rel="noopener">Abrir Google Drive</a></div>
+      <details class="por"><summary>¿Qué es esto y por qué te lo pido?</summary><div>
+        <p>Al terminar cada sesión, Claude dejará en esa carpeta un resumen de lo que se hizo y la documentación de tu app. Así la tienes en tu Drive, a mano, aunque no entres nunca en GitHub.</p>
+        <p>No puedo crear la carpeta por ti: está en tu cuenta de Google. Es un minuto: <b>Nuevo → Carpeta</b>, escribe el nombre y ábrela. El enlace es la dirección que sale arriba en el navegador, o <b>⋮ → Compartir → Copiar enlace</b>.</p>
+        <p>Tiene que ser una carpeta normal de «Mi unidad», no un «Proyecto» de Drive: en esos Claude no puede escribir.</p>
+        <p>Para que Claude pueda escribir en ella, conecta Google Drive en la app de Claude: <b>Ajustes → Conectores → Google Drive</b>.</p>
+        <p>Es opcional. Si prefieres no usar Drive, pulsa «Sin Drive»: la app funciona igual y puedes añadirlo cuando quieras.</p>
+      </div></details>
+      <label class="campo" for="in-drive">Enlace de la carpeta</label>
+      <input class="txt" id="in-drive" placeholder="https://drive.google.com/drive/folders/…" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="url">
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Hecho</button><button class="btn fantasma" type="button" id="sin-drive">Sin Drive</button></div>
+      <div class="verif" hidden></div>
+    </div>
+  </article>
+
+  <!-- 7 · PC -->
   <article class="paso" data-id="pc">
-    <header><span class="n">6</span><h3>El PC, una sola vez</h3><span class="badge"></span></header>
+    <header><span class="n">7</span><h3>El PC, una sola vez</h3><span class="badge"></span></header>
     <div class="cuerpo">
       <p class="pide">Enciende el PC y ábrete allí este enlace. En esa página descargas un archivo y lo abres con doble clic. Te pedirá entrar en GitHub y en Fly.io desde el navegador. Nada más.</p>
       <p class="small ink2" style="margin-top:0">Cuando lo hayas abierto en el PC, pulsa el botón de abajo: desde aquí iré viendo cómo nace tu app, y este paso se marcará solo.</p>
@@ -365,33 +398,37 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
           <li>Abre tu navegador para que entres en GitHub con un código de ocho letras, y después en Fly.io. Tú solo pulsas «Authorize» en cada uno.</li>
           <li>Crea tu app <code class="A">recetas</code> en tu organización <code class="O">tuorganizacion</code> a partir de un molde ya probado, y le pone tu nombre a todo.</li>
           <li>Guarda la llave del servidor en tu organización de GitHub. No te la enseña ni te pide que copies nada.</li>
+          <li>Si le diste tu carpeta de Drive, la deja anotada en tu app para que Claude guarde ahí los resúmenes.</li>
           <li>Enciende tu web y tu servidor, y espera a que respondan de verdad.</li>
-          <li>Te enseña un resumen, te deja una ficha en el escritorio y termina. Puedes apagar el PC: no vuelve a hacer falta.</li>
+          <li>Deja en <b>Documentos\Peripateticos\<span class="A">recetas</span></b> una copia de seguridad de tu app, con su ficha, accesos directos y un archivo para ponerla al día cuando quieras. Y un acceso a esa carpeta en el escritorio.</li>
+          <li>Te enseña un resumen y termina. Puedes apagar el PC: no vuelve a hacer falta.</li>
         </ol>
         <p>Si algo falla a mitad, te dice qué pasa y puedes volver a abrir el mismo archivo: continúa donde lo dejó.</p>
       </div></details>
       <details class="por"><summary>Lo que verás en la pantalla del PC</summary><div>
-<div class="term"><span class="c">== 2/6 Entrar en GitHub</span>
+<div class="term"><span class="c">== 2/7 Entrar en GitHub</span>
    Se va a abrir tu navegador en GitHub.
    Cuando te pida un codigo, escribe el que sale aqui abajo
 
             <span class="cod">7F3A-K2QP</span>
 
    <span class="g">OK</span>  Hola, <span class="U">maria-garcia</span>
-<span class="c">== 3/6 Entrar en Fly.io</span>
+<span class="c">== 3/7 Entrar en Fly.io</span>
    <span class="g">OK</span>  Cuenta de Fly.io: tu correo
-<span class="c">== 4/6 Llaves</span>
+<span class="c">== 4/7 Llaves</span>
    <span class="g">OK</span>  Guardada en <span class="O">tuorganizacion</span> como secreto (no se muestra)
    <span class="w">Ya no te voy a pedir nada mas. Puedes ir a por un cafe.</span>
-<span class="c">== 5/6 Tu app</span>
+<span class="c">== 5/7 Tu app</span>
    <span class="g">OK</span>  <span class="O">tuorganizacion</span>/<span class="A">recetas</span> creada a partir del molde
    <span class="d">..</span>  Construyendo el servidor. La primera vez tarda
        entre 2 y 5 minutos; no es un fallo.
-<span class="c">== 6/6 Comprobacion</span>
+<span class="c">== 6/7 Comprobacion</span>
    <span class="g">OK</span>  "Hola, soy <span class="A">recetas</span> y respondo desde Fly.io"
+<span class="c">== 7/7 Copia en tu PC</span>
+   <span class="g">OK</span>  Copia del repositorio en ...\Documentos\Peripateticos\<span class="A">recetas</span>\repo
 
 <span class="g">================ <span class="A">recetas</span> lista en 8.6 min ================</span>
-   <span class="w">Ya puedes apagar el PC. Vuelve al movil: el paso 6 se marca
+   <span class="w">Ya puedes apagar el PC. Vuelve al movil: el paso 7 se marca
    solo en cuanto tu app responde.</span></div>
         <p>Las pantallas completas, una a una: <a href="recorrido.html">el recorrido</a>.</p>
       </div></details>
@@ -404,6 +441,24 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
         <li data-l="srv"><span class="p"></span><span>Esperando a tu servidor<small>La primera vez tarda entre 2 y 5 minutos. No es un fallo.</small></span></li>
         <li data-l="viva"><span class="p"></span><span>Preguntándole si está viva<small></small></span></li>
       </ol>
+    </div>
+  </article>
+
+  <!-- 8 · Claude comprueba Drive -->
+  <article class="paso" data-id="verdrive">
+    <header><span class="n">8</span><h3>Claude y tu carpeta de Drive</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <p class="pide">Último paso: que Claude compruebe que llega a tu carpeta de Drive. Abre Claude, entra en <b>Code</b>, elige <code><span class="O">tuorganizacion</span>/<span class="A">recetas</span></code> y pégale esto:</p>
+      <div class="block"><pre id="prompt-drive"></pre><button class="copy" type="button" id="copiar-drive">Copiar</button></div>
+      <div class="acciones"><a class="btn ext" href="https://claude.ai/code" target="_blank" rel="noopener">Abrir Claude Code</a></div>
+      <details class="por"><summary>¿Qué es esto y por qué te lo pido?</summary><div>
+        <p>Tu carpeta de Drive solo la puede abrir quien tenga permiso de tu cuenta de Google. Ni esta página ni el PC lo tienen: solo Claude, si conectaste Google Drive en sus ajustes. Por eso la comprobación la hace él.</p>
+        <p>Claude dejará en tu carpeta una ficha de tu app y apuntará en tu app que lo ha hecho. Aquí lo verás en cuanto se publique, en un par de minutos.</p>
+        <p>De paso queda comprobado que Claude puede trabajar en tu app: para apuntarlo tiene que escribir en ella.</p>
+        <p>Si Claude dice que no llega a tu Drive: en la app de Claude, <b>Ajustes → Conectores → Google Drive → Conectar</b>, y vuelve a pegarle lo mismo.</p>
+      </div></details>
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Hecho, ya se lo he pedido</button></div>
+      <div class="verif" hidden></div>
     </div>
   </article>
 
@@ -427,7 +482,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
       <dt>Bitácora</dt><dd><a class="L-bit" href="#" target="_blank" rel="noopener">qué se pidió y qué cambió</a></dd>
       <dt>Dónde vive</dt><dd><a class="L-repo" href="#" target="_blank" rel="noopener"></a></dd>
       <dt>Claude</dt><dd id="f-claude">—</dd>
-      <dt>Copias</dt><dd><span class="mute">Google Drive, sin configurar</span> · <a href="#ayuda" class="small">cómo activarlo</a></dd>
+      <dt>Copias</dt><dd id="f-drive"><span class="mute">Google Drive, sin configurar</span> · <a href="#ayuda" class="small">cómo activarlo</a></dd>
     </dl>
     <div style="margin-top:1rem">
       <button class="btn primario ancho grande" id="saluda" type="button">Saluda</button>
@@ -479,7 +534,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     <details><summary>El PC se quedó a mitad</summary><div>Vuelve a abrir el mismo archivo: sabe por dónde iba y continúa. Si vuelve a fallar, te enseña un mensaje con lo que pasó; hazle una foto y pégala en Claude.</div></details>
     <details><summary>Dice que el nombre está cogido en Fly.io</summary><div>Los nombres de servidor en Fly.io son únicos en todo el mundo. Vuelve al paso 1, cambia el nombre (añadirle algo basta) y descarga el archivo otra vez.</div></details>
     <details><summary>«Esperando a tu servidor» lleva mucho rato</summary><div>La primera vez tarda entre 2 y 5 minutos porque el servidor se construye desde cero. A partir de los 15 minutos, sí es un fallo: mira lo que dice la ventana del PC.</div></details>
-    <details><summary>Quiero copias en Google Drive</summary><div>Crea una carpeta normal en «Mi unidad» y pídele a Claude: «guarda copias de la documentación en esta carpeta de Drive», pegando el enlace de la carpeta. A partir de ahí, cada sesión deja ahí sus copias.</div></details>
+    <details><summary>Quiero copias en Google Drive</summary><div>Si no la pusiste al montar la app: crea una carpeta normal en «Mi unidad», conecta Google Drive en Claude (Ajustes → Conectores) y pídele: «pon esta carpeta de Drive en los Parámetros de CLAUDE.md», pegando el enlace. A partir de ahí, cada sesión deja allí su resumen y la documentación.</div></details>
     <details><summary>Quiero borrarlo todo</summary><div>Pídele a Claude: «elimina esta app por completo». Te guiará para borrar el servidor en Fly.io y el repositorio en GitHub. Tus cuentas son tuyas y se quedan.</div></details>
   </div>
   <h3 style="margin-top:1.6rem">Lo que nunca te voy a pedir</h3>
@@ -491,7 +546,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 </section>
 
 <footer>
-  Build <code>DM-B3-20260925-005</code> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="bitacora.html">Bitácora</a> · <a href="mocks/">Versiones anteriores</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
+  Build <code>DM-B3-20260925-007</code> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="bitacora.html">Bitácora</a> · <a href="mocks/">Versiones anteriores</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
 </footer>
 </main>
 
@@ -513,10 +568,16 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   // Como deploy.yml: minúsculas, [a-z0-9-], 30 caracteres, sin guion final.
   function nombreFly(v){ return String(v||'').toLowerCase().replace(/[^a-z0-9-]/g,'-').slice(0,30).replace(/-+$/,'') }
   function limpiaCuenta(v){ return String(v||'').trim().replace(/^@/,'').replace(/[^A-Za-z0-9-]/g,'') }
+  // Id de una carpeta de Drive a partir de su enlace (o del id pelado). Mismas reglas que el instalador.
+  function idDrive(v){
+    v = String(v||'').trim(); var m = v.match(/\/folders\/([A-Za-z0-9_-]+)/) || v.match(/[?&]id=([A-Za-z0-9_-]+)/);
+    if (m) v = m[1];
+    return /^[A-Za-z0-9_-]{25,}$/.test(v) ? v : '';   // los ids de carpeta miden unos 33
+  }
   function D(){
     var a = slug(st.datos.nombre), o = st.reales.org || limpiaCuenta(st.datos.org), u = st.reales.usuario || limpiaCuenta(st.datos.usuario);
     var fa = nombreFly((a||'recetas') + '-' + (o||'tuorganizacion'));
-    return { app: a, org: o, usuario: u, flyApp: fa,
+    return { app: a, org: o, usuario: u, flyApp: fa, drive: st.hechos.drive === 'omitido' ? '' : idDrive(st.datos.drive),
       web: 'https://' + (o||'tuorganizacion').toLowerCase() + '.github.io/' + (a||'recetas') + '/',
       servidor: 'https://' + fa + '.fly.dev/',
       repo: 'https://github.com/' + (o||'tuorganizacion') + '/' + (a||'recetas') };
@@ -537,10 +598,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     pon('.L-bit', d.web + 'bitacora.html', null);
     pon('.L-repo', d.repo, d.repo.replace('https://',''));
     document.getElementById('enlace-pc').textContent = enlacePC();
+    document.getElementById('prompt-drive').textContent = promptDrive();
+  }
+  function promptDrive(){
+    return 'Comprueba que tienes acceso a mi carpeta de Google Drive, como explica CLAUDE.md en «Comprobación de Drive», y dime el resultado.';
   }
   function enlacePC(){
     var d = D(), u = new URL('pc.html', location.href);
-    u.search = '?app=' + encodeURIComponent(d.app||'') + '&org=' + encodeURIComponent(d.org||'') + (d.usuario ? '&u=' + encodeURIComponent(d.usuario) : '');
+    u.search = '?app=' + encodeURIComponent(d.app||'') + '&org=' + encodeURIComponent(d.org||'') + (d.usuario ? '&u=' + encodeURIComponent(d.usuario) : '') + (d.drive ? '&drive=' + encodeURIComponent(d.drive) : '');
     return u.href;
   }
 
@@ -579,6 +644,9 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   function paso(id){ return document.querySelector('.paso[data-id="'+id+'"]') }
   function primerPendiente(){ for (var i=0;i<pasos.length;i++) if (!st.hechos[pasos[i].dataset.id]) return i; return pasos.length }
   function pinta(){
+    // Sin carpeta de Drive no hay nada que comprobar en el paso 8.
+    if (st.hechos.drive === 'omitido') st.hechos.verdrive = 'omitido';
+    else if (st.hechos.verdrive === 'omitido') delete st.hechos.verdrive;
     var act = primerPendiente();
     pasos.forEach(function(p,i){
       var id = p.dataset.id, b = p.querySelector('.badge');
@@ -589,6 +657,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
         b.className = 'badge ' + (an ? 'anotado' : 'ok');
         b.textContent = an ? 'anotado' : 'verificado';
         if (id === 'claude' && st.verif.claude === false) { b.className = 'badge anotado'; b.textContent = 'falta permiso' }
+        if (st.hechos[id] === 'omitido') { b.className = 'badge'; b.textContent = 'sin Drive' }
       }
       else if (e==='activo') { b.className='badge activo'; b.textContent='ahora' }
       else { b.className='badge'; b.textContent='' }
@@ -613,8 +682,10 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     if (id==='nombre') st.datos.nombre = document.getElementById('in-nombre').value;
     if (id==='github') { st.datos.usuario = document.getElementById('in-usuario').value; delete st.reales.usuario }
     if (id==='org') { st.datos.org = document.getElementById('in-org').value; delete st.reales.org }
+    if (id==='drive') st.datos.drive = document.getElementById('in-drive').value;
     guardar(); aplica();
     if (id==='pc') { vigilar(); return }
+    if (id==='verdrive') { vigilarDrive(); return }
     btn.disabled = true; verif(p, 'espera', 'Comprobando…', '');
     COMPRUEBA[id]().catch(function(e){
       return { estado:'anotado', titulo:'No he podido comprobarlo ahora', texto:'No llego a GitHub desde este móvil ('+esc(e.message||e)+'). Lo anoto y lo comprobará el PC.' };
@@ -668,10 +739,18 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
       });
     },
     fly: function(){ return Promise.resolve({estado:'anotado', titulo:'Anotado', texto:'No puedo mirar dentro de tu cuenta de Fly.io desde aquí. Lo comprobará el PC cuando entres allí.'}) },
+    drive: function(){
+      var v = String(st.datos.drive||'').trim();
+      if (!v) return Promise.resolve({estado:'err', titulo:'Falta el enlace de la carpeta', texto:'Pégalo aquí, o pulsa «Sin Drive» si prefieres no usarlo.'});
+      if (/\/file\/d\/|docs\.google\.com/.test(v)) return Promise.resolve({estado:'err', titulo:'Eso es un archivo, no una carpeta', texto:'Abre la carpeta que has creado y copia la dirección que sale arriba.'});
+      var id = idDrive(v);
+      if (!id) return Promise.resolve({estado:'err', titulo:'Así no reconozco la carpeta', texto:'El enlace de una carpeta es como <code>drive.google.com/drive/folders/…</code>. Cópialo entero.'});
+      return Promise.resolve({estado:'anotado', titulo:'Carpeta anotada', texto:'No puedo mirar dentro de tu Drive desde aquí. El PC la dejará apuntada en tu app, y la primera sesión de Claude subirá ahí su resumen: lo verás aparecer.'});
+    },
     claude: function(){ return Promise.resolve({estado:'anotado', titulo:'Anotado', texto:'El PC mirará si Claude tiene permiso en tu organización y te lo dirá.'}) }
   };
 
-  // ---------------------------------------------------------------- paso 6: vigilar
+  // ---------------------------------------------------------------- paso 7: vigilar
   // Lo mismo que comprueba el PC, por otro camino: la API pública de GitHub,
   // la web en github.io y el servidor en fly.dev. Ninguno necesita llaves.
   var vig = null;
@@ -726,7 +805,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
         if (hecho.repo && hecho.init && hecho.web && hecho.srv && hecho.viva) {
           vig = null; st.hechos.pc = true; delete st.vig; guardar();
           verif(p, 'ok', 'Tu app está viva', 'Web y servidor responden. Puedes apagar el PC.');
-          setTimeout(function(){ pinta(); document.getElementById('meta').scrollIntoView({behavior:'smooth'}) }, 700);
+          setTimeout(function(){ pinta(); var s = pasos[primerPendiente()]; (s || document.getElementById('meta')).scrollIntoView({behavior:'smooth', block:'start'}) }, 700);
           return;
         }
         if (Date.now() - st.vig.inicio > 45*60*1000) {
@@ -738,6 +817,40 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     }
     activa(); vig = true; vuelta();
   }
+  // ---------------------------------------------------------------- paso 8: vigilar docs/drive.json
+  // Solo Claude llega a la carpeta de Drive del usuario (con su conector). Al
+  // comprobarla deja docs/drive.json en la app; esta página lo lee de la web.
+  var vigD = null;
+  function vigilarDrive(){
+    if (vigD) return;
+    var p = paso('verdrive'), btn = p.querySelector('.hecho');
+    st.vigDrive = st.vigDrive || { inicio: Date.now() }; guardar();
+    btn.disabled = true; vigD = true;
+    function vuelta(){
+      var d = D(), s = Math.round((Date.now() - st.vigDrive.inicio) / 1000);
+      verif(p, 'espera', 'Esperando a que Claude lo compruebe…', 'Llevo ' + (s >= 60 ? Math.floor(s/60) + ' min ' + (s%60) + ' s' : s + ' s') + '. Cuando Claude termine y se publique, aparece aquí solo (un par de minutos).');
+      pide(d.web + 'drive.json?t=' + Date.now()).then(function(r){ return r.ok ? r.json() : null }).catch(function(){ return null }).then(function(j){
+        if (j && j.verificado === true) {
+          vigD = null; btn.disabled = false; st.hechos.verdrive = true; st.verif.claude = true; st.verif.drive = true; st.driveOk = j; delete st.vigDrive; guardar();
+          verif(p, 'ok', 'Claude llega a tu carpeta de Drive', 'Ha dejado «' + esc(j.fichero || 'la ficha de tu app') + '» en ella. A partir de ahora, cada sesión guardará allí su resumen.');
+          setTimeout(function(){ pinta(); document.getElementById('meta').scrollIntoView({behavior:'smooth'}) }, 900);
+          return;
+        }
+        if (j && j.verificado === false) {
+          verif(p, 'err', 'Claude no llega a tu carpeta de Drive', (j.motivo ? esc(j.motivo) + '. ' : '') + 'En la app de Claude: Ajustes → Conectores → Google Drive → Conectar. Luego pégale otra vez la petición; sigo mirando.');
+        }
+        if (Date.now() - st.vigDrive.inicio > 30*60*1000) {
+          vigD = null; btn.disabled = false; delete st.vigDrive; guardar();
+          verif(p, 'anotado', 'Todavía no lo veo', '¿Le has pegado la petición a Claude en el repositorio de tu app? Cuando te diga que ha terminado, vuelve a pulsar el botón.');
+          return;
+        }
+        vigD = setTimeout(vuelta, 10000);
+      });
+    }
+    vuelta();
+  }
+  document.getElementById('copiar-drive').addEventListener('click', function(){ copia(promptDrive(), this, 'Copiar') });
+
   function leeNacimiento(n){
     if (!n || !n.verificado) return n;
     var cambia = false;
@@ -800,6 +913,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
       else c.textContent = 'sin comprobar todavía';
     }
     document.getElementById('f-nacida').textContent = (st.creado ? 'Nacida el ' + fechaLarga(st.creado) + ' · ' : '') + 'vive en ' + (d.org || 'tu organización');
+    if (d.drive) document.getElementById('f-drive').innerHTML = '<a href="https://drive.google.com/drive/folders/' + esc(d.drive) + '" target="_blank" rel="noopener">tu carpeta de Google Drive</a> · ' + (st.driveOk ? 'Claude llega a ella' : 'sin comprobar todavía');
     pintaClaude();
     pide(d.web + 'nacimiento.json?t=' + Date.now()).then(function(r){ return r.ok ? r.json() : null }).then(function(n){
       leeNacimiento(n); if (n && n.creado) document.getElementById('f-nacida').textContent = 'Nacida el ' + fechaLarga(n.creado) + ' · vive en ' + (n.org || d.org);
@@ -819,7 +933,12 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   document.getElementById('copiar').addEventListener('click', function(){ copia(out.textContent, this, 'Copiar') });
 
   // ---------------------------------------------------------------- entradas, tema, reinicio
-  [['nombre','in-nombre'],['usuario','in-usuario'],['org','in-org']].forEach(function(k){
+  document.getElementById('sin-drive').addEventListener('click', function(){
+    var p = paso('drive'); st.hechos.drive = 'omitido'; guardar();
+    verif(p, 'anotado', 'Sin Drive, de momento', 'La app funciona igual. Puedes añadir la carpeta cuando quieras: está en la Ayuda.');
+    setTimeout(function(){ pinta(); var s = pasos[primerPendiente()]; if (s) s.scrollIntoView({behavior:'smooth',block:'start'}) }, 900);
+  });
+  [['nombre','in-nombre'],['usuario','in-usuario'],['org','in-org'],['drive','in-drive']].forEach(function(k){
     var el = document.getElementById(k[1]);
     el.value = st.datos[k[0]]||'';
     el.addEventListener('input', function(){ st.datos[k[0]] = el.value; if (k[0]!=='nombre') delete st.reales[k[0]]; guardar(); aplica() });
@@ -835,6 +954,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 
   prompt(); pinta(); ruta();
   if (st.vig && !st.hechos.pc) vigilar();   // se cerró la página a mitad de la espera: sigue vigilando
+  if (st.vigDrive && !st.hechos.verdrive) vigilarDrive();
 })();
 </script>
 </body>

@@ -84,6 +84,7 @@ footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--line);font-
     <dt>Servidor</dt><dd><a id="l-servidor" href="#">…</a></dd>
     <dt>Bitácora</dt><dd><a id="l-bitacora" href="bitacora.html">qué se pidió y qué cambió</a></dd>
     <dt>Código</dt><dd><a id="l-codigo" href="#">en GitHub</a></dd>
+    <dt>Copias</dt><dd id="copias">en Google Drive, si le das una carpeta a Claude</dd>
   </dl></div>
 
   <h2>Cómo pedirme cosas</h2>
@@ -124,6 +125,13 @@ footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--line);font-
     if (!n) return;
     if (n.fly_app && !parametros.get('app')) { app = n.fly_app; pintaServidor() }
     if (n.creado) document.getElementById('nacida').textContent = 'Nací el ' + fechaLarga(n.creado) + (n.org ? ' · vivo en ' + n.org : '') + '.';
+  }).catch(function(){});
+  // docs/drive.json lo escribe la sesion de Claude que comprueba la carpeta de Drive.
+  fetch(raiz + 'drive.json', {cache:'no-store'}).then(function(r){ return r.ok ? r.json() : null }).then(function(j){
+    if (!j) return;
+    document.getElementById('copias').textContent = j.verificado
+      ? 'en tu carpeta de Google Drive: Claude deja ahí el resumen de cada sesión'
+      : 'Claude no llega a tu carpeta de Drive: conéctala en Claude (Ajustes → Conectores)';
   }).catch(function(){});
 
   var CIUDADES = {cdg:'París',ams:'Ámsterdam',lhr:'Londres',fra:'Fráncfort',mad:'Madrid',arn:'Estocolmo',waw:'Varsovia',otp:'Bucarest',iad:'Virginia',ewr:'Nueva Jersey',ord:'Chicago',dfw:'Dallas',lax:'Los Ángeles',sjc:'San José',sea:'Seattle',yyz:'Toronto',gru:'São Paulo',scl:'Santiago de Chile',bog:'Bogotá',qro:'Querétaro',nrt:'Tokio',sin:'Singapur',syd:'Sídney',hkg:'Hong Kong',bom:'Bombay',jnb:'Johannesburgo'};

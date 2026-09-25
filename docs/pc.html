@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260925-005">
+<meta name="build" content="DM-B3-20260925-007">
 <meta name="description" content="Peripatéticos en el PC: descarga un archivo, ábrelo y tu app queda montada en tus cuentas.">
 <title>Peripatéticos en el PC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,7 +49,7 @@ pre{font:.78rem/1.5 var(--mono);background:var(--code);border:1px solid var(--li
 .pasos > li{display:grid;grid-template-columns:2.2rem 1fr;gap:.8rem;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:1rem;box-shadow:var(--shadow)}
 .pasos .n{display:grid;place-items:center;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--acc);color:var(--acc-ink);font:700 1rem var(--sans)}
 .pasos h3{margin:.25rem 0 .3rem}
-.pasos p{margin:.3rem 0;color:var(--ink2)}
+.pasos p{margin:.3rem 0;color:var(--ink2);overflow-wrap:anywhere}
 .nota{font-size:.88rem;color:var(--mute)}
 .smart{max-width:24rem;margin:.6rem 0 .2rem;border-radius:8px;overflow:hidden;border:1px solid #0067C0;font:13px/1.45 "Segoe UI",system-ui,sans-serif}
 .smart .c{background:#0067C0;color:#fff;padding:.7rem .9rem}
@@ -103,6 +103,7 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
       <p class="kicker">En el PC · una sola vez</p>
       <h1>Montar «<span class="A"></span>» en este PC</h1>
       <p class="lede">Tu app se creará en tu organización <b class="O"></b>. Tardará unos 8 minutos y al terminar podrás apagar el PC: no vuelve a hacer falta.</p>
+      <p class="nota" id="con-drive" hidden>Los resúmenes de cada sesión irán a tu carpeta de Google Drive.</p>
     </div>
 
     <ol class="pasos">
@@ -129,7 +130,8 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
       </div></li>
       <li><span class="n">5</span><div>
         <h3>Espera y apaga</h3>
-        <p>La ventana va diciendo lo que hace. Cuando ponga <b>«Ya puedes apagar el PC»</b>, vuelve al móvil: el paso 6 se marca solo en cuanto tu app responde.</p>
+        <p>La ventana va diciendo lo que hace. Cuando ponga <b>«Ya puedes apagar el PC»</b>, vuelve al móvil: el paso 7 se marca solo en cuanto tu app responde.</p>
+        <p>Al terminar, te deja en <b>Documentos\Peripateticos\<span class="A"></span></b> una copia de seguridad de tu app —con su ficha, accesos directos y «Actualizar copia» para ponerla al día con doble clic— y un acceso a esa carpeta en el escritorio.</p>
         <p class="nota">Si algo falla, la ventana te dice qué pasa. Volver a abrir el mismo archivo sigue donde lo dejó.</p>
       </div></li>
     </ol>
@@ -149,7 +151,7 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
     </div></details>
   </section>
 
-  <footer>Build <code>DM-B3-20260925-005</code> · <a href="./">Peripatéticos</a> · <a href="recorrido.html">Recorrido</a></footer>
+  <footer>Build <code>DM-B3-20260925-007</code> · <a href="./">Peripatéticos</a> · <a href="recorrido.html">Recorrido</a></footer>
 </main>
 <script>
 (function(){
@@ -161,6 +163,7 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
   function cuenta(v){ return String(v||'').trim().replace(/^@/,'').replace(/[^A-Za-z0-9-]/g,'') }
   var p = new URLSearchParams(location.search);
   var app = slug(p.get('app')), org = cuenta(p.get('org')), usuario = cuenta(p.get('u'));
+  var drive = String(p.get('drive')||'').replace(/[^A-Za-z0-9_-]/g,'');   // id de la carpeta de Drive, opcional
 
   // La plantilla de la que nace la app: la de esta misma web (owner.github.io/repo).
   var h = location.hostname.match(/^([^.]+)\.github\.io$/i), trozo = location.pathname.split('/').filter(Boolean)[0];
@@ -182,6 +185,7 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
       'set "PERI_APP=' + app + '"',
       'set "PERI_ORG=' + org + '"',
       'set "PERI_USUARIO=' + usuario + '"',
+      'set "PERI_DRIVE=' + drive + '"',
       'set "PERI_PLANTILLA=' + plantilla + '"',
       'set "PERI_URL=' + u + '"',
       'powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $w = New-Object Net.WebClient; $w.Encoding = [Text.Encoding]::UTF8; $s = $w.DownloadString($env:PERI_URL); & ([scriptblock]::Create($s)) } catch { Write-Host (\'No se pudo descargar el instalador: \' + $_.Exception.Message) -ForegroundColor Red }"',
@@ -191,7 +195,7 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
     ].join('\r\n') + '\r\n';
   }
   function lineaPs(){
-    return "[Net.ServicePointManager]::SecurityProtocol = 'Tls12'; $env:PERI_APP='" + app + "'; $env:PERI_ORG='" + org + "'; $env:PERI_USUARIO='" + usuario + "'; $env:PERI_PLANTILLA='" + plantilla + "'; irm " + urlPs1 + " | iex";
+    return "[Net.ServicePointManager]::SecurityProtocol = 'Tls12'; $env:PERI_APP='" + app + "'; $env:PERI_ORG='" + org + "'; $env:PERI_USUARIO='" + usuario + "'; $env:PERI_DRIVE='" + drive + "'; $env:PERI_PLANTILLA='" + plantilla + "'; irm " + urlPs1 + " | iex";
   }
 
   function pinta(){
@@ -202,6 +206,7 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
     [].forEach.call(document.querySelectorAll('.A'), function(e){ e.textContent = app });
     [].forEach.call(document.querySelectorAll('.O'), function(e){ e.textContent = org });
     document.title = 'Montar ' + app + ' · Peripatéticos';
+    document.getElementById('con-drive').hidden = !drive;
     document.getElementById('contenido-cmd').textContent = cmd();
     document.getElementById('linea-ps').textContent = lineaPs();
     document.getElementById('enlace-ps1').href = urlPs1;

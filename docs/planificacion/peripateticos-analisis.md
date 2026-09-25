@@ -144,3 +144,17 @@ Con «adelante, no me preguntes nada», las preguntas 1–4 y 6–8 se cierran c
 - **[SUPUESTO]** La app de GitHub de Claude se llama `claude` en `orgs/<org>/installations`. Plan B: si no, el aviso sale aunque tenga permiso; no bloquea nada.
 - **[SUPUESTO]** En organizaciones Free, los secretos de organización llegan a los repositorios públicos (así funciona hoy la plantilla en `npiobject-labs`).
 - Nada de esto se ha ejecutado en Windows PowerShell 5.1: solo en PowerShell 7 y con sintaxis compatible con 5.1 revisada. **La primera ejecución real conviene hacerla con una organización de prueba.**
+
+## 12. Drive y la copia en el PC (25-sep, misma sesión)
+
+Dos cambios pedidos tras la primera entrega, que reabren las preguntas 4 y 6:
+
+- **Drive entra en el recorrido** (pregunta 6). Paso 6, opcional: el usuario crea a mano una carpeta con el nombre de la app en «Mi unidad» y pega su enlace; la página saca el id, rechaza enlaces a archivos y ofrece «Sin Drive». El id viaja al PC (`&drive=` → `PERI_DRIVE` en el `.cmd`) y el instalador lo escribe en la fila **Carpeta de Drive (id)** de `CLAUDE.md` del hijo. `docs/nacimiento.json` solo dice `drive: true`: el id no va a `docs/`, que es público.
+- **Claude comprueba que llega a Drive** (paso 8). Ni la página ni el PC pueden entrar en la carpeta: solo una sesión de Claude con el conector de Google Drive. La página da la petición lista para copiar; Claude sigue la sección **Comprobación de Drive** de `CLAUDE.md` (lista la carpeta, sube `Ficha de <app>.md`, escribe `docs/drive.json` con `verificado`, `fecha` y `fichero`, o `verificado: false` y el motivo) y la página vigila ese fichero en Pages. Si Claude no llega, la página dice cómo conectar Drive en **Ajustes → Conectores**. Con Drive, la meta espera a este paso; sin Drive se omite. De paso queda probado que Claude escribe en el repositorio.
+- **Copia de seguridad en el PC** (pregunta 4). Paso 7/7 del instalador: `Documentos\Peripateticos\<app>\` con `repo\` (zip de `main`, sin git), la ficha, `LEEME.txt`, accesos directos (web, servidor, bitácora, código, Claude, Drive), `Actualizar copia.cmd` (autosuficiente: vuelve a bajar el zip y sustituye `repo\` entero) y un acceso a la carpeta en el escritorio. Espejo de solo lectura, como manda `CLAUDE.md`.
+- La portada explica los tres destinos en «Dónde queda todo», y Drive aparece en «Tres pasos», «Qué necesitas» y «Qué cuesta».
+
+Pruebas: 63 comprobaciones de extremo a extremo en Chromium (enlace de archivo rechazado, id de Drive por enlace → `.cmd` → `CLAUDE.md` del hijo, `drive.json` falso y luego verdadero, camino «Sin Drive», copia en el PC con su contenido) y `Actualizar copia.cmd` ejecutado de verdad sobre la copia: sustituye `repo\` y se lleva un cambio hecho a mano.
+
+- **[SUPUESTO]** El conector de Google Drive de Claude puede escribir en una carpeta normal de «Mi unidad» creada a mano por el usuario (así funciona hoy en este proyecto). Plan B: si en alguna cuenta solo ve lo que crea el propio conector, que Claude cree la carpeta y el usuario pegue después su enlace.
+- **[SUPUESTO]** `[Environment]::GetFolderPath("MyDocuments")` devuelve la carpeta de Documentos aunque esté redirigida a OneDrive. Plan B: `-Local` o `PERI_LOCAL` para otra ruta.
