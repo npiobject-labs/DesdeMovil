@@ -11,7 +11,7 @@ Flujo "PC arranca, móvil continúa": el desarrollo, la revisión y las pruebas 
 | App de Fly.io | `derivada` |
 | Carpeta de Drive (id) | `1-0wWhp_-rrSgxKrr0AN34dg_Y2nAPK2J` |
 
-Esta tabla la rellena sola `.github/workflows/init-plantilla.yml` en el primer push de un repo creado desde la plantilla; no hay nada que tocar a mano salvo el id de Drive.
+Esta tabla la rellena sola `.github/workflows/init-plantilla.yml` en el primer push de un repo creado desde la plantilla; no hay nada que tocar a mano salvo el id de Drive. Si la app se montó con el instalador de Peripatéticos, él anota también la app de Fly y, si se le dio, la carpeta de Drive.
 
 - **App de Fly.io**: `derivada` significa que `deploy.yml` la calcula como `<repo>-<owner>` en minúsculas, saneado a `[a-z0-9-]` y recortado a 30 caracteres. Si existe la variable de repositorio `FLY_APP`, esa manda; anota aquí el valor cuando la definas.
 - **Carpeta de Drive (id)**: vacío significa que este proyecto no usa Drive. Ver ARRANQUE.md para activarlo a mitad de proyecto.
@@ -50,7 +50,7 @@ Pages está siempre activo. Fly también: `FLY_API_TOKEN` es un secreto de la or
 - `app/fly.toml` no lleva clave `app`: el nombre se pasa con `--app` desde `deploy.yml`.
 - El backend escucha en 8080, que es lo que espera Fly; la variable de entorno `PUERTO` solo la usa `tools/arrancar.ps1` para probar en el PC.
 - Mocks estáticos en `docs/`. `docs/index.html` es el mock vivo; los anteriores se archivan en `docs/mocks/NNN-nombre.html`.
-- En la plantilla, `docs/index.html` es el instalador de Peripatéticos (portada + pasos con verificación real), con `docs/pc.html` (la página que se abre en el PC y genera el `.cmd`), `docs/instalador/peripateticos.ps1` (el instalador) y `docs/recorrido.html` (las pantallas del recorrido). `docs/semilla/index.html` es la portada con la que nace cada proyecto: `init-plantilla.yml` la mueve a `docs/index.html` y borra lo demás, que solo tiene sentido aquí.
+- En la plantilla, `docs/index.html` es el instalador de Peripatéticos (portada + pasos con verificación real), con `docs/pc.html` (la página que se abre en el PC y genera el `.cmd`), `docs/instalador/peripateticos.ps1` (el instalador) y `docs/recorrido.html` (las pantallas del recorrido). `docs/semilla/index.html` es la portada con la que nace cada proyecto: `init-plantilla.yml` la mueve a `docs/index.html` y borra lo demás, que solo tiene sentido aquí. En cada proyecto, `docs/nacimiento.json` lo escribe el instalador y `docs/drive.json` la sesión que comprueba Drive (ver **Comprobación de Drive**); los dos los leen la portada y el instalador.
 - El índice `docs/mocks/index.html` lo genera `pages.yml` en cada publicación, leyendo el `<title>` y el `<meta name="build">` de cada mock archivado. No lo edites ni lo commitees: está en `.gitignore`.
 - Cada mock lleva `<meta name="build" content="DM-B3-AAAAMMDD-NNN">` con un número nuevo en cada iteración.
 - Nunca pongas claves, endpoints internos ni datos reales en `docs/`: el sitio es público.
@@ -61,6 +61,16 @@ Pages está siempre activo. Fly también: `FLY_API_TOKEN` es un secreto de la or
 - Si existe `docs/plantilla/`, es el historial de la plantilla de origen que apartó `init-plantilla.yml`: referencia de solo lectura, nunca se edita ni se mezcla con `docs/planificacion/`.
 - Si hay id de Drive en **Parámetros**, al cerrar sesión se sube copia como fichero, sin conversión a formato Google (`disableConversionToGoogleType=true`), tanto `.md` como `.html/.png/.svg`.
 - No hay edición incremental en Drive: se vuelve a subir el fichero completo con el mismo nombre, o con sufijo de versión (`-v2`, `-v3`) si quieres conservar la copia anterior.
+
+## Comprobación de Drive
+
+Solo una sesión de Claude con el conector de Google Drive llega a la carpeta: ni Pages ni el instalador del PC pueden. Cuando te pidan comprobar el acceso a Drive (el instalador de Peripatéticos lo pide en su último paso):
+
+1. Toma el id de la fila **Carpeta de Drive (id)** de **Parámetros**. Si está vacía, dilo y no hagas nada más.
+2. Con el conector de Google Drive, lista la carpeta (`search_files` con `parentId = '<id>'`). Si no tienes conector o falla, no lo des por bueno: escribe `docs/drive.json` con `{"verificado": false, "fecha": "<ISO con zona>", "motivo": "<qué falló, en una frase>"}`, publícalo y dile al usuario que conecte Google Drive en Claude (**Ajustes → Conectores → Google Drive**) y te lo vuelva a pedir.
+3. Si llegas, sube a la carpeta `Ficha de <nombre del proyecto>.md`, sin conversión a formato Google: qué es la app y sus enlaces (web, servidor, bitácora, repositorio). Solo crear o sobrescribir por nombre.
+4. Escribe `docs/drive.json` con `{"verificado": true, "fecha": "<ISO con zona>", "fichero": "<nombre de la ficha>"}`. Sin el id de la carpeta ni datos personales: `docs/` es público.
+5. Commit + push a `main` y confirma por la API de Actions que `pages.yml` de ese SHA queda en `success`: la página del instalador y la portada de la app leen ese fichero desde Pages.
 
 ## Verificación antes de avisar
 
@@ -85,6 +95,7 @@ Si necesitas comprobar algo desde la sesión, hazlo contra la API de GitHub (`ht
 
 ## Aterrizaje en el PC
 
+- Las apps montadas con el instalador de Peripatéticos tienen además una copia de seguridad en `Documentos\Peripateticos\<app>\` (el repositorio en `repo\`, bajado como zip de `main`, sin git), con la ficha, accesos directos y `Actualizar copia.cmd`. Es un espejo de solo lectura, como la carpeta de `aterrizar.ps1`: se sustituye entera al actualizar.
 - Solo a petición y solo con Claude Desktop conectado: `tools/aterrizar.ps1` (idempotente, sobrescribe la copia local sin preguntar). "¿Estoy al día?" = `tools/estado.ps1`. Ambos aceptan `-Proyecto`, `-Owner`, `-Remote`, `-Root` y `-Rama`.
 - `tools/arrancar.ps1` levanta la app entera en el PC sin tocar la nube: compila el backend, lo sirve en `localhost:8080` y publica `docs/` en `localhost:8081`. Acepta `-PuertoApi`, `-PuertoWeb`, `-Release` y `-SinNavegador`. Necesita Rust; no necesita Docker.
 - `tools/eliminar.ps1` borra el proyecto entero: app de Fly, repositorio y copia local. Sin `-Confirmar` solo enseña el plan; con él pide escribir el nombre. Drive y las sesiones quedan a mano. Solo se ejecuta si el usuario lo pide explícitamente.

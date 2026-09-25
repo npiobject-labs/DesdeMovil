@@ -8,10 +8,14 @@
   Lo hace el usuario: dos inicios de sesion en el navegador (GitHub y Fly.io).
 
   Normalmente no se ejecuta a mano: lo lanza el archivo montar-<app>.cmd que
-  genera docs/pc.html, que fija PERI_APP, PERI_ORG y PERI_USUARIO.
+  genera docs/pc.html, que fija PERI_APP, PERI_ORG, PERI_USUARIO y, si el
+  usuario dio una carpeta de Google Drive, PERI_DRIVE. Drive nunca se toca: solo
+  se anota su id en CLAUDE.md, y son las sesiones de Claude las que suben ahi
+  sus copias.
 
 .EXAMPLE
   $env:PERI_APP='recetas'; $env:PERI_ORG='apps-de-maria'; irm <url>/peripateticos.ps1 | iex
+  .\peripateticos.ps1 -App recetas -Org apps-de-maria -Drive https://drive.google.com/drive/folders/1AbC...
   .\peripateticos.ps1 -App recetas -Org apps-de-maria
   .\peripateticos.ps1 -App recetas -Org apps-de-maria -Simular   # ensena el plan y no toca nada
 
@@ -24,19 +28,26 @@
   Reanudable: cada paso mira primero si ya esta hecho. Si algo falla a mitad,
   volver a abrir el mismo .cmd sigue por donde iba.
 
+  Al final deja en el PC una copia de seguridad de la app, de solo lectura:
+  Documentos\Peripateticos\<app>\ (o -Local) con repo\ (el repositorio entero,
+  bajado como zip: no hace falta git), la ficha, accesos directos, un LEEME y
+  "Actualizar copia.cmd" para volver a traer la ultima version cuando se quiera.
+
   Solo para pruebas: PERI_URL_WEB y PERI_URL_SERVIDOR sustituyen las URLs que
-  se comprueban al final, PERI_INTERVALO los segundos entre consultas y
-  PERI_SIN_NAVEGADOR evita abrir el navegador.
+  se comprueban al final, PERI_URL_ZIP la del zip del repositorio,
+  PERI_INTERVALO los segundos entre consultas y PERI_SIN_NAVEGADOR evita abrir
+  el navegador.
 #>
 [CmdletBinding()]
 param(
   [string]$App       = $env:PERI_APP,
   [string]$Org       = $env:PERI_ORG,
   [string]$Usuario   = $env:PERI_USUARIO,
+  [string]$Drive     = $env:PERI_DRIVE,
   [string]$Plantilla = $(if ($env:PERI_PLANTILLA) { $env:PERI_PLANTILLA } else { "npiobject-labs/DesdeMovil" }),
   [string]$FlyOrg    = $env:PERI_FLY_ORG,
   [string]$Bin       = $env:PERI_BIN,
-  [string]$Ficha     = $env:PERI_FICHA,
+  [string]$Local     = $env:PERI_LOCAL,
   [int]$TimeoutMin   = 20,
   [switch]$Simular
 )
@@ -100,6 +111,16 @@ function NombreFly([string]$v) {
   $x = "$v".ToLowerInvariant() -replace '[^a-z0-9-]', '-'
   if ($x.Length -gt 30) { $x = $x.Substring(0, 30) }
   return $x.TrimEnd('-')
+}
+
+# Id de una carpeta de Drive a partir de su enlace o del id pelado. Vacio si no lo parece.
+# Los ids de carpeta miden unos 33 caracteres: con menos de 25 no se da por bueno.
+function IdDrive([string]$v) {
+  $v = "$v".Trim().Trim('"').Trim("'")
+  if ($v -match '/folders/([A-Za-z0-9_-]+)') { $v = $Matches[1] }
+  elseif ($v -match '[?&]id=([A-Za-z0-9_-]+)') { $v = $Matches[1] }
+  if ($v -cmatch '^[A-Za-z0-9_-]{25,}$') { return $v }
+  return ""
 }
 
 # ---------------------------------------------------------------- Comandos nativos
@@ -233,6 +254,27 @@ function Http([string]$url) {
   } catch { return $null }
 }
 
+# ---------------------------------------------------------------- Copia en el PC
+# Baja el zip de la rama main (repositorio publico: sin credenciales ni git) y
+# deja su contenido en $destino, sustituyendo lo que hubiera: es un espejo.
+function Bajar-Repo([string]$url, [string]$destino) {
+  $tmp = [IO.Path]::GetTempPath()
+  $zip = Join-Path $tmp "peri-copia.zip"
+  $dir = Join-Path $tmp "peri-copia"
+  Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $zip -TimeoutSec 300
+  if (Test-Path $dir) { Remove-Item -Recurse -Force $dir }
+  Expand-Archive -Path $zip -DestinationPath $dir -Force
+  $raiz = Get-ChildItem -Path $dir | Select-Object -First 1   # el zip trae <repo>-main/
+  if (-not $raiz) { throw "el zip del repositorio viene vacio" }
+  if (Test-Path $destino) { Remove-Item -Recurse -Force $destino }
+  Move-Item -Path $raiz.FullName -Destination $destino
+  Remove-Item -Force $zip -ErrorAction SilentlyContinue
+  Remove-Item -Recurse -Force $dir -ErrorAction SilentlyContinue
+}
+function Acceso([string]$carpeta, [string]$nombre, [string]$url) {
+  [IO.File]::WriteAllLines((Join-Path $carpeta "$nombre.url"), [string[]]@("[InternetShortcut]", "URL=$url"))
+}
+
 # ================================================================ Montaje
 function Principal {
   Write-Host ""
@@ -260,12 +302,13 @@ function Principal {
     Dice "Repositorio  : https://github.com/$($script:repo)  (publico, desde $Plantilla)"
     Dice "Web          : $web"
     Dice "Servidor     : $servidor  (app de Fly '$flyApp')"
+    if ($script:Drive) { Dice "Drive        : https://drive.google.com/drive/folders/$($script:Drive)  (solo se anota)" }
     Dice "Ayudantes en : $Bin"
     return
   }
 
   # ------------------------------------------------------------ 1/6 Ayudantes
-  Paso "1/6 Ayudantes"
+  Paso "1/7 Ayudantes"
   if (-not (Test-Path $Bin)) { New-Item -ItemType Directory -Force $Bin | Out-Null }
   $arm = ($env:PROCESSOR_ARCHITECTURE -eq "ARM64" -or $env:PROCESSOR_ARCHITEW6432 -eq "ARM64")
   $script:gh = Buscar-Exe @("gh") @((Join-Path $Bin "gh.exe"), "$env:ProgramFiles\GitHub CLI\gh.exe")
@@ -285,7 +328,7 @@ function Principal {
   $script:hecho.ayudantes = $true
 
   # ------------------------------------------------------------ 2/6 GitHub
-  Paso "2/6 Entrar en GitHub"
+  Paso "2/7 Entrar en GitHub"
   $estado = Gh @("auth", "status", "--hostname", "github.com")
   $faltan = $true
   if ($estado.ok -and $estado.texto -match "Token scopes:\s*(.*)") {
@@ -344,7 +387,7 @@ function Principal {
   }
 
   # ------------------------------------------------------------ 3/6 Fly.io
-  Paso "3/6 Entrar en Fly.io"
+  Paso "3/7 Entrar en Fly.io"
   $w = Fly @("auth", "whoami") -SoloSalida
   if (-not $w.ok) {
     Dice "Se abre el navegador otra vez, ahora en Fly.io. Pulsa 'Authorize'."
@@ -368,7 +411,7 @@ function Principal {
   Nota "organizacion de Fly.io: $FlyOrg"
 
   # ------------------------------------------------------------ 4/6 Llaves
-  Paso "4/6 Llaves"
+  Paso "4/7 Llaves"
   # El token se crea y se guarda sin pasar por la pantalla ni por el disco.
   $salida = & $script:fly tokens create org -o $FlyOrg -n "peripateticos-$Org" -x 87600h 2>$null
   $token = @($salida | ForEach-Object { "$_".Trim() } | Where-Object { $_ -match '^(FlyV1 |fm\d_)' }) | Select-Object -Last 1
@@ -384,7 +427,7 @@ function Principal {
   Fuerte "Ya no te voy a pedir nada mas. Puedes ir a por un cafe."
 
   # ------------------------------------------------------------ 5/6 Tu app
-  Paso "5/6 Tu app"
+  Paso "5/7 Tu app"
   $c = Fly @("apps", "create", $flyApp, "--org", $FlyOrg)
   if (-not $c.ok -and $c.texto -match "payment|credit card|billing|trial") {
     Aviso "Fly.io pide una tarjeta antes de crear servidores."
@@ -437,13 +480,19 @@ function Principal {
   if ($init -ne "ok") { Falla "No se pudo poner el nombre a la app." @("Detalle: $init", "Haz una foto de esa pagina y pegasela a Claude.") }
   Ok "Tu nombre puesto en todo: web, servidor, textos"
 
-  # La fila "App de Fly.io" de CLAUDE.md: la leen las sesiones de Claude.
+  # Parametros de CLAUDE.md, que leen las sesiones de Claude: la app de Fly y,
+  # si se dio, la carpeta de Drive donde cada sesion deja su resumen.
   $cm = Leer-Fichero "CLAUDE.md"
   if ($cm) {
     $nuevo = [regex]::Replace($cm.texto, '(?m)^(\| App de Fly\.io \|).*$', ('$1 `' + $flyApp + '` |'))
+    if ($script:Drive) { $nuevo = [regex]::Replace($nuevo, '(?m)^(\| Carpeta de Drive \(id\) \|).*$', ('$1 `' + $script:Drive + '` |')) }
     if ($nuevo -ne $cm.texto) {
-      if (Escribir-Fichero "CLAUDE.md" $nuevo $cm.sha "Anotar la app de Fly.io") { Ok "Ficha del proyecto anotada para Claude" }
-      else { Aviso "No se pudo anotar la app de Fly.io en CLAUDE.md (no es grave)" }
+      $msg = "Anotar la app de Fly.io"; if ($script:Drive) { $msg = "Anotar la app de Fly.io y la carpeta de Drive" }
+      if (Escribir-Fichero "CLAUDE.md" $nuevo $cm.sha $msg) {
+        Ok "Ficha del proyecto anotada para Claude"
+        if ($script:Drive) { Ok "Carpeta de Drive anotada: ahi dejara Claude el resumen de cada sesion" }
+      }
+      else { Aviso "No se pudo anotar la ficha en CLAUDE.md (no es grave)" }
     }
   }
 
@@ -454,7 +503,7 @@ function Principal {
   Ok "Web publicada"
 
   # ------------------------------------------------------------ 6/6 Comprobacion
-  Paso "6/6 Comprobacion"
+  Paso "6/7 Comprobacion"
   $urlWeb = $web; if ($env:PERI_URL_WEB) { $urlWeb = $env:PERI_URL_WEB }
   $urlSrv = $servidor; if ($env:PERI_URL_SERVIDOR) { $urlSrv = $env:PERI_URL_SERVIDOR }
   $appLocal = $App
@@ -479,6 +528,7 @@ function Principal {
   $nac = [ordered]@{
     app = $App; org = $Org; repo = $script:repo; usuario = $login
     fly_app = $flyApp; fly_org = $FlyOrg; web = $web; servidor = $servidor
+    drive = [bool]$script:Drive
     creado = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'")
     instalador = "peripateticos.ps1 v1"
     verificado = [ordered]@{ github = $true; org = $true; fly = $true; claude = [bool]$claude }
@@ -489,7 +539,8 @@ function Principal {
   if (Escribir-Fichero "docs/nacimiento.json" ($nac | ConvertTo-Json -Depth 4) $shaPrev "Registrar el nacimiento de la app") { Ok "Nacimiento registrado" }
   else { Aviso "No se pudo registrar el nacimiento (el movil lo comprobara por su cuenta)" }
 
-  $mins = [Math]::Round(((Get-Date) - $script:inicio).TotalMinutes, 1)
+  # ------------------------------------------------------------ 7/7 Copia en el PC
+  Paso "7/7 Copia en tu PC"
   $lineas = @(
     ("Web         " + $web),
     ("Servidor    " + $servidor),
@@ -497,31 +548,100 @@ function Principal {
     ("Donde vive  https://github.com/" + $script:repo),
     ("Bitacora    " + $web + "bitacora.html")
   )
+  if ($script:Drive) { $lineas += ("Drive       https://drive.google.com/drive/folders/" + $script:Drive) }
+  $carpeta = $Local
+  if (-not $carpeta) {
+    $docs = [Environment]::GetFolderPath("MyDocuments")
+    if (-not $docs) { $docs = $HOME }
+    $carpeta = Join-Path (Join-Path $docs "Peripateticos") $App
+  }
+  $urlZip = "https://github.com/$($script:repo)/archive/refs/heads/main.zip"
+  if ($env:PERI_URL_ZIP) { $urlZip = $env:PERI_URL_ZIP }
+  $copia = $null
+  try {
+    if (-not (Test-Path $carpeta)) { New-Item -ItemType Directory -Force $carpeta | Out-Null }
+    # Recien hechos los commits, el zip puede tardar unos segundos en traerlos.
+    $destinoRepo = Join-Path $carpeta "repo"
+    $copia = Esperar "Bajando la copia" { try { Bajar-Repo $urlZip $destinoRepo; "ok" } catch { $script:errCopia = $_.Exception.Message; $null } } 1
+    if ($copia) { Ok "Copia del repositorio en $destinoRepo" }
+    else { Aviso "No se pudo bajar la copia ($($script:errCopia)). Luego: doble clic en 'Actualizar copia.cmd'." }
+
+    $txt = @("Tu app $App", ("=" * 60), "") + $lineas + @("",
+      "Nacida el $($nac.creado) con Peripateticos.",
+      "Para cambiarla: Claude en el movil -> Code -> $($script:repo).")
+    [IO.File]::WriteAllLines((Join-Path $carpeta "$App.txt"), [string[]]$txt)
+
+    Acceso $carpeta "Web de $App" $web
+    Acceso $carpeta "Servidor de $App" ($servidor + "hola")
+    Acceso $carpeta "Bitacora de $App" ($web + "bitacora.html")
+    Acceso $carpeta "Codigo en GitHub" ("https://github.com/" + $script:repo)
+    Acceso $carpeta "Claude Code" "https://claude.ai/code"
+    if ($script:Drive) { Acceso $carpeta "Carpeta de Drive" ("https://drive.google.com/drive/folders/" + $script:Drive) }
+
+    [IO.File]::WriteAllLines((Join-Path $carpeta "LEEME.txt"), [string[]]@(
+      "Copia de seguridad de $App",
+      ("=" * 60),
+      "",
+      "Esta carpeta es una COPIA de tu app. No edites nada aqui: tu app se",
+      "cambia desde el movil, pidiendoselo a Claude. Lo que cambies aqui se",
+      "pierde la proxima vez que actualices la copia.",
+      "",
+      "repo\                    todo el repositorio: CLAUDE.md, documentacion,",
+      "                         paginas (docs\) y servidor (app\).",
+      "$App.txt                 la ficha: donde vive cada cosa.",
+      "Actualizar copia.cmd     doble clic: trae la ultima version de GitHub.",
+      "*.url                    accesos directos a la web, el servidor, la",
+      "                         bitacora, el codigo, Claude y tu Drive."))
+
+    # Actualizar la copia: autosuficiente, no depende de esta web ni del instalador.
+    $ps = "try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; " +
+          "`$ProgressPreference = 'SilentlyContinue'; `$d = `$env:PERI_DIR.TrimEnd('\'); `$z = Join-Path `$env:TEMP 'peri-copia.zip'; `$t = Join-Path `$env:TEMP 'peri-copia'; " +
+          "Write-Host 'Bajando la ultima version de $($script:repo)...'; Invoke-WebRequest -UseBasicParsing -Uri `$env:PERI_ZIP -OutFile `$z; " +
+          "if (Test-Path `$t) { Remove-Item -Recurse -Force `$t }; Expand-Archive -Path `$z -DestinationPath `$t -Force; " +
+          "`$r = Join-Path `$d 'repo'; if (Test-Path `$r) { Remove-Item -Recurse -Force `$r }; " +
+          "Move-Item -Path (Get-ChildItem `$t | Select-Object -First 1).FullName -Destination `$r; Remove-Item -Force `$z; " +
+          "Write-Host 'Copia actualizada.' -ForegroundColor Green } catch { Write-Host ('No se pudo actualizar: ' + `$_.Exception.Message) -ForegroundColor Red }"
+    $cmd = @("@echo off", "title Actualizar la copia de $App", "setlocal",
+      'set "PERI_DIR=%~dp0"',
+      ('set "PERI_ZIP=' + ("https://github.com/$($script:repo)/archive/refs/heads/main.zip") + '"'),
+      ('powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "' + $ps + '"'),
+      "echo.", "echo Pulsa una tecla para cerrar esta ventana.", "pause >nul")
+    [IO.File]::WriteAllText((Join-Path $carpeta "Actualizar copia.cmd"), (($cmd -join "`r`n") + "`r`n"), (New-Object Text.ASCIIEncoding))
+    Ok "Ficha, accesos directos y 'Actualizar copia.cmd' en $carpeta"
+
+    # Acceso a la carpeta en el escritorio (solo Windows; si falla, no pasa nada).
+    try {
+      $esc = [Environment]::GetFolderPath("Desktop")
+      if ($esc -and (Test-Path $esc) -and -not $Local) {
+        $wsh = New-Object -ComObject WScript.Shell
+        $lnk = $wsh.CreateShortcut((Join-Path $esc "Peripateticos - $App.lnk"))
+        $lnk.TargetPath = $carpeta; $lnk.Save()
+        Ok "Acceso a la carpeta en el escritorio"
+      }
+    } catch { }
+  } catch { Aviso "No se pudo preparar la carpeta del PC: $($_.Exception.Message)" }
+
+  $mins = [Math]::Round(((Get-Date) - $script:inicio).TotalMinutes, 1)
   Write-Host ""
   Write-Host ("================ {0} lista en {1} min ================" -f $App, $mins) -ForegroundColor Green
   foreach ($l in $lineas) { Dice $l }
+  Dice ("Copia       " + $carpeta)
   if (-not $claude) { Write-Host ""; Aviso "Falta dar permiso a Claude: https://github.com/apps/claude/installations/new" }
 
-  try {
-    $dirFicha = $Ficha
-    if (-not $dirFicha) { $dirFicha = [Environment]::GetFolderPath("Desktop") }
-    if (-not $dirFicha -or -not (Test-Path $dirFicha)) { $dirFicha = [IO.Path]::GetTempPath() }
-    $fichero = Join-Path $dirFicha "$App.txt"
-    $txt = @("Tu app $App", ("=" * 60), "") + $lineas + @("", "Nacida el $($nac.creado) con Peripateticos.", "Para cambiarla: Claude en el movil -> Code -> $($script:repo).")
-    [IO.File]::WriteAllLines($fichero, [string[]]$txt)
-    Write-Host ""
-    Dice "Esta ficha tambien esta en: $fichero"
-  } catch { }
-
   Write-Host ""
-  Fuerte "Ya puedes apagar el PC. Vuelve al movil: el paso 6 se marca"
+  Fuerte "Ya puedes apagar el PC. Vuelve al movil: el paso 7 se marca"
   Fuerte "solo en cuanto tu app responde."
+  if ($script:Drive) { Fuerte "Despues, el paso 8: que Claude compruebe tu carpeta de Drive." }
   Abrir $web
 }
 
 # ================================================================ Arranque
 $script:App = Slug $App
 $script:Org = "$Org".Trim() -replace '^@', '' -replace '[^A-Za-z0-9-]', ''
+# Ojo: a nivel de script, $script:Drive y el parametro $Drive son la misma variable.
+$driveDado = "$Drive"
+$script:Drive = IdDrive $driveDado
+if ($driveDado -and -not $script:Drive) { Write-Host "   !!  El enlace de Drive no parece de una carpeta; sigo sin Drive." -ForegroundColor Yellow }
 if (-not $Bin) {
   if ($env:LOCALAPPDATA) { $Bin = Join-Path $env:LOCALAPPDATA "Peripateticos\bin" }
   else { $Bin = Join-Path $HOME ".peripateticos/bin" }
