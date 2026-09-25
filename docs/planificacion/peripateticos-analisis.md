@@ -1,0 +1,112 @@
+# Peripatéticos — análisis y propuesta de mock
+
+**Fecha:** 2026-09-25
+**Origen:** transcripción de brainstorm «Desarrollo de apps desde el móvil para usuarios no técnicos» (25-sep, 18:05).
+**Alcance de esta sesión:** analizar, preguntar y hacer un mock. No se desarrolla nada.
+
+## 1. Qué es, en una frase
+
+Un enlace que convierte a una persona sin ninguna formación técnica en propietaria de una app viva —web pública y servidor— que a partir de ese momento desarrolla desde el móvil, hablando con Claude Code. El PC con Windows se enciende **una vez**, y solo para hacer lo que el móvil no puede: colocar las llaves.
+
+La meta está definida en el prompt y es verificable: la app responde «Hola, soy *Nombre* y respondo desde Fly.io», con fecha, hora y datos del servidor, desde un enlace con un botón.
+
+## 2. La regla de oro aplicada: qué le queda al usuario
+
+«No mandes a hacer nada que puedas hacer tú.» Repasado paso a paso, solo hay **cinco cosas** que ni un script ni un agente pueden hacer por el usuario, porque llevan su identidad o su decisión:
+
+| Paso | Por qué es irreducible | Cómo se pide | Cómo se verifica desde el móvil |
+|---|---|---|---|
+| Nombre de la app | Es su decisión | Un solo campo, con vista previa de cómo quedará (web y servidor) | Formato válido y nombre libre (API pública de GitHub) |
+| Cuenta de GitHub | Identidad: correo, contraseña, 2FA | Enlace directo al alta; se le pide su nombre de usuario | `api.github.com/users/<u>` es público y admite CORS: la página lo comprueba en vivo |
+| Organización en GitHub | GitHub no ofrece API para crear organizaciones en el plan gratuito | Enlace directo a «New organization» y el nombre | `api.github.com/orgs/<o>`, igual que arriba |
+| Cuenta de Fly.io | Identidad y, llegado el caso, tarjeta | Enlace al alta | No se puede desde el móvil sin credenciales: **se comprueba en el paso del PC** (`flyctl auth whoami`) y la página lo dice así, sin fingir |
+| Claude en el móvil con GitHub conectado | OAuth con su cuenta; la app de Claude en GitHub la instala el dueño de la organización | Enlace a la app y a la pantalla de conexión | No se puede desde una página: **lo confirma la primera petición**, que deja una huella en el repositorio que la página detecta |
+
+Todo lo demás —crear el repositorio desde el molde, renombrarlo, activar Pages, reservar la app de Fly, generar y guardar el token, lanzar el primer despliegue, comprobar que responde— lo hace el instalador del PC o un workflow. El usuario no ve ninguna clave en ningún momento.
+
+Las dos cuentas que no se pueden verificar desde la página se marcan como **«anotado, lo compruebo más adelante»**, no como verificadas. Es la única forma honesta de cumplir «comprobaciones antes de pedir» cuando la comprobación necesita credenciales.
+
+## 3. Formato de entrega: un enlace, no un zip
+
+Pedías que lo planteara yo. Propuesta: **un único enlace** a una página publicada en GitHub Pages, que es a la vez la portada (para entender y decidir) y el instalador guiado (para hacerlo). Razones:
+
+- Se abre en el móvil sin descargar nada ni buscar un fichero.
+- Se puede corregir después de enviarla; un zip enviado es un zip obsoleto.
+- Puede **verificar en vivo**: las tres cosas que hay que mirar (API de GitHub, la web en `github.io`, el servidor en `fly.dev`) sirven cabeceras CORS abiertas, así que la página del móvil las consulta directamente.
+- Guarda el progreso en el navegador: se puede cerrar y volver.
+
+El fichero existe, pero no es la entrada: es **un solo archivo `.cmd`** que la propia página ofrece en el paso del PC. Doble clic, dos inicios de sesión en el navegador (GitHub y Fly.io, los dos con «Autorizar»), y el PC hace el resto.
+
+## 4. Los puntos críticos: las claves desaparecen
+
+Identificabas como crítico establecer las API keys de GitHub, de Fly y «de la aplicación». Esta propuesta las quita del camino del usuario:
+
+| Clave | Quién la crea | Dónde acaba | Qué ve el usuario |
+|---|---|---|---|
+| Token de GitHub | `gh auth login` en el PC (flujo de dispositivo: un código de 8 letras que se teclea en el navegador) | En el PC, gestionado por `gh` | Una pantalla de GitHub con «Autorizar» |
+| Token de Fly.io | `flyctl auth login` (abre el navegador) y después `flyctl tokens create org` | Como secreto de **su** organización de GitHub, puesto por `gh secret set --org` | Una pantalla de Fly.io con «Autorizar». El token no se imprime nunca |
+| Acceso de Claude a su GitHub | OAuth desde la app de Claude | En Claude | Dos pantallas de «Autorizar» en el móvil. Es el único punto crítico que el PC no puede absorber |
+| «API key de la aplicación» | — | — | **[SUPUESTO]** La v1 no necesita ninguna: la app se sirve desde Pages y habla con Fly sin claves. Ver pregunta 5 |
+
+Corolario: el PC no es el sitio donde se «instala la app». Es **las manos** que hacen los inicios de sesión y colocan las llaves. Por eso se enciende una vez y se puede apagar para siempre. Esta es la frase que vende el paso del PC sin asustar.
+
+## 5. La meta: `/hola` y la ficha
+
+El backend gana una ruta `GET /hola` que devuelve, con CORS abierto:
+
+```json
+{"app":"recetas","mensaje":"Hola, soy recetas y respondo desde Fly.io",
+ "fecha":"2026-09-25T18:42:07+02:00","region":"cdg","maquina":"1781…",
+ "version":"a438a95","despierta_desde_hace_s":3}
+```
+
+Fly expone `FLY_APP_NAME`, `FLY_REGION` y `FLY_MACHINE_ID` como variables de entorno: sale gratis. La **ficha** es una página pública con todos los parámetros del montaje (web, servidor, repositorio, bitácora, Drive si hay, organización, fecha de nacimiento) y el botón **Saluda**, que llama a `/hola` y enseña la respuesta en prosa. Es el enlace que el usuario comparte: «mira, mi app».
+
+## 6. Cómo hablarle: las tres cosas
+
+De la charla de Boris Cherny que citas: a un modelo alto solo hay que decirle **qué quieres, cuál es el guardarraíl y cuándo has terminado**. En el mock esto es una pantalla con tres campos que construyen la petición y un botón para copiarla en Claude. No es un detalle: es la forma de que un usuario no técnico pida bien desde el primer día, y la misma estructura vale para las sesiones siguientes.
+
+## 7. Riesgos y supuestos
+
+- **SmartScreen.** Windows avisa al abrir un `.cmd` descargado («Windows protegió tu PC»). Es el momento en que más usuarios no técnicos se echan atrás. Plan: el desplegable del paso lo explica con captura y el texto exacto de los dos toques («Más información → Ejecutar de todas formas»). Plan B: firmar el script (cuesta un certificado) o sustituir la descarga por una línea que se pega en PowerShell (más feo, sin aviso).
+- **[SUPUESTO] Fly.io pide tarjeta al alta** en muchos países aunque el uso sea gratuito, y el umbral de los 25 $ cambia con el tiempo. La página no promete «gratis para siempre»: dice «gratis para empezar; Fly puede pedirte una tarjeta y avisarte antes de cobrar». Plan B: proveedor con free tier sin tarjeta, pero cambiaría el molde.
+- **[SUPUESTO] Claude Code en el móvil requiere plan de pago** (Pro o superior). La página lo dice en «Qué cuesta». Plan B: enlazar a la página oficial de planes en vez de nombrar uno.
+- **La organización no tiene API de creación.** Es el paso más «técnico» de los irreducibles (el usuario ve palabras como *organization*, *billing plan*). Ver pregunta 3.
+- **Nombre único en todo Fly.io.** Se resuelve con el sufijo de la organización (`recetas-miorg`), y el instalador reserva la app antes de crear el repo para no dejar restos.
+- **Límite de la API de GitHub sin autenticar** (60 peticiones/hora por IP). La página verifica la web y el servidor contra sus URLs directas, sin límite, y solo usa la API para usuario, organización y existencia del repositorio.
+- **Ventana de espera del servidor.** El primer despliegue compila Rust (2–5 min). La página lo dice antes, con reloj, para que la espera no parezca fallo.
+
+## 8. Qué cambia respecto al molde actual (para cuando se desarrolle)
+
+No se ha tocado nada. Anotado para no olvidarlo:
+
+- `deploy.yml` lleva `--org desdemovil` fijo y da por hecho que `FLY_API_TOKEN` es secreto de `npiobject-labs`. Con usuarios propios, la organización de Fly y la de GitHub son las suyas: variables `FLY_ORG` y secreto en su organización.
+- `nuevo-proyecto-V1.ps1` exige `gh` y `flyctl` ya instalados y autenticados. El instalador nuevo los instala (`winget`), hace los dos inicios de sesión, crea el secreto y sigue. Reutiliza la lógica de reanudación, plan previo y verificación por HTTP, que ya funciona.
+- Backend: ruta `/hola` (punto 5). `holamundo.html` pasa a ser la ficha.
+- Las tres guías actuales se funden en la página única de portada + instalador. La bitácora se queda tal cual: es la memoria del proyecto del usuario.
+- `init-plantilla.yml` ya renombra todo; el instalador solo espera a que termine.
+
+## 9. Preguntas abiertas (con la opción que lleva el mock)
+
+1. **Nombre.** La transcripción lo llama «Peripatéticos». El mock lo usa. ¿Se queda?
+2. **Entrega.** Enlace único con el `.cmd` dentro (punto 3), en vez de zip. ¿De acuerdo?
+3. **Organización de GitHub.** La mantienes como guardarraíl. El mock la pide con enlace directo y la verifica; el instalador deja dentro el secreto de Fly. Alternativa: admitir cuenta personal en la v1 (una pantalla menos, pero el secreto sería por repositorio y la segunda app obligaría a repetirlo).
+4. **El PC.** Se enciende una vez, solo para las llaves, y se puede apagar. El aterrizaje local y el arranque en el PC quedan como extras para más adelante, fuera del camino del usuario no técnico. ¿Vale?
+5. **«API key de la aplicación, del frontend».** No he sabido a qué clave te refieres. Supuesto: en la v1 no hay ninguna. Si más adelante una app necesita una clave externa (un mapa, un pago), el mecanismo sería el mismo: el PC —o la sesión de Claude— la deja como secreto sin que el usuario la copie.
+6. **Drive.** Fuera del camino crítico: se ofrece después de la meta, como extra. ¿O lo quieres dentro del recorrido?
+7. **Fly y la tarjeta.** ¿Aceptas el texto «gratis para empezar; puede pedirte tarjeta» o prefieres exigir la tarjeta desde el principio para que no haya sorpresas a mitad?
+8. **Idioma.** Solo español en la v1.
+
+## 10. El mock
+
+`docs/index.html`, build `DM-B3-20260925-003`; el mock 0 archivado en `docs/mocks/001-mock0.html`. Un solo fichero, sin backend, navegable por pantallas:
+
+| Pantalla | Qué enseña |
+|---|---|
+| **Portada** | Qué es, para quién, por qué «peripatéticos», los tres pasos, las tres cosas que se le dicen, qué se necesita y qué cuesta |
+| **Instalar** | Seis pasos con el patrón del prompt: petición no técnica → desplegable «¿Qué es esto y por qué te lo pido?» → botón **Hecho** → verificación con tres resultados (verificado, anotado para más tarde, no lo veo + qué hacer). Solo un paso activo; los demás, hechos o bloqueados. El paso del PC muestra la vigilancia en vivo y lo que se verá en la pantalla del PC |
+| **Ficha** | «Tu app ha nacido»: parámetros, enlaces y el botón **Saluda** con la respuesta de `/hola` |
+| **Pedir** | Los tres campos que construyen la primera petición, con ejemplos, copiar y abrir Claude |
+| **Ayuda** | Qué hacer si cada paso se atasca, y cómo borrarlo todo |
+
+Las comprobaciones están simuladas (retardo y resultado fijo); el nombre de la app rellena todos los textos y enlaces; el progreso se guarda en el navegador y hay un «Reiniciar demo». Para provocar el estado de fallo: usuario de GitHub con espacios o vacío, o nombre de app `ocupada`.
