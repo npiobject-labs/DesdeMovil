@@ -158,3 +158,27 @@ Pruebas: 64 comprobaciones de extremo a extremo en Chromium (enlace de archivo y
 
 - **[SUPUESTO]** El conector de Google Drive de Claude puede escribir en una carpeta normal de «Mi unidad» creada a mano por el usuario (así funciona hoy en este proyecto). Plan B: si en alguna cuenta solo ve lo que crea el propio conector, que Claude cree la carpeta y el usuario pegue después su enlace.
 - **[SUPUESTO]** `[Environment]::GetFolderPath("MyDocuments")` devuelve la carpeta de Documentos aunque esté redirigida a OneDrive. Plan B: `-Local` o `PERI_LOCAL` para otra ruta.
+
+## 13. Varias apps con las mismas cuentas (25-sep, misma sesión)
+
+Pregunta del usuario: ¿los pasos 2 a 5 se repiten para cada app? Análisis:
+
+| Paso | ¿Reutilizable? | Por qué |
+|---|---|---|
+| 2 · Cuenta de GitHub | Sí | Es la identidad del usuario. |
+| 3 · Organización | Sí | Además conviene: `FLY_API_TOKEN` y `FLY_ORG` viven a nivel de organización y cada app nueva los hereda. Solo hay que comprobar que el nombre nuevo está libre en ella. |
+| 4 · Fly.io | Sí | Misma cuenta y organización de Fly. |
+| 5 · Claude | Sí, con matiz | Si la app de GitHub de Claude tiene permiso solo en «los repositorios elegidos», no ve el repositorio nuevo. |
+| 1 · Nombre, 6 · Drive | No | Son de cada app. |
+| 7 · PC | Hay que volver a abrirlo | Crea el repositorio, pero ya sin inicios de sesión: ayudantes y sesiones de `gh` y `flyctl` siguen en el PC. |
+
+Implementado:
+
+- **Guía** (`docs/index.html`, build `DM-B3-20260925-010`): al llegar a la meta guarda en el navegador el perfil (usuario, organización y qué quedó verificado de Fly y Claude; nunca llaves) y la lista de apps. La portada enseña «Tus apps» con «Montar otra app»: los pasos 2 a 5 salen como «guardado», usuario y organización se revalidan contra la API, y el paso 1 comprueba ya que el nombre está libre en la organización. «Copiar enlace con mis cuentas» (`?u=…&org=…`) lleva el perfil a otro navegador y la dirección se limpia al cargar; «Olvidar mis datos» lo borra. «Empezar de nuevo» conserva el perfil.
+- **Instalador**: mira el `repository_selection` de la instalación de Claude en la organización; si es `selected`, añade el repositorio nuevo (`PUT user/installations/<id>/repositories/<repo_id>`) o, si no puede, avisa con el enlace a «Repository access» de esa instalación.
+- **Recorrido**: pantalla 20, «Otra app».
+
+Pruebas: 73 comprobaciones de extremo a extremo en Chromium (portada con «Tus apps», pasos 2 a 5 guardados, nombre libre en el paso 1, enlace al PC con las cuentas guardadas, enlace con cuentas en otro navegador, «Olvidar mis datos»); instalador en la segunda app sin inicios de sesión, con Claude en «repositorios elegidos» añadiendo el repositorio y, en el caso de fallo, avisando con el enlace.
+
+- **[SUPUESTO]** El token OAuth de `gh` (con `repo`) basta para añadir un repositorio a la instalación de Claude. Plan B: el aviso con el enlace directo a «Repository access», ya implementado.
+- Siguiente paso posible, no hecho: montar la segunda app **sin PC**. La llave de Fly ya está en la organización; faltaría crear el repositorio desde la plantilla y activar Pages, que hoy exigen una credencial con permisos de administración que solo tiene el PC. Hacerlo desde el móvil pediría al usuario dos pasos a mano en GitHub, contra la regla de oro.
