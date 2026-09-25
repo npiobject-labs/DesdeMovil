@@ -24,18 +24,35 @@ jobs:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       # Variable de repositorio opcional; si existe, manda sobre el nombre derivado.
       FLY_APP_VAR: ${{ vars.FLY_APP }}
+      # Organizacion de Fly donde vive la app. Sin variable, la de la plantilla; un
+      # proyecto montado por el instalador la trae como variable (de su
+      # organizacion de GitHub o del repositorio).
+      FLY_ORG: ${{ vars.FLY_ORG || 'desdemovil' }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
       # Fly es opcional: sin secreto el workflow termina en verde con un aviso.
+      # Tampoco se despliega un proyecto hijo que aun no ha pasado por
+      # init-plantilla.yml: saldria con el nombre de la plantilla. Al terminar,
+      # init-plantilla.yml lanza este workflow otra vez.
       - name: Comprobar si Fly esta configurado
         id: fly
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ -z "${FLY_API_TOKEN}" ]; then
             echo "configurado=false" >> "$GITHUB_OUTPUT"
             echo "Fly no configurado: ver ARRANQUE.md, seccion Fly" >> "$GITHUB_STEP_SUMMARY"
             echo "Fly no configurado: ver ARRANQUE.md, seccion Fly"
+          elif [ -f .plantilla-pendiente ] \
+               && [ "$(gh api "repos/${GITHUB_REPOSITORY}" -q .is_template)" != "true" ]; then
+            echo "configurado=false" >> "$GITHUB_OUTPUT"
+            echo "Proyecto sin inicializar: se despliega cuando termine init-plantilla.yml" >> "$GITHUB_STEP_SUMMARY"
+            echo "Proyecto sin inicializar: se despliega cuando termine init-plantilla.yml"
           else
             echo "configurado=true" >> "$GITHUB_OUTPUT"
-            echo "Token presente (valor oculto)."
+            echo "Token presente (valor oculto). Organizacion de Fly: ${FLY_ORG}"
           fi
 
       # Nombre de la app: variable FLY_APP si existe; si no, <repo>-<owner> en
@@ -64,10 +81,6 @@ jobs:
           echo "App de Fly: ${app} (${origen})"
           echo "app=${app}" >> "$GITHUB_OUTPUT"
 
-      - name: Checkout
-        if: steps.fly.outputs.configurado == 'true'
-        uses: actions/checkout@v5
-
       - name: Instalar flyctl
         if: steps.fly.outputs.configurado == 'true'
         uses: superfly/flyctl-actions/setup-flyctl@master
@@ -76,7 +89,7 @@ jobs:
         if: steps.fly.outputs.configurado == 'true'
         env:
           FLY_APP: ${{ steps.app.outputs.app }}
-        run: flyctl apps create "${FLY_APP}" --org desdemovil || true
+        run: flyctl apps create "${FLY_APP}" --org "${FLY_ORG}" || true
 
       - name: Fijar BUILD_ID con el SHA del commit
         if: steps.fly.outputs.configurado == 'true'
@@ -127,6 +140,39 @@ jobs:
             || { echo "::error::/holamundo sin cabecera CORS"; exit 1; }
           echo "OK: /holamundo responde 'holamundo' con CORS"
 
+      # El saludo de la app: lo pide el instalador al terminar y el boton
+      # "Saluda" de la ficha. Tiene que ser JSON, con CORS, con el nombre del
+      # proyecto, decir que responde desde Fly.io y llevar el SHA desplegado.
+      - name: Verificar /hola
+        if: steps.fly.outputs.configurado == 'true'
+        env:
+          FLY_APP: ${{ steps.app.outputs.app }}
+          SHA: ${{ github.sha }}
+        run: |
+          url="https://${FLY_APP}.fly.dev/hola"
+          cabeceras="$(curl -fsS --max-time 20 -D - -o /tmp/hola.json "${url}")"
+          echo "Respuesta: $(cat /tmp/hola.json)"
+          printf '%s' "${cabeceras}" | grep -qi '^access-control-allow-origin: \*' \
+            || { echo "::error::/hola sin cabecera CORS"; exit 1; }
+          NOMBRE="${GITHUB_REPOSITORY#*/}" python3 - <<'PY'
+          import json, os, sys
+          d = json.load(open('/tmp/hola.json'))
+          fallos = []
+          if d.get('app') != os.environ['NOMBRE']:
+              fallos.append(f"app={d.get('app')!r}, se esperaba {os.environ['NOMBRE']!r}")
+          if 'Fly.io' not in d.get('mensaje', ''):
+              fallos.append(f"mensaje={d.get('mensaje')!r} no dice Fly.io")
+          if d.get('version') != os.environ['SHA']:
+              fallos.append(f"version={d.get('version')!r}, se esperaba el SHA")
+          for campo in ('fecha', 'region', 'maquina'):
+              if not d.get(campo):
+                  fallos.append(f"falta {campo}")
+          if fallos:
+              print('::error::/hola: ' + '; '.join(fallos))
+              sys.exit(1)
+          print('OK: ' + d['mensaje'] + ' (' + d['region'] + ', ' + d['fecha'] + ')')
+          PY
+
       - name: Resumen del despliegue
         if: success() && steps.fly.outputs.configurado == 'true'
         env:
@@ -136,10 +182,11 @@ jobs:
           {
             echo "### Backend desplegado en Fly.io"
             echo ""
-            echo "- App: \`${FLY_APP}\` (region \`${region}\`)"
+            echo "- App: \`${FLY_APP}\` (region \`${region}\`, organizacion de Fly \`${FLY_ORG}\`)"
             echo "- URL: https://${FLY_APP}.fly.dev/"
             echo "- Salud: https://${FLY_APP}.fly.dev/salud"
             echo "- Hola mundo: https://${FLY_APP}.fly.dev/holamundo"
+            echo "- Saludo: https://${FLY_APP}.fly.dev/hola"
             echo "- Comprobacion desde Pages: https://${GITHUB_REPOSITORY%%/*}.github.io/${GITHUB_REPOSITORY#*/}/holamundo.html"
             echo "- Build (SHA): \`${GITHUB_SHA}\`"
           } >> "$GITHUB_STEP_SUMMARY"

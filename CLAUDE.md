@@ -44,11 +44,13 @@ Pages está siempre activo. Fly también: `FLY_API_TOKEN` es un secreto de la or
 
 - Todo cambio termina en commit + push a `main`. Mensajes de commit en español, imperativo.
 - Backend en `app/` (Rust, axum + tokio). `GET /` devuelve texto plano; `GET /salud` devuelve `{"ok":true,"build":"<BUILD_ID>"}`, donde `BUILD_ID` es el SHA que inyecta el workflow.
-- `GET /holamundo` devuelve `holamundo` en texto plano; `/holamundo` y `/salud` llevan `Access-Control-Allow-Origin: *` porque los consume `docs/holamundo.html` desde Pages (otro origen). Si añades más rutas para el frontend, ponles la misma cabecera. `deploy.yml` verifica las dos rutas y falla si cambian.
+- `GET /holamundo` devuelve `holamundo` en texto plano; `/holamundo` y `/salud` llevan `Access-Control-Allow-Origin: *` porque los consume `docs/holamundo.html` desde Pages (otro origen). Si añades más rutas para el frontend, ponles la misma cabecera.
+- `GET /hola` es el saludo de la app: JSON con `app` (el nombre del proyecto), `mensaje` («Hola, soy … y respondo desde Fly.io»), `fecha` ISO en UTC, `region`, `maquina`, `app_fly`, `version` (el SHA) y `despierta_desde_hace_s`, con la misma cabecera CORS. Lo consumen el botón «Saluda» de la portada y el instalador. `deploy.yml` verifica las tres rutas y falla si cambian.
 - `docs/holamundo.html` toma el nombre de la app de Fly del `<meta name="fly-app">` (`<repo>-<owner>`, como lo deriva `deploy.yml`). Si el proyecto define `FLY_APP` con otro nombre, actualiza ese `content` en el mismo commit.
 - `app/fly.toml` no lleva clave `app`: el nombre se pasa con `--app` desde `deploy.yml`.
 - El backend escucha en 8080, que es lo que espera Fly; la variable de entorno `PUERTO` solo la usa `tools/arrancar.ps1` para probar en el PC.
 - Mocks estáticos en `docs/`. `docs/index.html` es el mock vivo; los anteriores se archivan en `docs/mocks/NNN-nombre.html`.
+- En la plantilla, `docs/index.html` es el instalador de Peripatéticos (portada + pasos con verificación real), con `docs/pc.html` (la página que se abre en el PC y genera el `.cmd`), `docs/instalador/peripateticos.ps1` (el instalador) y `docs/recorrido.html` (las pantallas del recorrido). `docs/semilla/index.html` es la portada con la que nace cada proyecto: `init-plantilla.yml` la mueve a `docs/index.html` y borra lo demás, que solo tiene sentido aquí.
 - El índice `docs/mocks/index.html` lo genera `pages.yml` en cada publicación, leyendo el `<title>` y el `<meta name="build">` de cada mock archivado. No lo edites ni lo commitees: está en `.gitignore`.
 - Cada mock lleva `<meta name="build" content="DM-B3-AAAAMMDD-NNN">` con un número nuevo en cada iteración.
 - Nunca pongas claves, endpoints internos ni datos reales en `docs/`: el sitio es público.
@@ -77,6 +79,7 @@ Si necesitas comprobar algo desde la sesión, hazlo contra la API de GitHub (`ht
 
 - Estático: GitHub Pages vía `.github/workflows/pages.yml` (push a `main` publica `docs/`). Requiere **Settings → Pages → Source: GitHub Actions** una vez a mano. Se aplica también a este repo: el sitio de la plantilla estuvo sirviendo el README hasta que se hizo.
 - Backend (opcional): Fly.io vía `.github/workflows/deploy.yml`. `FLY_API_TOKEN` **llega heredado de la organización `npiobject-labs`** (secreto de organización, repos públicos); no hay que crear ni guardar ningún token por proyecto. Nunca lo imprimas en los logs.
+- La organización de Fly la da la variable `FLY_ORG` (de la organización de GitHub o del repositorio); sin ella, la de la plantilla. `deploy.yml` no despliega un proyecto que aún tenga `.plantilla-pendiente`: lo lanza `init-plantilla.yml` al terminar, ya con el nombre puesto.
 - Si el proyecto usa además un VPS con rama `release`, solo tocas `release` cuando el usuario lo pida explícitamente.
 - No intentes SSH, scp, rsync ni curl al VPS, a Fly ni a `*.github.io` desde la sesión: el sandbox los bloquea.
 
