@@ -4,6 +4,8 @@
 **Origen:** transcripción de brainstorm «Desarrollo de apps desde el móvil para usuarios no técnicos» (25-sep, 18:05).
 **Alcance de esta sesión:** analizar, preguntar y hacer un mock. No se desarrolla nada.
 
+> **Actualizado el mismo día:** tras el visto bueno se desarrolló. La sección 11 describe lo construido y **manda sobre las secciones 1–10**, que se conservan como el análisis original. Cambios de fondo: el PC comprueba el permiso de Claude (no la primera petición), los ayudantes se descargan sin `winget` y la ficha es la portada de cada app (`docs/semilla/`), no `holamundo.html`.
+
 ## 1. Qué es, en una frase
 
 Un enlace que convierte a una persona sin ninguna formación técnica en propietaria de una app viva —web pública y servidor— que a partir de ese momento desarrolla desde el móvil, hablando con Claude Code. El PC con Windows se enciende **una vez**, y solo para hacer lo que el móvil no puede: colocar las llaves.
