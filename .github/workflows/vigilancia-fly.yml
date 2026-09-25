@@ -29,7 +29,7 @@ jobs:
     timeout-minutes: 10
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      FLY_ORG: desdemovil
+      FLY_ORG: ${{ vars.FLY_ORG || 'desdemovil' }}
       MAQUINAS_MAX: ${{ vars.FLY_MAQUINAS_MAX || '0' }}
     steps:
       - name: Comprobar que el token esta configurado

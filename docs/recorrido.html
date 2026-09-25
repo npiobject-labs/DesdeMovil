@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260925-004">
+<meta name="build" content="DM-B3-20260925-006">
 <meta name="description" content="Guion gráfico de Peripatéticos: las dieciséis pantallas que ve el usuario, en el móvil y en el PC, desde la portada hasta la primera petición.">
 <title>Peripatéticos · recorrido</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -204,7 +204,7 @@ body.todas footer{padding-bottom:2rem}
     <span class="brand">Peripatéticos <small>recorrido</small></span>
     <span class="esp"></span>
     <button class="tog" id="todas" type="button" aria-pressed="false">Todas seguidas</button>
-    <a class="tog" href="./" style="text-decoration:none">Mock navegable</a>
+    <a class="tog" href="./" style="text-decoration:none">Instalador</a>
   </div>
   <div class="menu" id="menu"></div>
 </div>
@@ -216,7 +216,7 @@ body.todas footer{padding-bottom:2rem}
   <div class="cab"><span class="n">1 / 16</span><span class="donde">Móvil</span><h2>Recibe un enlace y lo abre en el móvil</h2></div>
   <p class="hace">Lee qué es, qué necesita y qué cuesta. Pulsa <b>Empezar</b>. Nada que descargar.</p>
   <div class="tel"><div class="st"><span>18:05</span><span>●●● ▲ ▮</span></div>
-    <div class="app"><span class="b">Peripatéticos</span><span class="pill">mock</span></div>
+    <div class="app"><span class="b">Peripatéticos</span><span class="pill">inicio</span></div>
     <div class="pant">
       <p class="kick">Para gente que no programa</p>
       <h1>Tu app nace mientras paseas.</h1>
@@ -246,14 +246,14 @@ body.todas footer{padding-bottom:2rem}
           <p class="previa">Se llamará <code>recetas-de-la</code>. Tendrá una web en <code>tuorganizacion.github.io/recetas-de-la</code> y un servidor en <code>recetas-de-la-tuorganizacion.fly.dev</code>.</p>
           <div class="por">¿Qué es esto y por qué te lo pido?</div>
           <a class="btn pri">Hecho</a>
-          <div class="verif ok"><span class="ic">✓</span><div><b>«recetas-de-la» está libre</b>Reservo ese nombre para tu web y tu servidor.</div></div>
+          <div class="verif ok"><span class="ic">✓</span><div><b>«recetas-de-la» vale como nombre</b>Compruebo que está libre en cuanto sepa cuál es tu organización (paso 3).</div></div>
         </div></div>
       <div class="paso bl"><div class="h"><span class="num">2</span><b>Tu cuenta de GitHub</b></div></div>
       <div class="paso bl"><div class="h"><span class="num">3</span><b>Tu espacio en GitHub</b></div></div>
       <div class="paso bl"><div class="h"><span class="num">4</span><b>Tu cuenta en Fly.io</b></div></div>
     </div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div>El nombre se sanea en el móvil (minúsculas, guiones, 15 caracteres sin partir palabras) y la página consulta la API pública de GitHub para ver que no existe ya un repositorio con ese nombre. El nombre de Fly lleva la organización de sufijo porque en Fly es único para todo el mundo.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div>El nombre se sanea en el móvil (minúsculas, guiones, 15 caracteres sin partir palabras), con las mismas reglas que el instalador. En el paso 3, ya con la organización, la página pregunta a la API pública de GitHub si <code>organización/nombre</code> existe. El nombre de Fly lleva la organización de sufijo porque en Fly es único para todo el mundo.</div></details>
 </section>
 
 <!-- ================================================== 3 -->
@@ -270,16 +270,16 @@ body.todas footer{padding-bottom:2rem}
       <div class="paso ok"><div class="h"><span class="num">✓</span><b>Tu cuenta en Fly.io</b><span class="bd an">anotado</span></div></div>
       <div class="paso ok"><div class="h"><span class="num">✓</span><b>Claude en tu móvil</b><span class="bd an">anotado</span></div></div>
       <div class="paso ac"><div class="h"><span class="num">6</span><b>El PC, una sola vez</b><span class="bd ac">ahora</span></div>
-        <div class="cu"><p class="pide">Enciende el PC. Ábrete allí este enlace, descarga el archivo y ábrelo con doble clic. Te pedirá entrar en GitHub y en Fly.io desde el navegador. Nada más.</p>
+        <div class="cu"><p class="pide">Enciende el PC y ábrete allí este enlace. En esa página descargas un archivo y lo abres con doble clic. Te pedirá entrar en GitHub y en Fly.io desde el navegador. Nada más.</p>
           <a class="btn pri">Enviarme el enlace al PC</a>
-          <p class="previa">Se abre lo de compartir del móvil: mándatelo por correo o por WhatsApp y ábrelo en el PC.</p>
+          <p class="previa">Se abre lo de compartir del móvil: mándatelo por correo o por WhatsApp. El enlace también está a la vista, con un botón para copiarlo.</p>
           <p class="aviso"><b>Windows te avisará</b> de que es un archivo bajado de internet. Pulsa <i>Más información</i> y después <i>Ejecutar de todas formas</i>.</p>
           <div class="por">¿Qué va a hacer el PC exactamente?</div>
-          <a class="btn">Hecho, el PC ha terminado</a>
+          <a class="btn">Ya lo he abierto en el PC</a>
         </div></div>
     </div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div>«Enviarme el enlace» usa la hoja de compartir del móvil (Web Share API) con la dirección <code>…/pc.html?app=recetas-de-la&amp;org=apps-de-maria</code>. Es la forma en que la gente mueve un enlace del móvil al PC sin que nadie se lo explique. Si el navegador no tiene hoja de compartir, se copia el enlace y se dice dónde pegarlo.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div>«Enviarme el enlace» usa la hoja de compartir del móvil (Web Share API) con la dirección <code>…/pc.html?app=recetas-de-la&amp;org=apps-de-maria&amp;u=maria-garcia</code>. Es la forma en que la gente mueve un enlace del móvil al PC sin que nadie se lo explique. Sin hoja de compartir, abre el correo con el enlace ya escrito.</div></details>
 </section>
 
 <!-- ================================================== 4 -->
@@ -294,7 +294,7 @@ body.todas footer{padding-bottom:2rem}
       <div class="velo"></div>
       <div class="hoja"><div class="asa"></div>
         <b style="font-size:.9rem">Montar recetas-de-la en mi PC</b>
-        <div class="enl">https://npiobject-labs.github.io/Peripateticos/pc.html?app=recetas-de-la&amp;org=apps-de-maria</div>
+        <div class="enl">https://npiobject-labs.github.io/DesdeMovil/pc.html?app=recetas-de-la&amp;org=apps-de-maria&amp;u=maria-garcia</div>
         <div class="apps"><div><i class="c"></i>Correo</div><div><i class="w"></i>WhatsApp</div><div><i class="n"></i>Notas</div><div><i class="k"></i>Copiar</div></div>
       </div>
     </div>
@@ -306,16 +306,16 @@ body.todas footer{padding-bottom:2rem}
   <div class="cab"><span class="n">5 / 16</span><span class="donde pc">PC · navegador</span><h2>En el PC: abre el enlace y descarga un archivo</h2></div>
   <p class="hace">Abre el correo en el PC, pulsa el enlace, y en la página pulsa <b>Descargar</b>. El navegador guarda <code>montar-recetas-de-la.cmd</code> en Descargas.</p>
   <div class="pc"><div class="barra"><span>■ Inicio</span><span>Navegador</span><span class="hora">18:24</span></div>
-    <div class="win"><div class="tb"><span>Peripatéticos · montar en este PC</span><span class="ctl">–▢✕</span></div>
-      <div class="cu"><div class="url"><span class="cand">🔒</span>npiobject-labs.github.io/Peripateticos/pc.html?app=recetas-de-la&amp;org=apps-de-maria</div>
+    <div class="win"><div class="tb"><span>Montar recetas-de-la · Peripatéticos</span><span class="ctl">–▢✕</span></div>
+      <div class="cu"><div class="url"><span class="cand">🔒</span>npiobject-labs.github.io/DesdeMovil/pc.html?app=recetas-de-la&amp;org=apps-de-maria&amp;u=maria-garcia</div>
         <h3 style="font:700 20px var(--serif);margin:4px 0 6px">Montar «recetas-de-la» en este PC</h3>
         <p style="margin:.3rem 0;color:var(--w-ink2)">Tu app se creará en <b>apps-de-maria</b>. Descarga el archivo, ábrelo con doble clic y sigue lo que diga. Tardará unos 8 minutos y podrás apagar el PC al terminar.</p>
         <span class="wbtn azul">⬇ Descargar montar-recetas-de-la.cmd</span>
         <p style="margin:.6rem 0 0;font-size:12px;color:var(--w-ink2)">Windows te avisará de que viene de internet. Pulsa <b>Más información → Ejecutar de todas formas</b>.</p>
-        <div class="burb"><b>montar-recetas-de-la.cmd</b><span class="f">3,1 KB · Descarga completada · <u>Abrir archivo</u></span></div>
+        <div class="burb"><b>montar-recetas-de-la.cmd</b><span class="f">1 KB · Descarga completada · <u>Abrir archivo</u></span></div>
       </div></div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div><code>pc.html</code> genera el <code>.cmd</code> en el navegador con el nombre y la organización <b>dentro del nombre del fichero</b>; el script los lee de ahí (<code>%~n0</code>). No hace falta ningún servidor intermedio ni teclear nada en el PC. El <code>.cmd</code> solo hace una cosa: descargar y lanzar el instalador de PowerShell con la política de ejecución relajada para esa ventana.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div><code>pc.html</code> genera el <code>.cmd</code> en el propio navegador, con la app, la organización, el usuario y la plantilla escritos dentro (<code>set "PERI_APP=…"</code>). No hace falta ningún servidor intermedio ni teclear nada en el PC. El <code>.cmd</code> solo hace una cosa: descargar <code>instalador/peripateticos.ps1</code> de esta misma web y ejecutarlo con Windows PowerShell, con la política de ejecución relajada solo para esa ventana. La página enseña su contenido entero, y ofrece una línea para pegar en PowerShell si Windows no deja abrir el archivo.</div></details>
 </section>
 
 <!-- ================================================== 6 -->
@@ -337,21 +337,21 @@ body.todas footer{padding-bottom:2rem}
   <p class="hace">No tiene que escribir nada. Solo leer. La ventana dice qué hace ella y qué va a pedirle a él.</p>
   <div class="pc"><div class="barra"><span>■ Inicio</span><span>montar-recetas-de-la</span><span class="hora">18:25</span></div>
     <div class="win"><div class="tb"><span>▮ montar-recetas-de-la</span><span class="ctl">–▢✕</span></div>
-<div class="con"><span class="c">  +------------------------------------------------------+
-  |  Peripatéticos  ::  montar la app "recetas-de-la"     |
-  +------------------------------------------------------+</span>
-<span class="d">  |  Lo hace el PC : GitHub + web + servidor + llaves     |
-  |  Lo pones tú   : dos inicios de sesión en el navegador|
-  +------------------------------------------------------+</span>
+<div class="con"><span class="c">  +--------------------------------------------------------+
+  |  Peripateticos  ::  montar la app "recetas-de-la"      |
+  +--------------------------------------------------------+</span>
+<span class="d">  |  Lo hace el PC : GitHub + web + servidor + llaves       |
+  |  Lo pones tu   : dos inicios de sesion en el navegador  |
+  +--------------------------------------------------------+</span>
 
-  <span class="w">No cierres esta ventana. Puedes minimizarla.</span>
-  No tienes que escribir nada aquí en ningún momento.
+   <span class="w">No cierres esta ventana. Puedes minimizarla.</span>
+   No tienes que escribir nada aqui.
 
 <span class="c">== 1/6 Ayudantes</span>
-   <span class="g">OK</span>  Ayudante de GitHub instalado (23s)
-   <span class="y">..</span>  Instalando el ayudante de Fly.io</div></div>
+   <span class="g">OK</span>  Ayudante de GitHub instalado (9s)
+   <span class="g">OK</span>  Ayudante de Fly.io instalado (21s)</div></div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div>PowerShell 5.1, el que trae Windows. Instala <code>gh</code> con <code>winget</code> (viene con Windows 10/11) y <code>flyctl</code> con su instalador oficial. Todo en el perfil del usuario, sin permisos de administrador. Si algo ya estaba, lo detecta y no lo repite.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div>Windows PowerShell 5.1, el que trae Windows. Descarga <code>gh</code> y <code>flyctl</code> de sus páginas oficiales de versiones en GitHub y los deja en <code>%LOCALAPPDATA%\Peripateticos\bin</code>: sin <code>winget</code>, sin tocar Windows y sin permisos de administrador. Si ya estaban instalados, usa esos. La consola va sin acentos a propósito: así ninguna configuración de Windows la puede desfigurar.</div></details>
 </section>
 
 <!-- ================================================== 8 -->
@@ -367,15 +367,16 @@ body.todas footer{padding-bottom:2rem}
     </div>
     <div class="win"><div class="tb"><span>▮ montar-recetas-de-la</span><span class="ctl">–▢✕</span></div>
 <div class="con" style="min-height:0"><span class="c">== 2/6 Entrar en GitHub</span>
-   Se va a abrir tu navegador.
-   Cuando te pida un código, escribe este:
+   Se va a abrir tu navegador en GitHub.
+   Cuando te pida un codigo, escribe el que sale aqui abajo
+   (tambien lo tienes copiado: puedes pegarlo).
 
         <span class="cod">7F3A-K2QP</span>
 
-   <span class="y">..</span>  Esperando a que lo autorices en el navegador
-       (tienes 15 minutos; la ventana no se cierra)</div></div>
+   <span class="d">..</span>  Esperando a que lo autorices en el navegador
+       (tienes 15 minutos)</div></div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div><code>gh auth login --web</code> con flujo de dispositivo y los permisos <code>repo</code>, <code>workflow</code> y <code>admin:org</code> (este último para poder guardar el secreto de Fly en la organización). El token queda en el almacén de credenciales de Windows; nunca se imprime.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div><code>gh auth login --web</code> con flujo de dispositivo y los permisos <code>repo</code>, <code>workflow</code> y <code>admin:org</code> (este último para guardar el secreto de Fly en la organización). Con la salida redirigida, <code>gh</code> no espera a que se pulse Intro: el instalador lee el código de su salida, lo enseña en grande, lo copia al portapapeles y abre él mismo <code>github.com/login/device</code>. El token queda en el almacén de credenciales de Windows; nunca se imprime. Si ya había sesión con esos permisos, este paso no pide nada.</div></details>
 </section>
 
 <!-- ================================================== 9 -->
@@ -395,10 +396,11 @@ body.todas footer{padding-bottom:2rem}
     <div class="win"><div class="tb"><span>▮ montar-recetas-de-la</span><span class="ctl">–▢✕</span></div>
 <div class="con" style="min-height:0"><span class="c">== 2/6 Entrar en GitHub</span>
    <span class="g">OK</span>  Hola, <span class="w">maria-garcia</span> (1m 04s)
-   <span class="g">OK</span>  Organización <span class="w">apps-de-maria</span> encontrada; eres su dueña
-   <span class="g">OK</span>  Claude ya tiene permiso en apps-de-maria (paso 5 del móvil: verificado)</div></div>
+   <span class="g">OK</span>  Organizacion <span class="w">apps-de-maria</span> encontrada; tienes
+       permiso de administracion (1m 05s)
+   <span class="g">OK</span>  Claude ya tiene permiso en apps-de-maria (1m 05s)</div></div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div>Con el token, el instalador comprueba tres cosas que el móvil no podía: que el usuario es dueño de la organización, que la app de GitHub de Claude está instalada en ella (<code>gh api orgs/…/installations</code>) y, si no lo está, enseña el enlace exacto para instalarla. Así el paso 5 del móvil pasa de «anotado» a «verificado» aquí, sin esperar a la primera petición.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div>Con el token, el instalador comprueba lo que el móvil no podía: que el usuario administra la organización (<code>user/memberships/orgs/…</code>) y que la app de GitHub de Claude está instalada en ella (<code>orgs/…/installations</code>). Si falta Claude, no para: avisa con el enlace exacto para darle permiso. El resultado va a <code>docs/nacimiento.json</code>, y con él el paso 5 del móvil pasa de «anotado» a «verificado».</div></details>
 </section>
 
 <!-- ================================================== 10 -->
@@ -416,16 +418,17 @@ body.todas footer{padding-bottom:2rem}
     </div>
     <div class="win"><div class="tb"><span>▮ montar-recetas-de-la</span><span class="ctl">–▢✕</span></div>
 <div class="con" style="min-height:0"><span class="c">== 3/6 Entrar en Fly.io</span>
-   Se abre el navegador otra vez. Pulsa "Authorize".
-   <span class="g">OK</span>  Cuenta de Fly.io: maria@ejemplo.es (paso 4 del móvil: verificado)
-   <span class="d">..</span>  Fly aún no tiene tarjeta: no hace falta para empezar
+   Se abre el navegador otra vez, ahora en Fly.io. Pulsa 'Authorize'.
+   <span class="g">OK</span>  Cuenta de Fly.io: maria@ejemplo.es (38s)
+   <span class="d">..</span>  organizacion de Fly.io: personal
 
 <span class="c">== 4/6 Llaves</span>
-   <span class="g">OK</span>  Llave del servidor creada (solo vale para apps-de-maria)
-   <span class="g">OK</span>  Guardada en tu organización de GitHub como secreto (no se muestra)
-   <span class="w">Ya no te voy a pedir nada más. Puedes ir a por un café.</span></div></div>
+   <span class="g">OK</span>  Llave del servidor creada (solo vale para tu
+       organizacion de Fly.io) (2s)
+   <span class="g">OK</span>  Guardada en apps-de-maria como secreto (no se muestra) (3s)
+   <span class="w">Ya no te voy a pedir nada mas. Puedes ir a por un cafe.</span></div></div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div><code>flyctl auth login</code> abre el navegador; después <code>flyctl tokens create org</code> crea un token limitado a su organización de Fly y <code>gh secret set FLY_API_TOKEN --org apps-de-maria --visibility all</code> lo guarda para todos sus repositorios. El valor pasa de un comando a otro por tubería: no toca el disco ni la pantalla.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div><code>flyctl auth login</code> abre el navegador; después <code>flyctl tokens create org -o personal</code> crea un token limitado a su organización de Fly y <code>gh secret set FLY_API_TOKEN --org apps-de-maria --visibility all</code> lo guarda para todos sus repositorios. El valor pasa de un comando a otro por tubería: no toca el disco ni la pantalla. La organización de Fly queda como variable <code>FLY_ORG</code> de la organización de GitHub, que es de donde la lee <code>deploy.yml</code>. Si Fly pide tarjeta al reservar el servidor, el instalador abre la página de pago, espera a que se pulse Intro y reintenta.</div></details>
 </section>
 
 <!-- ================================================== 11 -->
@@ -435,16 +438,16 @@ body.todas footer{padding-bottom:2rem}
   <div class="pc"><div class="barra"><span>■ Inicio</span><span>montar-recetas-de-la</span><span class="hora">18:32</span></div>
     <div class="win"><div class="tb"><span>▮ montar-recetas-de-la</span><span class="ctl">–▢✕</span></div>
 <div class="con"><span class="c">== 5/6 Tu app</span>
-   <span class="g">OK</span>  Nombre "recetas-de-la-apps-de-maria" reservado en Fly.io (2s)
+   <span class="g">OK</span>  Nombre 'recetas-de-la-apps-de-maria' reservado en Fly.io (1s)
    <span class="g">OK</span>  apps-de-maria/recetas-de-la creada a partir del molde (4s)
-   <span class="g">OK</span>  Tu nombre puesto en todo: web, servidor, textos (14s)
-   <span class="g">OK</span>  Web encendida · https://apps-de-maria.github.io/recetas-de-la/ (48s)
-   <span class="y">..</span>  Construyendo el servidor: <span class="w">2 min 40 s</span>
-       La primera vez tarda entre 2 y 5 minutos. No es un fallo.
-       Si pasan más de 10, cierra esta ventana y abre el archivo otra vez:
-       sigue por donde iba.</div></div>
+   <span class="g">OK</span>  Web activada (9s)
+   <span class="g">OK</span>  Tu nombre puesto en todo: web, servidor, textos (31s)
+   <span class="g">OK</span>  Ficha del proyecto anotada para Claude (33s)
+   <span class="d">..</span>  Construyendo el servidor. La primera vez tarda entre 2 y 5
+       minutos; no es un fallo.
+   <span class="d">..</span>  Construyendo el servidor: <span class="w">2m 30s</span></div></div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div>Reutiliza lo que ya existe: <code>gh repo create --template</code>, espera a <code>init-plantilla.yml</code>, activa Pages por API, define <code>FLY_APP</code> y <code>FLY_ORG</code> como variables del repositorio y lanza <code>deploy.yml</code>. Cada paso es idempotente: si el archivo se vuelve a abrir, detecta lo hecho y continúa.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div>Reserva el nombre en Fly <b>antes</b> de crear nada en GitHub, para no dejar restos si está cogido. Después: <code>gh repo create --template</code> (público, para que le llegue el secreto de la organización), variables <code>FLY_APP</code> y <code>FLY_ORG</code>, Pages con origen «GitHub Actions» por API, y espera a que <code>init-plantilla.yml</code> ponga el nombre en todo. Ese workflow lanza al terminar <code>pages.yml</code> y <code>deploy.yml</code>; el instalador espera a los dos y, si alguno falla, lo relanza una vez. Cada paso es idempotente: si el archivo se vuelve a abrir, detecta lo hecho y continúa.</div></details>
 </section>
 
 <!-- ================================================== 12 -->
@@ -458,51 +461,54 @@ body.todas footer{padding-bottom:2rem}
         <div class="cu">
           <ol class="linea">
             <li class="ok"><span class="p">✓</span><span>Buscando tu app en GitHub<small>Encontrada: github.com/apps-de-maria/recetas-de-la</small></span></li>
-            <li class="ok"><span class="p">✓</span><span>Comprobando que tiene tu nombre en todo<small>Todo lleva el nombre «recetas-de-la»</small></span></li>
+            <li class="ok"><span class="p">✓</span><span>Poniéndole tu nombre a todo<small>Todo lleva el nombre «recetas-de-la»</small></span></li>
             <li class="ok"><span class="p">✓</span><span>Esperando a tu web<small>Responde: apps-de-maria.github.io/recetas-de-la</small></span></li>
             <li class="act"><span class="p"></span><span>Esperando a tu servidor<small>2 min 40 s · la primera vez tarda entre 2 y 5 minutos. No es un fallo.</small></span></li>
             <li><span class="p"></span><span>Preguntándole si está viva</span></li>
           </ol>
-          <a class="btn chico">Hecho, el PC ha terminado</a>
+          <a class="btn chico">Ya lo he abierto en el PC</a>
         </div></div>
     </div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div>La página del móvil sondea cada 15 s: existencia del repositorio (API pública de GitHub), la web (<code>github.io</code> sirve CORS abierto) y el servidor (<code>/hola</code>, también con CORS). Ninguna de las tres necesita credenciales. Por eso el móvil y el PC llegan a la misma conclusión por caminos distintos.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div>La página del móvil sondea cada 10 s: existencia del repositorio y del marcador <code>.plantilla-pendiente</code> (API pública de GitHub), la web (<code>github.io</code> sirve CORS abierto) y el servidor (<code>/hola</code>, también con CORS). Ninguna necesita credenciales. Si GitHub corta por límite de consultas, le basta con que la web y el servidor respondan. Por eso el móvil y el PC llegan a la misma conclusión por caminos distintos, y el paso 6 se marca solo.</div></details>
 </section>
 
 <!-- ================================================== 13 -->
 <section class="marco" data-t="Fin PC" data-g="PC">
   <div class="cab"><span class="n">13 / 16</span><span class="donde pc">PC · ventana</span><h2>«Ya puedes apagar el PC»</h2></div>
-  <p class="hace">La ventana termina con el saludo de la app, los enlaces y la frase que lo cierra todo. Deja una ficha en el escritorio por si la quiere. Apaga el PC.</p>
+  <p class="hace">La ventana termina con el saludo de la app, los enlaces y la frase que lo cierra todo. Deja una ficha en el escritorio y abre la portada de su app en el navegador. Apaga el PC.</p>
   <div class="pc"><div class="barra"><span>■ Inicio</span><span>montar-recetas-de-la</span><span class="hora">18:34</span></div>
     <div class="win"><div class="tb"><span>▮ montar-recetas-de-la</span><span class="ctl">–▢✕</span></div>
-<div class="con">   <span class="g">OK</span>  Servidor vivo · https://recetas-de-la-apps-de-maria.fly.dev/ (4m 12s)
+<div class="con">   <span class="g">OK</span>  Servidor construido (…/actions/runs/…) (4m 12s)
+   <span class="g">OK</span>  Web publicada (4m 40s)
 
-<span class="c">== 6/6 Comprobación</span>
+<span class="c">== 6/6 Comprobacion</span>
+   <span class="g">OK</span>  Web viva: https://apps-de-maria.github.io/recetas-de-la/
    <span class="g">OK</span>  <span class="w">"Hola, soy recetas-de-la y respondo desde Fly.io"</span>
-       25/09/2026 18:34 · París (cdg) · versión a438a95
+       2026-09-25 16:34:07 UTC - cdg - version 5e1f2a9
+   <span class="g">OK</span>  Nacimiento registrado
 
-<span class="g">================ recetas-de-la lista en 8,6 min ================</span>
+<span class="g">================ recetas-de-la lista en 8.6 min ================</span>
    Web         https://apps-de-maria.github.io/recetas-de-la/
    Servidor    https://recetas-de-la-apps-de-maria.fly.dev/
-   Ficha       https://apps-de-maria.github.io/recetas-de-la/ficha.html
-   Dónde vive  https://github.com/apps-de-maria/recetas-de-la
-   Bitácora    https://apps-de-maria.github.io/recetas-de-la/bitacora.html
+   Saludo      https://recetas-de-la-apps-de-maria.fly.dev/hola
+   Donde vive  https://github.com/apps-de-maria/recetas-de-la
+   Bitacora    https://apps-de-maria.github.io/recetas-de-la/bitacora.html
 
-   Esta ficha también está en tu escritorio: recetas-de-la.txt
+   Esta ficha tambien esta en: C:\Users\Maria\Desktop\recetas-de-la.txt
 
-   <span class="w">Ya puedes apagar el PC. Sigue en el móvil:
-   pulsa "Hecho, el PC ha terminado" en el paso 6.</span>
+   <span class="w">Ya puedes apagar el PC. Vuelve al movil: el paso 6 se marca
+   solo en cuanto tu app responde.</span>
 
-   Pulsa cualquier tecla para cerrar esta ventana.</div></div>
+Pulsa una tecla para cerrar esta ventana.</div></div>
   </div>
-  <details class="bajo"><summary>Por debajo</summary><div>Verificación real por HTTP desde el PC, que sí tiene red: <code>/salud</code> con el SHA y <code>/hola</code> con el nombre. Si algo no responde, no dice «listo»: dice qué falta y qué hacer. El instalador no deja nada en el PC salvo los dos ayudantes y la ficha; no clona el repositorio, porque el PC no vuelve a hacer falta.</div></details>
+  <details class="bajo"><summary>Por debajo</summary><div>Verificación real por HTTP desde el PC, que sí tiene red: la portada de la web tiene que llevar el nombre y <code>/hola</code> tiene que contestar. Si el servidor no responde, no dice «listo»: dice qué falta y qué hacer. Después sube <code>docs/nacimiento.json</code> (sin correos ni datos personales: <code>docs/</code> es público). El instalador no deja nada en el PC salvo los dos ayudantes y la ficha; no clona el repositorio, porque el PC no vuelve a hacer falta.</div></details>
 </section>
 
 <!-- ================================================== 14 -->
 <section class="marco" data-t="Meta" data-g="Móvil">
   <div class="cab"><span class="n">14 / 16</span><span class="donde">Móvil</span><h2>La meta</h2></div>
-  <p class="hace">De vuelta al móvil, pulsa <b>Hecho</b>. La página termina su vigilancia, marca el paso y enseña la meta.</p>
+  <p class="hace">De vuelta al móvil, el paso 6 ya está marcado: la página vio la web y el servidor por su cuenta, y enseña la meta.</p>
   <div class="tel"><div class="st"><span>18:35</span><span>●●● ▲ ▮</span></div>
     <div class="app"><span class="b">Peripatéticos</span><span class="pill">Meta</span></div>
     <div class="pant">
@@ -524,11 +530,11 @@ body.todas footer{padding-bottom:2rem}
   <div class="tel"><div class="st"><span>18:36</span><span>●●● ▲ ▮</span></div>
     <div class="app"><span class="b">Peripatéticos</span><span class="pill">Ficha</span></div>
     <div class="pant">
-      <div class="ficha"><div class="nom">recetas-de-la</div><p class="lede" style="margin:0">Nacida el 25 de septiembre de 2026 · cuidada por apps-de-maria</p>
-        <dl><dt>Web</dt><dd><a>apps-de-maria.github.io/recetas-de-la/</a></dd><dt>Servidor</dt><dd><a>recetas-de-la-apps-de-maria.fly.dev</a></dd><dt>Bitácora</dt><dd><a>…/recetas-de-la/bitacora.html</a></dd><dt>Dónde vive</dt><dd><a>github.com/apps-de-maria/recetas-de-la</a></dd><dt>Versión</dt><dd><code>a438a95</code> · montada el 25/09/2026</dd></dl>
+      <div class="ficha"><div class="nom">recetas-de-la</div><p class="lede" style="margin:0">Nacida el 25 de septiembre de 2026 · vive en apps-de-maria</p>
+        <dl><dt>Web</dt><dd><a>apps-de-maria.github.io/recetas-de-la/</a></dd><dt>Servidor</dt><dd><a>recetas-de-la-apps-de-maria.fly.dev/</a></dd><dt>Bitácora</dt><dd><a>qué se pidió y qué cambió</a></dd><dt>Dónde vive</dt><dd><a>github.com/apps-de-maria/recetas-de-la</a></dd><dt>Claude</dt><dd>tiene permiso en apps-de-maria</dd></dl>
         <a class="btn pri">Saluda otra vez</a>
         <div class="resp"><p class="g">Hola, soy recetas-de-la y respondo desde Fly.io.</p>
-          <dl><dt>Fecha y hora</dt><dd>25 de septiembre de 2026, 18:36 (Madrid)</dd><dt>Servidor</dt><dd>París (<code>cdg</code>) · máquina <code>1781e6f</code></dd><dt>Versión</dt><dd><code>a438a95</code></dd><dt>Despierta</dt><dd>desde hace 3 segundos</dd></dl></div>
+          <dl><dt>Fecha y hora</dt><dd>25 de septiembre de 2026, 18:36:12</dd><dt>Servidor</dt><dd>París (cdg) · máquina <code>1781e6f0c2d4</code></dd><dt>Versión</dt><dd><code>5e1f2a9</code></dd><dt>Despierta</dt><dd>desde hace 3 s (la has despertado tú)</dd></dl></div>
       </div>
       <a class="btn pri">Pídele lo primero desde el móvil</a>
     </div>
@@ -561,7 +567,7 @@ Cuando esté publicado dime el enlace para verlo en el móvil, y apunta esta ses
 
 </main>
 
-<footer>Mock <code>DM-B3-20260925-004</code> · dieciséis pantallas dibujadas, nada es real · <a href="./">mock navegable</a> · <a href="bitacora.html">bitácora</a></footer>
+<footer>Build <code>DM-B3-20260925-006</code> · dieciséis pantallas dibujadas a partir del instalador real · <a href="./">el instalador</a> · <a href="pc.html?app=recetas-de-la&amp;org=apps-de-maria">la página del PC</a> · <a href="bitacora.html">bitácora</a></footer>
 
 <div class="nav"><div class="fila">
   <button type="button" id="ant">← Anterior</button>

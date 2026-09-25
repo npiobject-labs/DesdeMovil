@@ -74,6 +74,19 @@ jobs:
           echo "Inicializando como ${OWNER}/${NOMBRE}"
           echo "  slug: ${SLUG} · usuario del runtime: ${USUARIO} · prefijo de build: ${PREFIJO}-B1"
 
+          # La portada de la plantilla es el instalador de Peripateticos, que
+          # solo tiene sentido aqui. El hijo nace con su propia portada
+          # (docs/semilla/index.html: la ficha con el boton "Saluda") y sin el
+          # instalador, la pagina del PC, el recorrido ni los mocks de la
+          # plantilla. Va antes de las sustituciones para que la portada nueva
+          # reciba el nombre del proyecto.
+          if [ -f docs/semilla/index.html ]; then
+            mv docs/semilla/index.html docs/index.html
+            echo "  docs/index.html: portada del proyecto (desde docs/semilla/)"
+          fi
+          rm -rf docs/semilla docs/instalador docs/mocks docs/pc.html docs/recorrido.html
+          echo "  instalador, recorrido y mocks de la plantilla: fuera"
+
           # El enlace "Use this template" debe seguir apuntando a la plantilla
           # original, asi que se aparta antes de sustituir y se restaura despues.
           # Va en ARRANQUE.md y en las guias de docs/, y ahi el "&" aparece a
@@ -208,11 +221,12 @@ jobs:
           # init-plantilla.yml se excluye: es la herramienta, no el resultado, y
           # ya no puede borrarse a si mismo (ver el paso de sustitucion). La
           # organizacion de Fly se llama "desdemovil" y es comun a todos los
-          # proyectos: no es un residuo, se excluye por linea.
+          # proyectos: no es un residuo, se excluye por linea (y tambien como valor
+          # por defecto de la variable FLY_ORG en deploy.yml y vigilancia-fly.yml).
           residuos="$(grep -rniE 'desdemovil|DM-B3|PLANTILLA:' \
             --exclude-dir=.git --exclude-dir=plantilla \
             --exclude=init-plantilla.yml . \
-            | grep -vE 'template_name=DesdeMovil|github\.com/npiobject-labs/DesdeMovil|--org desdemovil|FLY_ORG: desdemovil' || true)"
+            | grep -vE 'template_name=DesdeMovil|github\.com/npiobject-labs/DesdeMovil|--org desdemovil|FLY_ORG: desdemovil|vars\.FLY_ORG' || true)"
           if [ -n "${residuos}" ]; then
             echo "::error::Quedan residuos de la plantilla tras la inicializacion."
             printf '%s\n' "${residuos}"
@@ -272,6 +286,15 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run pages.yml --ref "${GITHUB_REF_NAME}"
 
+      # Lo mismo con el backend: deploy.yml no despliega un hijo sin inicializar
+      # (saldria con el nombre de la plantilla), asi que se lanza aqui, ya con
+      # el nombre puesto. Sin FLY_API_TOKEN termina en verde sin hacer nada.
+      - name: Lanzar el despliegue del backend
+        if: steps.marcador.outputs.pendiente == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
+
       - name: Resumen
         if: steps.marcador.outputs.pendiente == 'true'
         run: |
@@ -284,4 +307,5 @@ jobs:
             echo "- Marcador \`.plantilla-pendiente\`: borrado."
             echo "- \`init-plantilla.yml\`: deshabilitado (no puede borrarse solo; borralo a mano si quieres)."
             echo "- Pages: lanzado \`pages.yml\`; la URL sera https://${GITHUB_REPOSITORY%%/*}.github.io/${GITHUB_REPOSITORY#*/}/"
+            echo "- Backend: lanzado \`deploy.yml\` con el nombre ya puesto."
           } >> "$GITHUB_STEP_SUMMARY"

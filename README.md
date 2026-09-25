@@ -12,6 +12,8 @@ Plantilla del método "PC arranca, móvil continúa":
 - Un proyecto nuevo son **dos pasos manuales**: crear el repo desde la plantilla y activar Pages. El resto lo hace `init-plantilla.yml`.
 - Esa inicialización deja el repo **entero** con su nombre —hasta el paquete Rust, el `GET /` del backend y el prefijo del `build`—, aparta la historia de la plantilla a `docs/plantilla/` y **falla el run** si se deja algo sin sustituir.
 
+**Peripatéticos**: en la plantilla, la portada de Pages (`docs/index.html`) es un instalador para gente que no programa. Con un enlace, crea las cuentas, abre un archivo en el PC con Windows y deja una app nueva —repositorio, web y servidor— en sus propias cuentas; después se desarrolla desde el móvil. Análisis y estado en [`docs/planificacion/peripateticos-analisis.md`](docs/planificacion/peripateticos-analisis.md).
+
 Empieza por [`ARRANQUE.md`](ARRANQUE.md) · Reglas para los agentes en [`CLAUDE.md`](CLAUDE.md) · Planificación en [`docs/planificacion/`](docs/planificacion/).
 
 Tres guías en `docs/`, con enfoques distintos y ninguna sustituye a las otras:

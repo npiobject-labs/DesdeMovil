@@ -110,3 +110,35 @@ No se ha tocado nada. Anotado para no olvidarlo:
 | **Ayuda** | Qué hacer si cada paso se atasca, y cómo borrarlo todo |
 
 Las comprobaciones están simuladas (retardo y resultado fijo); el nombre de la app rellena todos los textos y enlaces; el progreso se guarda en el navegador y hay un «Reiniciar demo». Para provocar el estado de fallo: usuario de GitHub con espacios o vacío, o nombre de app `ocupada`.
+
+## 11. Desarrollo (25-sep, misma sesión)
+
+Con «adelante, no me preguntes nada», las preguntas 1–4 y 6–8 se cierran con la opción que llevaba el mock; la 5 ya estaba resuelta.
+
+### Qué hay
+
+| Pieza | Fichero | Qué hace |
+|---|---|---|
+| Portada e instalador | `docs/index.html` | Los seis pasos con comprobaciones **reales**: usuario, organización y nombre libre contra la API pública de GitHub; el paso 6 vigila el repositorio, el marcador de inicialización, la web y `/hola` hasta dar la app por nacida. Demo en vivo contra el backend de la plantilla. Ficha con «Saluda» real |
+| Página del PC | `docs/pc.html` | Genera `montar-<app>.cmd` en el navegador con app, organización, usuario y plantilla dentro; enseña su contenido; plan B de una línea para PowerShell; avisa si se abre en un móvil |
+| Instalador | `docs/instalador/peripateticos.ps1` | Ayudantes sin admin (releases de GitHub), `gh auth login` con código de dispositivo capturado y copiado, `flyctl auth login`, token de organización de Fly como secreto de la organización de GitHub, reserva del nombre en Fly **antes** del repositorio, repo desde la plantilla, variables, Pages, espera a `init-plantilla`, despliegue, verificación HTTP, `docs/nacimiento.json`, ficha en el escritorio. Reanudable; PowerShell 5.1; solo ASCII |
+| Portada del hijo | `docs/semilla/index.html` | «Hola, soy <app>» con «Saluda», dónde vive y cómo pedirle cosas. `init-plantilla.yml` la mueve a `docs/index.html` y borra lo que solo es de la plantilla |
+| Backend | `app/src/main.rs` | `GET /hola`: app, mensaje, fecha ISO, región, máquina, versión, segundos despierta; CORS abierto. Test de fechas |
+| Workflows | `deploy.yml`, `vigilancia-fly.yml`, `init-plantilla.yml` | Organización de Fly por variable `FLY_ORG`; `deploy.yml` verifica `/hola` y no despliega un hijo sin inicializar; `init-plantilla.yml` lanza el despliegue al terminar |
+| Recorrido | `docs/recorrido.html` | Las dieciséis pantallas, sincronizadas con la salida real del instalador |
+
+### Cómo se ha probado
+
+- **Inicialización de un hijo**: los pasos reales de `init-plantilla.yml` ejecutados sobre una copia como `apps-de-maria/recetas`. Sin residuos; portada propia; backend `recetas-backend` compilado.
+- **Instalador**: PowerShell 7.4 en el sandbox contra un GitHub y un Fly.io simulados (`gh` y `flyctl` falsos con estado), con el backend Rust **real** del hijo y su `docs/` servidos en local. Escenarios: montaje completo, nombre cogido en Fly (para sin crear nada), Fly pide tarjeta (abre la página, espera Intro, reintenta), Claude sin permiso (avisa y sigue), Pages de `init` fallido (lo relanza), usuario distinto del del móvil, organización inexistente, reanudación sobre un montaje hecho (no repite nada) y `-Simular`.
+- **Extremo a extremo en Chromium** (41 comprobaciones): móvil a 390 px → pasos 1–5 con errores provocados → enlace al PC → `pc.html` en escritorio → descarga del `.cmd` → la orden de PowerShell **del propio `.cmd`** descarga el instalador de la web y lo ejecuta → el móvil lo detecta solo y llega a la meta → pasos 4 y 5 pasan a verificado con `nacimiento.json` → ficha y «Saluda» contra el backend real → portada del hijo. Sin errores de JS y sin scroll horizontal en ninguna pantalla.
+- `deploy.yml`: el script de verificación de `/hola` probado contra el backend local (pasa con el SHA correcto, falla con otro).
+
+### Supuestos pendientes de un Windows real
+
+- **[SUPUESTO]** `gh auth login --web` con la salida redirigida no espera a Intro ni abre el navegador (lo hace el instalador) e imprime el código por stderr. Plan B: si una versión de `gh` cambia el formato, el instalador sigue enseñando las líneas de `gh` al fallar; se ajusta la expresión del código.
+- **[SUPUESTO]** Un token `flyctl tokens create org` basta para `apps create`, `secrets set` y `deploy --remote-only`. Plan B: token de despliegue por app (`tokens create deploy -a <app>`) creado tras reservarla.
+- **[SUPUESTO]** `flyctl orgs list --json` devuelve un mapa `slug → nombre` (se aceptan también listas con `slug`).
+- **[SUPUESTO]** La app de GitHub de Claude se llama `claude` en `orgs/<org>/installations`. Plan B: si no, el aviso sale aunque tenga permiso; no bloquea nada.
+- **[SUPUESTO]** En organizaciones Free, los secretos de organización llegan a los repositorios públicos (así funciona hoy la plantilla en `npiobject-labs`).
+- Nada de esto se ha ejecutado en Windows PowerShell 5.1: solo en PowerShell 7 y con sintaxis compatible con 5.1 revisada. **La primera ejecución real conviene hacerla con una organización de prueba.**
