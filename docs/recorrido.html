@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260925-011">
+<meta name="build" content="DM-B3-20260926-003">
 <meta name="description" content="Guion gráfico de Peripatéticos: las veinte pantallas que ve el usuario, en el móvil y en el PC, desde la portada hasta la primera petición.">
 <title>Peripatéticos · recorrido</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -183,6 +183,13 @@ pre.pr{font:.74rem/1.45 var(--mono);background:var(--code);border:1px solid var(
 .smart .cu2{padding:16px 24px 20px;font-size:12.5px;color:var(--w-ink2)}
 .smart .cu2 a{color:var(--w-blue);font-weight:600}
 .smart .bot{text-align:right;padding-top:12px}
+.gris{background:#F0F0F0;border:1px solid #C9CCD1;border-radius:8px;overflow:hidden;max-width:520px;margin:0 auto;box-shadow:0 12px 30px -12px rgba(0,0,0,.45);color:var(--w-ink)}
+.gris .tb{display:flex;justify-content:space-between;padding:8px 14px;font-size:12px;color:var(--w-ink2)}
+.gris .cu2{padding:6px 24px 16px;font-size:12.5px}
+.gris h3{font:600 15px var(--sans);margin:0 0 10px;color:var(--w-ink)}
+.gris .bot{text-align:right;padding-top:10px}
+.gris .pie{margin:10px 0 0;font-size:12px;color:var(--w-ink2)}
+.pc .o{text-align:center;margin:10px 0;font-size:12px;color:var(--w-ink2)}
 .tarj{max-width:400px;margin:0 auto;border:1px solid var(--w-line);border-radius:8px;padding:18px 20px;background:#fff;color:var(--w-ink)}
 .tarj h3{font:600 17px var(--sans);margin:0 0 8px}
 .tarj p{margin:.3rem 0;font-size:12.5px;color:var(--w-ink2)}
@@ -274,7 +281,7 @@ body.todas footer{padding-bottom:2rem}
         <div class="cu"><p class="pide">Enciende el PC y ábrete allí este enlace. En esa página descargas un archivo y lo abres con doble clic. Te pedirá entrar en GitHub y en Fly.io desde el navegador. Nada más.</p>
           <a class="btn pri">Enviarme el enlace al PC</a>
           <p class="previa">Se abre lo de compartir del móvil: mándatelo por correo o por WhatsApp. El enlace también está a la vista, con un botón para copiarlo.</p>
-          <p class="aviso"><b>Windows te avisará</b> de que es un archivo bajado de internet. Pulsa <i>Más información</i> y después <i>Ejecutar de todas formas</i>.</p>
+          <p class="aviso"><b>Windows te avisará</b> de que es un archivo bajado de internet. Si sale una ventana gris («No se pudo comprobar el editor»), pulsa <i>Ejecutar</i>. Si sale una azul («Windows protegió tu PC»), pulsa <i>Más información</i> y después <i>Ejecutar de todas formas</i>.</p>
           <div class="por">¿Qué va a hacer el PC exactamente?</div>
           <a class="btn">Ya lo he abierto en el PC</a>
         </div></div>
@@ -336,7 +343,7 @@ body.todas footer{padding-bottom:2rem}
         <h3 style="font:700 20px var(--serif);margin:4px 0 6px">Montar «recetas-de-la» en este PC</h3>
         <p style="margin:.3rem 0;color:var(--w-ink2)">Tu app se creará en <b>apps-de-maria</b>. Descarga el archivo, ábrelo con doble clic y sigue lo que diga. Tardará unos 8 minutos y podrás apagar el PC al terminar.</p>
         <span class="wbtn azul">⬇ Descargar montar-recetas-de-la.cmd</span>
-        <p style="margin:.6rem 0 0;font-size:12px;color:var(--w-ink2)">Windows te avisará de que viene de internet. Pulsa <b>Más información → Ejecutar de todas formas</b>.</p>
+        <p style="margin:.6rem 0 0;font-size:12px;color:var(--w-ink2)">Windows te avisará de que viene de internet. Ventana gris: <b>Ejecutar</b>. Ventana azul: <b>Más información → Ejecutar de todas formas</b>.</p>
         <div class="burb"><b>montar-recetas-de-la.cmd</b><span class="f">1 KB · Descarga completada · <u>Abrir archivo</u></span></div>
       </div></div>
   </div>
@@ -346,14 +353,20 @@ body.todas footer{padding-bottom:2rem}
 <!-- ================================================== 6 -->
 <section class="marco" data-t="Aviso" data-g="PC">
   <div class="cab"><span class="n">7 / 20</span><span class="donde pc">PC · Windows</span><h2>El aviso de Windows: el momento más delicado</h2></div>
-  <p class="hace">Doble clic en el archivo. Windows enseña una pantalla azul. Pulsa <b>Más información</b> (texto pequeño) y luego <b>Ejecutar de todas formas</b>. La página del móvil ya lo había avisado con esas mismas palabras.</p>
+  <p class="hace">Doble clic en el archivo. Según el navegador, Windows enseña una de dos ventanas. La gris («No se pudo comprobar el editor»): pulsa <b>Ejecutar</b>. La azul («Windows protegió tu PC»): pulsa <b>Más información</b> (texto pequeño) y luego <b>Ejecutar de todas formas</b>. La página del móvil ya lo había avisado con esas mismas palabras.</p>
   <div class="pc"><div class="barra"><span>■ Inicio</span><span>Descargas</span><span class="hora">18:25</span></div>
+    <div class="gris"><div class="tb">Advertencia de seguridad de Abrir archivo<span>✕</span></div>
+      <div class="cu2"><h3>No se pudo comprobar el editor. ¿Está seguro de que desea ejecutar este software?</h3>
+        <p style="margin:0 0 4px">Nombre: <b>montar-recetas-de-la.cmd</b><br>Editor: <b>Publicador desconocido</b><br>Tipo: Script de comandos de Windows</p>
+        <div class="bot"><span class="wbtn azul">Ejecutar</span><span class="wbtn">Cancelar</span></div>
+        <p class="pie">☑ Preguntar siempre antes de abrir este archivo</p></div></div>
+    <p class="o">o bien</p>
     <div class="smart"><div class="cab2"><h3>Windows protegió tu PC</h3><p>SmartScreen impidió que se iniciara una aplicación desconocida. Si ejecutas esta aplicación, podrías poner en riesgo tu PC.</p></div>
       <div class="cu2"><p style="margin:0 0 6px"><a>Más información</a></p>
         <p style="margin:0 0 4px">Aplicación: <b>montar-recetas-de-la.cmd</b><br>Editor: <b>Editor desconocido</b></p>
         <div class="bot"><span class="wbtn azul">Ejecutar de todas formas</span><span class="wbtn">No ejecutar</span></div></div></div>
   </div>
-  <details class="bajo"><summary>Por debajo · riesgo</summary><div>Es un aviso genérico para cualquier ejecutable sin firma de una gran empresa. Aquí es donde más gente no técnica se echa atrás. Mitigación: avisarlo antes en el móvil con las palabras exactas y repetirlo en <code>pc.html</code>. Plan B: firmar el script con un certificado de código (cuesta dinero al año) o sustituir la descarga por una línea que se pega en PowerShell, que no da este aviso pero es más fea.</div></details>
+  <details class="bajo"><summary>Por debajo · riesgo</summary><div>Es un aviso genérico para cualquier ejecutable sin firma de una gran empresa. Sale la ventana gris del Administrador de datos adjuntos o la azul de SmartScreen según el navegador y la configuración de Windows; las dos se deben a la marca «descargado de internet» del archivo. El <code>.cmd</code> se la quita a sí mismo al arrancar (<code>Unblock-File</code>), así que reabrirlo para seguir donde lo dejó ya no avisa. Aquí es donde más gente no técnica se echa atrás. Mitigación: avisarlo antes en el móvil con las palabras exactas y repetirlo en <code>pc.html</code>. Plan B: firmar el script con un certificado de código (cuesta dinero al año) o sustituir la descarga por una línea que se pega en PowerShell, que no da este aviso pero es más fea.</div></details>
 </section>
 
 <!-- ================================================== 7 -->
@@ -676,7 +689,7 @@ Cuando esté publicado dime el enlace para verlo en el móvil, y apunta esta ses
 
 </main>
 
-<footer>Build <code>DM-B3-20260925-011</code> · veinte pantallas dibujadas a partir del instalador real · <a href="./">el instalador</a> · <a href="pc.html?app=recetas-de-la&amp;org=apps-de-maria">la página del PC</a> · <a href="bitacora.html">bitácora</a></footer>
+<footer>Build <code>DM-B3-20260926-003</code> · veinte pantallas dibujadas a partir del instalador real · <a href="./">el instalador</a> · <a href="pc.html?app=recetas-de-la&amp;org=apps-de-maria">la página del PC</a> · <a href="bitacora.html">bitácora</a></footer>
 
 <div class="nav"><div class="fila">
   <button type="button" id="ant">← Anterior</button>

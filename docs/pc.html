@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260925-007">
+<meta name="build" content="DM-B3-20260926-001">
 <meta name="description" content="Peripatéticos en el PC: descarga un archivo, ábrelo y tu app queda montada en tus cuentas.">
 <title>Peripatéticos en el PC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,9 +56,12 @@ pre{font:.78rem/1.5 var(--mono);background:var(--code);border:1px solid var(--li
 .smart .c b{display:block;font-size:15px;margin-bottom:.2rem}
 .smart .d{background:#fff;color:#1b1b1b;padding:.6rem .9rem}
 .smart .d a{color:#0067C0;font-weight:600;text-decoration:underline}
-.smart .bots{text-align:right;margin-top:.5rem}
-.smart .bots span{display:inline-block;padding:.3rem .7rem;border:1px solid #bbb;border-radius:4px;margin-left:.3rem;font-weight:600;font-size:12px}
-.smart .bots span.az{background:#0067C0;border-color:#0067C0;color:#fff;outline:3px solid #F9C74F}
+.gris{max-width:24rem;margin:.6rem 0 .2rem;border-radius:8px;border:1px solid #C9C9C9;background:#F0F0F0;color:#1b1b1b;padding:.7rem .9rem;font:13px/1.45 "Segoe UI",system-ui,sans-serif}
+.gris b{display:block;font-size:14px;margin-bottom:.35rem}
+.gris .f{font-size:12px;color:#444}
+.smart .bots,.gris .bots{text-align:right;margin-top:.5rem}
+.smart .bots span,.gris .bots span{display:inline-block;padding:.3rem .7rem;border:1px solid #bbb;border-radius:4px;margin-left:.3rem;font-weight:600;font-size:12px}
+.smart .bots span.az,.gris .bots span.az{background:#0067C0;border-color:#0067C0;color:#fff;outline:3px solid #F9C74F}
 .aviso{padding:.7rem .9rem;border-left:3px solid var(--warn);background:var(--warn2);border-radius:0 8px 8px 0;margin:1rem 0;font-size:.95rem}
 details.por{margin:.7rem 0;border:1px dashed var(--line);border-radius:10px}
 details.por summary{cursor:pointer;padding:.65rem .9rem;font-weight:600;color:var(--ink2);list-style:none}
@@ -118,10 +121,15 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
       </div></li>
       <li><span class="n">3</span><div>
         <h3>Si Windows te avisa, dale permiso</h3>
-        <p>Sale una pantalla azul. Pulsa <b>Más información</b> (texto pequeño) y después <b>Ejecutar de todas formas</b>.</p>
+        <p>Según el navegador, sale una de estas dos pantallas.</p>
+        <p><b>Gris, «Advertencia de seguridad»</b>: pulsa <b>Ejecutar</b>.</p>
+        <div class="gris" aria-hidden="true"><b>No se pudo comprobar el editor. ¿Está seguro de que desea ejecutar este software?</b>
+          <div class="f">Nombre: montar-<span class="A"></span>.cmd · Editor: Publicador desconocido</div>
+          <div class="bots"><span class="az">Ejecutar</span><span>Cancelar</span></div></div>
+        <p><b>Azul, «Windows protegió tu PC»</b>: pulsa <b>Más información</b> (texto pequeño) y después <b>Ejecutar de todas formas</b>.</p>
         <div class="smart" aria-hidden="true"><div class="c"><b>Windows protegió tu PC</b>SmartScreen impidió que se iniciara una aplicación desconocida…</div>
           <div class="d"><a>Más información</a><div class="bots"><span class="az">Ejecutar de todas formas</span><span>No ejecutar</span></div></div></div>
-        <p class="nota">Es normal: Windows lo hace con cualquier programa que no venga de una gran empresa.</p>
+        <p class="nota">Es normal: Windows lo hace con cualquier archivo bajado de internet que no firme una gran empresa. Solo avisa la primera vez: si vuelves a abrir el archivo, ya no pregunta.</p>
       </div></li>
       <li><span class="n">4</span><div>
         <h3>Entra dos veces en el navegador</h3>
@@ -151,7 +159,7 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
     </div></details>
   </section>
 
-  <footer>Build <code>DM-B3-20260925-007</code> · <a href="./">Peripatéticos</a> · <a href="recorrido.html">Recorrido</a></footer>
+  <footer>Build <code>DM-B3-20260926-001</code> · <a href="./">Peripatéticos</a> · <a href="recorrido.html">Recorrido</a></footer>
 </main>
 <script>
 (function(){
@@ -188,7 +196,8 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
       'set "PERI_DRIVE=' + drive + '"',
       'set "PERI_PLANTILLA=' + plantilla + '"',
       'set "PERI_URL=' + u + '"',
-      'powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $w = New-Object Net.WebClient; $w.Encoding = [Text.Encoding]::UTF8; $s = $w.DownloadString($env:PERI_URL); & ([scriptblock]::Create($s)) } catch { Write-Host (\'No se pudo descargar el instalador: \' + $_.Exception.Message) -ForegroundColor Red }"',
+      'set "PERI_CMD=%~f0"',
+      'powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "try { Unblock-File -LiteralPath $env:PERI_CMD -ErrorAction SilentlyContinue } catch {}; try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $w = New-Object Net.WebClient; $w.Encoding = [Text.Encoding]::UTF8; $s = $w.DownloadString($env:PERI_URL); & ([scriptblock]::Create($s)) } catch { Write-Host (\'No se pudo descargar el instalador: \' + $_.Exception.Message) -ForegroundColor Red }"',
       'echo.',
       'echo Pulsa una tecla para cerrar esta ventana.',
       'pause >nul'
