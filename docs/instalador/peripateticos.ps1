@@ -339,6 +339,8 @@ function Principal {
     Dice "Se va a abrir tu navegador en GitHub."
     Dice "Cuando te pida un codigo, escribe el que sale aqui abajo"
     Dice "(tambien lo tienes copiado: puedes pegarlo)."
+    Dice "Si GitHub te pide 'Confirm access', confirma que eres tu (por ejemplo"
+    Dice "con 'Verify via email' y el codigo que te llega al correo)."
     $script:codigoVisto = $false
     $script:lineasLogin = @()
     # Con la entrada y la salida redirigidas, gh no espera a que se pulse Intro
