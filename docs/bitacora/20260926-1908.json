@@ -1,0 +1,66 @@
+{
+  "fecha": "2026-09-26T19:08:00+02:00",
+  "titulo": "Peripatéticos: primera instalación real en Windows y sus tropiezos",
+  "objetivo": "Acompañar la primera ejecución real del instalador en Windows y corregir cada tropiezo: el aviso de Windows, la confirmación de GitHub y la espera de deploy.yml.",
+  "prompts": [
+    {
+      "texto": "(Captura, sin texto: ventana de Windows «Advertencia de seguridad de Abrir archivo — No se pudo comprobar el editor» al abrir montar-prupru.cmd, con los botones Ejecutar y Cancelar.)",
+      "nota": "El mensaje fue solo una imagen; aquí se describe su contenido."
+    },
+    {
+      "texto": "Integra tú la PR #26 en main"
+    },
+    {
+      "texto": "(Captura, sin texto: notificación «Seguridad de Windows — Se encontraron amenazas. Antivirus de Microsoft Defender detectó amenazas».)",
+      "nota": "Solo imagen; descrita."
+    },
+    {
+      "texto": "(Captura, sin texto: página de GitHub «Confirm access» con el botón «Verify via email».)",
+      "nota": "Solo imagen; descrita."
+    },
+    {
+      "texto": "(Salida de la consola del instalador lanzado con la línea de PowerShell: pasos 1 a 5 bien hasta «XX GitHub no arranca deploy.yml».)",
+      "nota": "Resumida: la línea pegada llevaba la ruta del usuario de Windows y el id de una carpeta de Drive."
+    },
+    {
+      "texto": "hasta luego, cierro"
+    }
+  ],
+  "cambios": [
+    "docs/pc.html: el paso 3 enseña las dos ventanas de Windows (la gris: «Ejecutar»; la azul: «Más información → Ejecutar de todas formas»), y el .cmd se quita la marca de descargado de internet con Unblock-File. Build DM-B3-20260926-001 (PR #26, en main).",
+    "docs/index.html y docs/recorrido.html: las dos ventanas en el paso 7 de la portada, en Ayuda y en la pantalla 7 del recorrido. Builds DM-B3-20260926-002 y -003 (PR #26).",
+    "docs/pc.html, docs/index.html, docs/recorrido.html y docs/instalador/peripateticos.ps1: el «Confirm access» de GitHub (sudo mode por admin:org). Builds -004, -005 y -006 (PR #27).",
+    "docs/instalador/peripateticos.ps1: las expresiones --jq sin comillas dobles, que Windows PowerShell 5.1 rompía. Arregla la parada «GitHub no arranca deploy.yml» y el falso «Claude aún no tiene permiso» (PR #27)."
+  ],
+  "sha": "a5c4dc0",
+  "sha_completo": "a5c4dc0bf58b974a58894b851ebc8b73cfa9c41c",
+  "run": "36257933270",
+  "mock": "mocks/002-peripateticos-simulado.html",
+  "build": "DM-B3-20260926-001",
+  "pagina": "pc.html",
+  "fly": "https://desdemovil-npiobject-labs.fly.dev/salud",
+  "pendiente": [
+    "Integrar la PR #27 y volver a lanzar el instalador de prupru: sigue donde lo dejó.",
+    "Detalle de la detección de Microsoft Defender (amenaza, archivo, acción). [SUPUESTO] es el .cmd que ejecuta en memoria un script descargado; plan B: bajarlo a disco con curl.exe y ejecutarlo con -File.",
+    "Confirmar en Windows que, al reabrir el .cmd, ya no sale el aviso."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #26 · aviso gris de Windows",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/26"
+    },
+    {
+      "texto": "PR #27 · Confirm access y arreglo de jq en PowerShell 5.1",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/27"
+    },
+    {
+      "texto": "Recorrido: pantalla del aviso",
+      "url": "https://npiobject-labs.github.io/DesdeMovil/recorrido.html#7"
+    },
+    {
+      "texto": "Run de Pages",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/actions/runs/36257933270"
+    }
+  ],
+  "notas": "Casi todos los mensajes fueron capturas o salida de consola: se describen en vez de copiarlos, sin el usuario de Windows ni el id de la carpeta de Drive, que son datos personales. sha y run corresponden a la PR #26; la #27 queda por integrar."
+}
