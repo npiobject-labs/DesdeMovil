@@ -1,0 +1,40 @@
+{
+  "fecha": "2026-09-27T18:13:00+02:00",
+  "titulo": "Peripatéticos: el cliente ya no ve enlaces al desarrollo",
+  "objetivo": "Que un cliente no vea la bitácora ni el resto del desarrollo de Peripatéticos, y dejar planificada una copia limpia para más adelante.",
+  "prompts": [
+    {
+      "texto": "No quiero que aparezca el enlace a la bitácora de la aplicación desde el móvil desde móvil porque ahí está todo el desarrollo que hemos hecho en la app y es al cliente no le interesa no sé eh cuál es la opción ideal si quitarlo en en estas páginas de peripatéticos o HM firmo una aplicación nueva una copia nueva desde móvil una copia que sea debe ser una aplicación que se llame peripatéticos o otro nombre y ya la bitácora estará prácticamente vacía qué te parece esto que te estoy contando el hecho de que en cualquier cliente va a ver todo el desarrollo que hemos hecho para llegar a este punto de de la aplicación desde móvil"
+    },
+    {
+      "texto": "Quiero la opción a y como deuda técnica el que guardes la opción de EH generar aplicaciones limpias para a la hora de presentar al usuario una aplicación que se llame peripatéticos entonces son 1 2 2 pasos ahora el más sencillo y más adelante en recurrir a la deuda técnica para montar el paso 2 el paso de crear nueva aplicación"
+    },
+    {
+      "texto": "Ahora desarrollas el paso 1 y lo despliega así cuando lo tengas hecho me avisas para chequearlo"
+    }
+  ],
+  "cambios": [
+    "docs/index.html: «Para saber más» solo con el recorrido y la app recién nacida; fuera bitácora, análisis, versiones anteriores, comprobación del servidor, guías técnicas y código; el pie solo con el build. Build DM-B3-20260927-010.",
+    "docs/menu.js: el menú ≡ deja de ofrecer la bitácora y la documentación.",
+    "docs/recorrido.html: fuera el enlace a la bitácora del pie. Build DM-B3-20260927-010.",
+    "docs/semilla/index.html: la vista previa en la plantilla no enlaza el código, la bitácora ni el servidor de pruebas de Peripatéticos. Build DM-B3-20260927-010.",
+    "CLAUDE.md: regla de no enlazar el desarrollo desde las páginas del cliente, y referencia a la deuda técnica.",
+    "docs/planificacion/deuda-tecnica.md (nuevo): DT-1, copia limpia «peripateticos» publicada desde DesdeMovil, con el plan."
+  ],
+  "sha": "b494879",
+  "sha_completo": "b4948796d7f9e86eb99e98238555bc9300ae4939",
+  "run": "36332385939",
+  "build": "DM-B3-20260927-010",
+  "pagina": "index.html",
+  "fly": null,
+  "pendiente": [
+    "DT-1: copia limpia «peripateticos» sin historial (confirmar el nombre antes de crearla)."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #36",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/36"
+    }
+  ],
+  "notas": "Continuación de las sesiones anteriores del 27-09, en la misma conversación. La bitácora sigue publicada en su dirección, sin enlaces desde las páginas del cliente."
+}
