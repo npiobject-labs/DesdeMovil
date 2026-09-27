@@ -1,0 +1,39 @@
+{
+  "fecha": "2026-09-27T19:23:00+02:00",
+  "titulo": "Peripatéticos: aparición suave de las tarjetas y mock de la barra de progreso",
+  "objetivo": "Dar un aire más profesional: tarjetas que aparecen suavemente al desplazar, y decidir con un mock dónde va la barra de progreso de lectura.",
+  "prompts": [
+    {
+      "texto": "La opción dos la desarrollas y si me gusta pero la opción 1 tengo una duda esa barra de progreso dónde iría en la parte de abajo del la caja de menú porque entonces si vais interferiría con la sombra y yo creo que debería ir en la parte de arriba para no interferir con la sombra esto es así no me puedes hacer un pequeño mock para verlo"
+    }
+  ],
+  "cambios": [
+    "docs/menu.js: aparición suave de las tarjetas que entran en pantalla al desplazar (IntersectionObserver), sin tocar las ya visibles y respetando «reducir movimiento».",
+    "docs/mocks/003-barra-progreso.html (nuevo): mock con la barra de progreso de lectura y un panel para ponerla arriba, abajo o quitarla.",
+    "index, instalar, pc, renombrar, desinstalar y recorrido: build DM-B3-20260927-014 (también en menu.js?b=).",
+    "CLAUDE.md: documentada la aparición suave."
+  ],
+  "sha": "9daf04d",
+  "sha_completo": "9daf04d41d27dd3ee9c8def190c3d74f8b4ec5a1",
+  "run": "36336723167",
+  "mock": "mocks/003-barra-progreso.html",
+  "build": "DM-B3-20260927-014",
+  "pagina": "index.html",
+  "fly": null,
+  "pendiente": [
+    "Validar la aparición suave.",
+    "Elegir en el mock dónde va la barra de progreso y pasarla a menu.js.",
+    "DT-1: copia limpia «peripateticos»."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #44",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/44"
+    },
+    {
+      "texto": "Mock de la barra de progreso",
+      "url": "https://npiobject-labs.github.io/DesdeMovil/mocks/003-barra-progreso.html"
+    }
+  ],
+  "notas": "Continuación de las sesiones anteriores del 27-09, en la misma conversación."
+}
