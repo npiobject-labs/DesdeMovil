@@ -8,6 +8,9 @@
     },
     {
       "texto": "También quiero que montes una eh, hoja aparte con la opción de eh, cambiar el nombre de un proyecto. Este nombre debe cambiar en, en Fly, en, en GitHub y eh, en Drive si lo puedes cambiar y en local. Si no, has de dar las indicaciones adecuadas para que el usuario lo, lo cambie. Esto sería otra opción del proyecto general de peripatéticos. Otra opción dentro del menú."
+    },
+    {
+      "texto": "Integra y muéstrame un enlace al resultado final"
     }
   ],
   "cambios": [
@@ -20,24 +23,29 @@
     "CLAUDE.md: sección «Eliminar o renombrar la app» y la excepción a no borrar ni renombrar en Drive.",
     ".github/workflows/init-plantilla.yml: los hijos nacen sin instalar, desinstalar ni renombrar.",
     "docs/recorrido.html: enlaces al menú y al instalador. Build DM-B3-20260927-006.",
-    "docs/planificacion/peripateticos-analisis.md: sección 14."
+    "docs/planificacion/peripateticos-analisis.md: sección 14.",
+    "Integradas en main la PR #27 (arreglo de jq y «Confirm access» del instalador, llevado a instalar.html) y la PR #28."
   ],
-  "sha": "9cd9e3b",
-  "sha_completo": "9cd9e3b0ccd2fb54ed708d799e45e7ae10435d95",
-  "run": null,
+  "sha": "a6a7f76",
+  "sha_completo": "a6a7f765f04c311b83acd7fd5d3dab42aa29a88a",
+  "run": "36310186845",
   "mock": "mocks/002-peripateticos-simulado.html",
   "build": "DM-B3-20260927-001",
   "pagina": "index.html",
   "fly": "https://desdemovil-npiobject-labs.fly.dev/salud",
   "pendiente": [
-    "Integrar la PR #27 y la PR #28 (chocan en docs/index.html, que pasa a instalar.html).",
     "Estrenar eliminar y renombrar en Windows con una app de prueba.",
+    "Relanzar el instalador de prupru, que ya lleva el arreglo de la #27.",
     "Confirmar que el conector de Google Drive manda a la papelera y renombra la carpeta del usuario (plan B: a mano, ya en las páginas)."
   ],
   "enlaces": [
     {
       "texto": "PR #28 · menú, eliminar y cambiar el nombre",
       "url": "https://github.com/npiobject-labs/DesdeMovil/pull/28"
+    },
+    {
+      "texto": "Run de Pages",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/actions/runs/36310186845"
     },
     {
       "texto": "Menú",
@@ -52,5 +60,5 @@
       "url": "https://npiobject-labs.github.io/DesdeMovil/renombrar.html"
     }
   ],
-  "notas": "Prompts dictados por voz, transcritos tal cual. El segundo llegó mientras se trabajaba en el primero. Esta sesión no archiva mock: el instalador no se sustituye, se mueve a instalar.html. run queda vacío porque la PR no está en main."
+  "notas": "Prompts dictados por voz, transcritos tal cual. El segundo llegó mientras se trabajaba en el primero. Esta sesión no archiva mock: el instalador no se sustituye, se mueve a instalar.html."
 }
