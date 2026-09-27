@@ -57,17 +57,19 @@
     // Barras flotantes (la de arriba de cada página y la cabecera del menú ≡): al
     // pasar el contenido por debajo se estrechan, se vuelven algo transparentes y
     // proyectan sombra, oscura de día y clara de noche.
-    + ':root{--pm-sombra:rgba(20,24,26,.32)}'
-    + '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pm-sombra:rgba(255,255,255,.3)}}'
-    + ':root[data-theme="dark"]{--pm-sombra:rgba(255,255,255,.3)}'
-    + '.pm-flota{position:sticky;top:0;z-index:20;background-color:var(--bg,#F6F2EA);transition:background-color .2s,box-shadow .2s,border-color .2s}'
-    + '.pm-fila{transition:padding .2s}'
-    + '.pm-flota .ibtn,.pm-flota .pm-btn{transition:height .2s,width .2s}'
-    + ':root .pm-flota.pm-scroll{background-color:color-mix(in srgb,var(--bg,#F6F2EA) 80%,transparent);-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);box-shadow:0 10px 22px -10px var(--pm-sombra);border-bottom-color:transparent}'
-    + ':root .pm-scroll .pm-fila,:root .pm-fila.pm-scroll{padding-top:.28rem;padding-bottom:.28rem}'
-    + ':root .pm-scroll .ibtn{width:2.05rem;height:2.05rem}'
-    + ':root .pm-scroll .pm-btn{height:2.05rem}'
-    + '@media (prefers-reduced-motion:reduce){.pm-flota,.pm-fila,.pm-flota .ibtn,.pm-flota .pm-btn{transition:none}}';
+    + ':root{--pm-sombra:rgba(15,18,20,.55);--pm-filo:rgba(15,18,20,.14)}'
+    + '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pm-sombra:rgba(255,255,255,.4);--pm-filo:rgba(255,255,255,.3)}}'
+    + ':root[data-theme="dark"]{--pm-sombra:rgba(255,255,255,.4);--pm-filo:rgba(255,255,255,.3)}'
+    + '.pm-flota{position:sticky;top:0;z-index:20;background-color:var(--bg,#F6F2EA);transition:background-color .25s,box-shadow .25s,border-color .25s}'
+    + '.pm-fila{transition:padding .25s}'
+    + '.pm-flota .ibtn,.pm-flota .pm-btn{transition:height .25s,width .25s,font-size .25s}'
+    + '.pm-fila>.brand,.pm-fila>a.b,.pm-cab>b{transition:font-size .25s}'
+    + ':root .pm-flota.pm-scroll{background-color:color-mix(in srgb,var(--bg,#F6F2EA) 62%,transparent);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4);box-shadow:0 1px 0 var(--pm-filo),0 14px 28px -10px var(--pm-sombra);border-bottom-color:transparent}'
+    + ':root .pm-scroll .pm-fila,:root .pm-fila.pm-scroll{padding-top:.14rem;padding-bottom:.14rem}'
+    + ':root .pm-scroll .pm-fila>.brand,:root .pm-scroll .pm-fila>a.b,:root .pm-scroll.pm-cab>b{font-size:.98rem}'
+    + ':root .pm-scroll .ibtn{width:1.85rem;height:1.85rem}'
+    + ':root .pm-scroll .pm-btn{height:1.85rem;font-size:.8rem}'
+    + '@media (prefers-reduced-motion:reduce){.pm-flota,.pm-fila,.pm-flota .ibtn,.pm-flota .pm-btn,.pm-fila>.brand,.pm-fila>a.b,.pm-cab>b{transition:none}}';
   var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
 
   function lee(k){ try { return JSON.parse(localStorage.getItem(k) || '{}') || {} } catch(e){ return {} } }
