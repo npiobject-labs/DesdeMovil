@@ -56,7 +56,9 @@
     + '.pm-aviso button{padding:0;border:0;background:none;color:var(--acc,#9A4A2C);font:600 .9rem var(--sans,system-ui,sans-serif);text-decoration:underline;text-underline-offset:2px;cursor:pointer}'
     // Barras flotantes (la de arriba de cada página y la cabecera del menú ≡): al
     // pasar el contenido por debajo se estrechan, se vuelven algo transparentes y
-    // proyectan sombra, oscura de día y clara de noche.
+    // proyectan sombra, oscura de día y clara de noche. La sombra es la de una
+    // hoja curvada: máxima en el centro y nula en los bordes, donde la hoja toca
+    // la de debajo.
     + ':root{--pm-sombra:rgba(15,18,20,.55);--pm-filo:rgba(15,18,20,.14)}'
     + '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pm-sombra:rgba(255,255,255,.4);--pm-filo:rgba(255,255,255,.3)}}'
     + ':root[data-theme="dark"]{--pm-sombra:rgba(255,255,255,.4);--pm-filo:rgba(255,255,255,.3)}'
@@ -64,12 +66,14 @@
     + '.pm-fila{transition:padding .25s}'
     + '.pm-flota .ibtn,.pm-flota .pm-btn{transition:height .25s,width .25s,font-size .25s}'
     + '.pm-fila>.brand,.pm-fila>a.b,.pm-cab>b{transition:font-size .25s}'
-    + ':root .pm-flota.pm-scroll{background-color:color-mix(in srgb,var(--bg,#F6F2EA) 62%,transparent);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4);box-shadow:0 1px 0 var(--pm-filo),0 14px 28px -10px var(--pm-sombra);border-bottom-color:transparent}'
+    + ':root .pm-flota.pm-scroll{background-color:color-mix(in srgb,var(--bg,#F6F2EA) 62%,transparent);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4);border-bottom-color:transparent}'
+    + '.pm-flota::after{content:"";position:absolute;left:0;right:0;top:100%;height:clamp(14px,4.5vw,30px);pointer-events:none;opacity:0;transition:opacity .25s;background:linear-gradient(90deg,transparent,var(--pm-filo) 50%,transparent) top/100% 1px no-repeat,radial-gradient(50% 100% at 50% 0,var(--pm-sombra),color-mix(in srgb,var(--pm-sombra) 35%,transparent) 55%,transparent)}'
+    + ':root .pm-flota.pm-scroll::after{opacity:1}'
     + ':root .pm-scroll .pm-fila,:root .pm-fila.pm-scroll{padding-top:.14rem;padding-bottom:.14rem}'
     + ':root .pm-scroll .pm-fila>.brand,:root .pm-scroll .pm-fila>a.b,:root .pm-scroll.pm-cab>b{font-size:.98rem}'
     + ':root .pm-scroll .ibtn{width:1.85rem;height:1.85rem}'
     + ':root .pm-scroll .pm-btn{height:1.85rem;font-size:.8rem}'
-    + '@media (prefers-reduced-motion:reduce){.pm-flota,.pm-fila,.pm-flota .ibtn,.pm-flota .pm-btn,.pm-fila>.brand,.pm-fila>a.b,.pm-cab>b{transition:none}}';
+    + '@media (prefers-reduced-motion:reduce){.pm-flota,.pm-flota::after,.pm-fila,.pm-flota .ibtn,.pm-flota .pm-btn,.pm-fila>.brand,.pm-fila>a.b,.pm-cab>b{transition:none}}';
   var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
 
   function lee(k){ try { return JSON.parse(localStorage.getItem(k) || '{}') || {} } catch(e){ return {} } }
