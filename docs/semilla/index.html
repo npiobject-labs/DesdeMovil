@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260925-001">
+<meta name="build" content="DM-B3-20260927-010">
 <!-- App de Fly: <repo>-<owner>, como la deriva deploy.yml (el script la pasa a
      minusculas y la recorta a 30). Si el instalador dejo docs/nacimiento.json,
      manda el nombre que trae ese fichero. ?app=<nombre> fuerza otro. -->
@@ -96,7 +96,7 @@ footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--line);font-
   </div>
   <a class="btn sec" href="https://claude.ai/code" target="_blank" rel="noopener">Abrir Claude Code ↗</a>
 
-  <footer>Build <code>DM-B3-20260925-001</code> · <a id="l-bitacora2" href="bitacora.html">Bitácora</a> · <a id="l-holamundo" href="holamundo.html">Comprobación del backend</a></footer>
+  <footer>Build <code>DM-B3-20260927-010</code> · <a id="l-bitacora2" href="bitacora.html">Bitácora</a> · <a id="l-holamundo" href="holamundo.html">Comprobación del backend</a></footer>
 </main>
 <script>
 (function(){
@@ -115,7 +115,14 @@ footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--line);font-
   // Codigo: owner.github.io/repo -> github.com/owner/repo
   var host = location.hostname.match(/^([^.]+)\.github\.io$/i), trozo = location.pathname.split('/').filter(Boolean)[0];
   var codigo = document.getElementById('l-codigo');
-  if (host && trozo) codigo.href = 'https://github.com/' + host[1] + '/' + trozo; else codigo.parentNode.textContent = 'en GitHub (enlace disponible cuando se publique)';
+  // Vista previa en la plantilla: sin enlaces a su código, su bitácora ni su servidor
+  // de pruebas, que son del desarrollo de Peripatéticos y no de la app del cliente.
+  if (enSemilla) codigo.parentNode.textContent = 'en tu GitHub';
+  else if (host && trozo) codigo.href = 'https://github.com/' + host[1] + '/' + trozo; else codigo.parentNode.textContent = 'en GitHub (enlace disponible cuando se publique)';
+  if (enSemilla) {
+    document.getElementById('l-bitacora').parentNode.textContent = 'vacía el primer día: se llena con lo que le pidas';
+    document.querySelector('footer').innerHTML = 'Build <code>' + document.querySelector('footer code').textContent + '</code> · vista previa';
+  }
   function pintaServidor(){ var a=document.getElementById('l-servidor'); a.href = base()+'/'; a.textContent = base().replace(/^https?:\/\//,'') }
   pintaServidor();
 

@@ -107,11 +107,9 @@
       { href: 'instalar.html#pedir', t: 'Pedirle cambios', d: 'Te ayuda a escribir el encargo para Claude.' },
       { href: 'renombrar.html', t: 'Cambiar el nombre', d: 'Ponerle otro nombre a una app que ya tienes.' },
       { href: 'desinstalar.html', t: 'Eliminar una app', d: 'Borrarla de internet para siempre. No se puede deshacer.', peligro: true },
-      { g: 'Ayuda y documentación' },
+      { g: 'Ayuda' },
       { href: 'instalar.html#ayuda', t: 'Si algo se atasca', d: 'Soluciones a los problemas más habituales.' },
-      { href: 'recorrido.html', t: 'El recorrido', d: 'Todas las pantallas que vas a ver al instalar, para saber qué esperar.' },
-      { href: 'bitacora.html', t: 'Bitácora', d: 'Qué se ha cambiado en Peripatéticos, sesión a sesión.' },
-      { href: './#documentacion', t: 'Guías y documentación', d: 'Para quien quiera saber cómo funciona por dentro.' }
+      { href: 'recorrido.html', t: 'El recorrido', d: 'Todas las pantallas que vas a ver al instalar, para saber qué esperar.' }
     ];
   }
 
