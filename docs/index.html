@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260927-007">
+<meta name="build" content="DM-B3-20260927-009">
 <meta name="description" content="Peripatéticos: el menú. Instalar una app, pedirle cosas desde el móvil, resolver errores, eliminarla y toda la documentación.">
 <title>Peripatéticos</title>
 <script src="menu.js"></script>
@@ -148,14 +148,14 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
     <p class="small">Si empiezas otra, lo que escribiste para esta se borra de este navegador. Tus cuentas se quedan guardadas.</p>
   </section>
 
-  <div class="pm-intro">
-    <p class="pm-t">Qué hace esta página</p>
+  <details class="pm-intro">
+    <summary class="pm-t">Qué hace esta página<span class="pm-flecha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
     <dl>
       <dt>Para qué sirve</dt><dd>Es la página principal. Desde aquí llegas a todo: crear una app, ver las que tienes, pedirles cambios, cambiarles el nombre o borrarlas.</dd>
-      <dt>Cómo se usa</dt><dd>Toca una opción. Cada página empieza con un recuadro como este que explica qué hace. El botón <b>Menú</b> (las tres rayitas, arriba a la derecha) te trae estas mismas opciones desde cualquier página.</dd>
+      <dt>Cómo se usa</dt><dd>Toca una opción. Cada página empieza con un recuadro plegado como este, «Qué hace esta página»: tócalo y se despliega la explicación. El botón <b>Menú</b> (las tres rayitas, arriba a la derecha) te trae estas mismas opciones desde cualquier página.</dd>
       <dt>Si te has atascado</dt><dd>En el <b>Menú</b>, abajo del todo, está <b>Empezar de cero</b>: deja la app que tengas a medias y empieza otra.</dd>
     </dl>
-  </div>
+  </details>
 
   <section id="s-apps" hidden>
     <h2>Tus apps</h2>
@@ -223,7 +223,7 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
     <a class="doc" href="https://github.com/npiobject-labs/DesdeMovil" target="_blank" rel="noopener"><b>El código</b><span>El molde del que nacen todas las apps, en GitHub.</span></a>
   </div>
 
-  <footer>Build <code>DM-B3-20260927-007</code> · <a href="bitacora.html">Bitácora</a> · <a href="mocks/">Versiones anteriores</a></footer>
+  <footer>Build <code>DM-B3-20260927-009</code> · <a href="bitacora.html">Bitácora</a> · <a href="mocks/">Versiones anteriores</a></footer>
 </main>
 
 <script>

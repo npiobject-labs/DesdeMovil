@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260927-008">
+<meta name="build" content="DM-B3-20260927-009">
 <meta name="description" content="Peripatéticos: monta tu app una vez en el PC y desarróllala para siempre desde el móvil, hablando.">
 <!-- La app de Fly de esta misma plantilla: la usa la demo de la portada. -->
 <meta name="fly-app" content="desdemovil-npiobject-labs">
@@ -205,14 +205,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     <p class="kicker">Para gente que no programa</p>
     <h1>Tu app nace mientras paseas.</h1>
     <p class="lede">Enciende el PC una vez, media hora. Después, tu app se desarrolla desde el móvil: le cuentas lo que quieres, lo ves en pantalla y dices «vale» o «cámbialo».</p>
-    <div class="pm-intro">
-      <p class="pm-t">Qué hace esta página</p>
+    <details class="pm-intro">
+      <summary class="pm-t">Qué hace esta página<span class="pm-flecha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
       <dl>
       <dt>Para qué sirve</dt><dd>Te presenta Peripatéticos: una forma de tener tu propia app —una página web con su propio servidor— sin saber programar. Aquí no hay nada que rellenar.</dd>
       <dt>Qué vas a hacer</dt><dd>Solo leer: cómo funciona, qué necesitas y cuánto cuesta. Si te convence, pulsa <b>Empezar</b>.</dd>
       <dt>Después</dt><dd>Pasas a <b>Instalar una app</b>, donde se crea la tuya paso a paso.</dd>
       </dl>
-    </div>
+    </details>
     <div class="acciones">
       <a class="btn primario grande" href="#instalar" id="empezar">Empezar · unos 30 minutos</a>
       <a class="btn fantasma" href="#como">¿Cómo funciona?</a>
@@ -299,15 +299,15 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 <section class="pantalla" id="p-instalar" hidden>
   <h2 style="margin-top:1.4rem">Vamos a montar tu app</h2>
   <p class="pm-aviso" id="medias" hidden>Estás montando <b id="medias-app"></b>. ¿Prefieres dejarla y empezar otra? <button type="button" id="medias-otra">Empezar otra app</button></p>
-  <div class="pm-intro">
-    <p class="pm-t">Qué hace esta página</p>
+  <details class="pm-intro">
+    <summary class="pm-t">Qué hace esta página<span class="pm-flecha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
     <dl>
       <dt>Para qué sirve</dt><dd>Crea tu app. Le pones nombre, abres las cuentas que necesita (GitHub, Fly.io y Claude) y enciendes el PC una sola vez para que la monte.</dd>
       <dt>Qué vas a hacer</dt><dd>Ocho pasos, uno detrás de otro. En cada uno te digo qué tocar; cuando pulses <b>Hecho</b>, compruebo que está bien y se abre el siguiente. El «por qué» de cada paso está plegado, por si te interesa.</dd>
       <dt>Cuánto tarda</dt><dd>Unos 30 minutos la primera vez. Las siguientes apps, unos 10: tus cuentas quedan guardadas.</dd>
       <dt>Si lo dejas a medias</dt><dd>Se guarda solo en este navegador: cuando vuelvas, sigues donde lo dejaste.</dd>
     </dl>
-  </div>
+  </details>
   <div class="progreso"><i id="barra"></i></div>
 
   <!-- 1 · nombre -->
@@ -510,14 +510,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 
 <!-- ============================================================ FICHA -->
 <section class="pantalla" id="p-ficha" hidden>
-  <div class="pm-intro" style="margin-top:1.6rem">
-    <p class="pm-t">Qué hace esta página</p>
+  <details class="pm-intro" style="margin-top:1.6rem">
+    <summary class="pm-t">Qué hace esta página<span class="pm-flecha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
     <dl>
       <dt>Para qué sirve</dt><dd>Es la tarjeta de identidad de tu app: su dirección en internet, su servidor, dónde se guarda y dónde van las copias.</dd>
       <dt>Qué puedes hacer</dt><dd>Abrir cada enlace, y pulsar <b>Saluda</b> para comprobar que tu app está encendida y contesta.</dd>
       <dt>Si aún no tienes ninguna</dt><dd>Te lo digo aquí y te llevo a instalarla. Solo salen apps que existen de verdad.</dd>
     </dl>
-  </div>
+  </details>
   <div class="demo" id="f-vacia" hidden>
     <h3 style="margin-top:0">Todavía no tienes ninguna app terminada</h3>
     <p>La ficha aparece cuando termina la instalación: aquí verás las direcciones de tu app y podrás saludarla.</p>
@@ -555,14 +555,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 <!-- ============================================================ PEDIR -->
 <section class="pantalla" id="p-pedir" hidden>
   <h2 style="margin-top:1.4rem">Tu primera petición</h2>
-  <div class="pm-intro">
-    <p class="pm-t">Qué hace esta página</p>
+  <details class="pm-intro">
+    <summary class="pm-t">Qué hace esta página<span class="pm-flecha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
     <dl>
       <dt>Para qué sirve</dt><dd>Te ayuda a escribir el encargo para Claude, que es quien hace los cambios en tu app.</dd>
       <dt>Qué vas a hacer</dt><dd>Rellenar tres casillas con tus palabras, copiar el texto que se forma debajo y pegarlo en Claude.</dd>
       <dt>Después</dt><dd>Claude hace el cambio, lo publica y te da el enlace para verlo. Tú contestas «vale» o le dices qué cambiar.</dd>
     </dl>
-  </div>
+  </details>
   <div class="demo" id="pd-vacia" hidden>
     <h3 style="margin-top:0">Primero necesitas una app terminada</h3>
     <p>Aquí se preparan los encargos para tu app, y en este navegador todavía no hay ninguna terminada.</p>
@@ -599,14 +599,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 <!-- ============================================================ AYUDA -->
 <section class="pantalla" id="p-ayuda" hidden>
   <h2 style="margin-top:1.4rem">Si algo se atasca</h2>
-  <div class="pm-intro">
-    <p class="pm-t">Qué hace esta página</p>
+  <details class="pm-intro">
+    <summary class="pm-t">Qué hace esta página<span class="pm-flecha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
     <dl>
       <dt>Para qué sirve</dt><dd>Reúne las soluciones a los problemas más habituales al instalar o usar tu app.</dd>
       <dt>Cómo se usa</dt><dd>Toca la pregunta que se parezca a lo que te pasa y se abre la respuesta.</dd>
       <dt>Si ninguna encaja</dt><dd>Haz una captura de pantalla y pégasela a Claude, contándole qué intentabas hacer.</dd>
     </dl>
-  </div>
+  </details>
   <div class="faq">
     <details><summary>Se me quedó una app a medias y quiero empezar otra</summary><div>Abre el <b>Menú</b> (las tres rayitas, arriba a la derecha) y, al final, pulsa <b>Dejarla y empezar otra</b>. Tus cuentas se quedan guardadas. Si el PC ya llegó a crearla y quieres quitarla de internet, usa <a href="desinstalar.html">Eliminar una app</a>.</div></details>
     <details><summary>No encuentra mi usuario de GitHub</summary><div>Entra en GitHub desde el móvil y mira arriba a la derecha: el nombre que aparece ahí, sin arroba, es el que hay que escribir. Las mayúsculas dan igual; los espacios no valen.</div></details>
@@ -629,7 +629,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 </section>
 
 <footer>
-  Build <code>DM-B3-20260927-008</code> · <a href="./">Menú</a> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="renombrar.html">Cambiar el nombre</a> · <a href="desinstalar.html">Eliminar una app</a> · <button type="button" id="reiniciar">Empezar otra app</button>
+  Build <code>DM-B3-20260927-009</code> · <a href="./">Menú</a> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="renombrar.html">Cambiar el nombre</a> · <a href="desinstalar.html">Eliminar una app</a> · <button type="button" id="reiniciar">Empezar otra app</button>
 </footer>
 </main>
 
