@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build" content="DM-B3-20260927-004">
+<meta name="description" content="Peripatéticos: cambiar el nombre de una app en GitHub, su web, Fly.io, Google Drive y la copia del PC.">
+<title>Cambiar el nombre · Peripatéticos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F6F2EA; --bg2:#FFFFFF; --ink:#1E2528; --ink2:#4E585C; --mute:#7C868A; --line:#DED7C9;
+  --acc:#9A4A2C; --acc2:#9A4A2C14; --acc-ink:#FFFFFF;
+  --ok:#2E7D4F; --ok2:#2E7D4F16; --warn:#8F6400; --warn2:#8F640016; --err:#B3261E; --err2:#B3261E14;
+    --code:#EFEBE2; --shadow:0 1px 2px rgba(30,37,40,.05),0 8px 24px -14px rgba(30,37,40,.3);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15191B; --bg2:#1E2427; --ink:#E9E6DE; --ink2:#B4BBBE; --mute:#838C90; --line:#2E3639;
+    --acc:#E0906D; --acc2:#E0906D1F; --acc-ink:#1A1210;
+    --ok:#6CC493; --ok2:#6CC4931F; --warn:#E2B94A; --warn2:#E2B94A1F; --err:#F28B82; --err2:#F28B821F;
+    --code:#101416; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15191B; --bg2:#1E2427; --ink:#E9E6DE; --ink2:#B4BBBE; --mute:#838C90; --line:#2E3639;
+  --acc:#E0906D; --acc2:#E0906D1F; --acc-ink:#1A1210;
+  --ok:#6CC493; --ok2:#6CC4931F; --warn:#E2B94A; --warn2:#E2B94A1F; --err:#F28B82; --err2:#F28B821F;
+  --code:#101416; --shadow:none;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);overflow-x:hidden}
+[hidden]{display:none!important}
+a{color:var(--acc);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.12;margin:0;text-wrap:balance}
+h2{font-size:1.45rem;margin:2rem 0 .6rem}
+h3{font-size:1.08rem}
+p{margin:.55rem 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.08em .35em;border-radius:4px;word-break:break-word}
+pre{font:.82rem/1.5 var(--mono);background:var(--code);border:1px solid var(--line);border-radius:8px;padding:.8rem .9rem;margin:0;white-space:pre-wrap;word-break:break-word}
+.wrap{max-width:32rem;margin:0 auto;padding:0 16px 5rem}
+.ink2{color:var(--ink2)}.mute{color:var(--mute)}.small{font-size:.88rem}
+
+.top{position:sticky;top:0;z-index:20;background:var(--bg)}
+.top .in{max-width:32rem;margin:0 auto;padding:.55rem 16px;display:flex;align-items:center;gap:.6rem}
+.brand{font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--ink);text-decoration:none;flex:1;white-space:nowrap}
+.pill{font-size:.74rem;font-weight:700;padding:.22rem .6rem;border-radius:99px;background:var(--err);color:#fff;white-space:nowrap;letter-spacing:.03em;text-transform:uppercase}
+.ibtn{display:inline-flex;align-items:center;justify-content:center;width:2.3rem;height:2.3rem;border:1px solid var(--line);border-radius:8px;background:var(--bg2);color:var(--ink);cursor:pointer;padding:0}
+.ibtn svg{width:1.1rem;height:1.1rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;font:600 .98rem var(--sans);padding:.72rem 1.1rem;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);text-decoration:none;cursor:pointer;min-height:2.9rem;text-align:center}
+.btn.primario{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.btn.fantasma{background:transparent}
+.btn.ancho{width:100%}
+.btn.grande{font-size:1.06rem;padding:.9rem 1.3rem}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.ext::after{content:"↗";font-weight:400;opacity:.8}
+.acciones{display:flex;flex-direction:column;gap:.6rem;margin:1rem 0}
+
+/* ---------- pasos */
+.progreso{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:.9rem 0 1.4rem}
+.progreso i{display:block;height:100%;width:0;background:var(--acc);transition:width .4s}
+.paso{background:var(--bg2);border:1px solid var(--line);border-radius:14px;margin:.7rem 0;box-shadow:var(--shadow);overflow:hidden}
+.paso > header{display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem}
+.paso .n{display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:50%;border:2px solid var(--line);font:700 .9rem var(--sans);color:var(--mute);flex:none}
+.paso h3{flex:1}
+.paso .badge{font-size:.74rem;font-weight:600;padding:.18rem .55rem;border-radius:99px;white-space:nowrap}
+.paso .cuerpo{padding:0 1rem 1rem;border-top:1px solid var(--line)}
+.paso[data-estado="bloqueado"]{opacity:.55}
+.paso[data-estado="bloqueado"] .cuerpo{display:none}
+.paso[data-estado="hecho"] .n{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.paso[data-estado="hecho"] .cuerpo{display:none}
+.paso[data-estado="hecho"] > header{cursor:pointer}
+.paso[data-estado="hecho"].abierto .cuerpo{display:block}
+.paso[data-estado="activo"]{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc2)}
+.paso[data-estado="activo"] .n{border-color:var(--acc);color:var(--acc)}
+.badge.ok{background:var(--ok2);color:var(--ok)}.badge.anotado{background:var(--warn2);color:var(--warn)}.badge.activo{background:var(--acc2);color:var(--acc)}
+.pide{font-size:1.04rem;margin:.9rem 0 .6rem}
+details.por{margin:.6rem 0;border:1px dashed var(--line);border-radius:10px;background:var(--bg)}
+details.por summary{cursor:pointer;padding:.6rem .85rem;font-weight:600;font-size:.92rem;color:var(--ink2);list-style:none;display:flex;gap:.5rem;align-items:center}
+details.por summary::-webkit-details-marker{display:none}
+details.por summary::before{content:"+";display:inline-grid;place-items:center;width:1.2rem;height:1.2rem;border-radius:50%;background:var(--acc2);color:var(--acc);font-weight:700;flex:none}
+details.por[open] summary::before{content:"–"}
+details.por > div{padding:0 .9rem .8rem;font-size:.93rem;color:var(--ink2);overflow-wrap:anywhere}
+label.campo{display:block;margin:.8rem 0 .4rem;font-weight:600;font-size:.92rem}
+input.txt{width:100%;font:1rem var(--sans);padding:.7rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--bg2);color:var(--ink)}
+.previa{font-size:.86rem;color:var(--ink2);margin:.4rem 0 0}
+.chips{display:flex;gap:.45rem;flex-wrap:wrap;margin:.6rem 0}
+.chip{font:500 .86rem var(--sans);padding:.4rem .75rem;border-radius:99px;border:1px solid var(--line);background:var(--bg2);color:var(--ink2);cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--acc);color:var(--acc);background:var(--acc2)}
+.verif{margin:.8rem 0 0;padding:.7rem .85rem;border-radius:10px;font-size:.94rem;display:flex;gap:.6rem;align-items:flex-start}
+.verif .ic{flex:none;width:1.3rem;height:1.3rem;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.verif.espera{background:var(--code);color:var(--ink2)}.verif.espera .ic{border:2px solid var(--mute);border-top-color:transparent;animation:gira .8s linear infinite}
+.verif.ok{background:var(--ok2);color:var(--ok)}.verif.ok .ic{background:var(--ok);color:#fff}
+.verif.anotado{background:var(--warn2);color:var(--warn)}.verif.anotado .ic{background:var(--warn);color:#fff}
+.verif.err{background:var(--err2);color:var(--err)}.verif.err .ic{background:var(--err);color:#fff}
+.verif b{display:block}.verif p{margin:.2rem 0 0;color:inherit}
+@keyframes gira{to{transform:rotate(360deg)}}
+.hecho-fila{display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap}
+.hecho-fila .btn{flex:1}
+.enlace{display:flex;gap:.4rem;align-items:center;margin:.5rem 0;padding:.45rem .5rem .45rem .7rem;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.enlace code{flex:1;background:none;padding:0;font-size:.78rem;color:var(--ink2);word-break:break-all}
+.enlace button{font:600 .78rem var(--sans);color:var(--acc);background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:.3rem .6rem;cursor:pointer;flex:none}
+.block{position:relative;margin:.6rem 0}
+.block .copy{position:absolute;top:.5rem;right:.5rem;font:600 .76rem var(--sans);color:var(--acc);background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:.28rem .55rem;cursor:pointer}
+.block pre{padding-right:5rem}
+.aviso{margin:.6rem 0;padding:.6rem .85rem;border-left:3px solid var(--warn);background:var(--warn2);border-radius:0 8px 8px 0;font-size:.9rem}
+.a-mano{margin:.8rem 0 0;padding:.8rem .9rem;border:2px dashed var(--warn);border-radius:12px;background:var(--warn2);font-size:.93rem}
+.a-mano ol{margin:.4rem 0;padding-left:1.2rem}
+.linea{list-style:none;padding:0;margin:.9rem 0 0}
+.linea li{display:flex;gap:.7rem;align-items:flex-start;padding:.45rem 0;border-top:1px dashed var(--line);font-size:.95rem;color:var(--mute)}
+.linea li:first-child{border-top:0}
+.linea .p{flex:none;width:1.3rem;height:1.3rem;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.75rem;font-weight:700;margin-top:.1rem}
+.linea li.act{color:var(--ink)}.linea li.act .p{border-color:var(--acc);border-top-color:transparent;animation:gira .8s linear infinite}
+.linea li.ok{color:var(--ink)}.linea li.ok .p{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.linea small{display:block;color:var(--mute);word-break:break-word}
+
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.8rem;color:var(--mute)}
+.cambio{margin:1.2rem 0 0;padding:1.4rem 1.1rem 1.2rem;border-radius:16px;background:var(--bg2);border:1px solid var(--line);box-shadow:var(--shadow)}
+.cambio .kicker{font:600 .78rem var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--acc);margin:0 0 .6rem}
+.cambio h1{font-size:clamp(2rem,8vw,2.7rem)}
+.cambio .lede{color:var(--ink2);font-size:1.04rem}
+.flecha{display:flex;align-items:center;gap:.6rem;margin:1rem 0 .4rem;font:600 1.05rem var(--mono);flex-wrap:wrap}
+.flecha span{padding:.35rem .7rem;border-radius:8px;background:var(--code);border:1px solid var(--line)}
+.flecha span.n{background:var(--acc2);border-color:var(--acc);color:var(--acc)}
+.flecha i{font-style:normal;color:var(--mute)}
+table{width:100%;border-collapse:collapse;font-size:.9rem;margin:.6rem 0}
+td,th{text-align:left;padding:.5rem .3rem;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+th{font-weight:600;color:var(--ink2);font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
+td code{font-size:.78rem}
+.meta{margin:1.2rem 0;padding:1.3rem 1rem;border-radius:14px;background:var(--acc);color:var(--acc-ink);text-align:center}
+.meta h2{margin:.2rem 0 .3rem;color:inherit}
+.meta dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem .8rem;text-align:left;font-size:.9rem;margin:.8rem 0}
+.meta dt{opacity:.8}.meta dd{margin:0;overflow-wrap:anywhere}.meta a{color:inherit}
+.meta .btn{background:var(--bg2);color:var(--ink);border-color:transparent;margin-top:.4rem}
+
+footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}</style>
+</head>
+<body>
+
+<div class="top"><div class="in" style="border-bottom:1px solid var(--line)">
+  <a class="brand" href="./">Peripatéticos</a>
+  <span class="pill" style="background:var(--acc2);color:var(--acc)">Cambiar el nombre</span>
+  <button class="ibtn" id="tema" type="button" aria-label="Cambiar tema" title="Tema">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
+  </button>
+</div></div>
+
+<main class="wrap">
+<section class="cambio">
+  <p class="kicker">Cambiar el nombre</p>
+  <h1>Tu app, con otro nombre.</h1>
+  <p class="lede">El nombre está en muchos sitios: GitHub, la dirección de la web, el servidor, tu carpeta de Drive y la copia de tu PC. Lo cambio en todos, o te digo cómo hacerlo donde yo no llego.</p>
+  <div class="flecha" aria-hidden="true"><span class="A">recetas</span><i>→</i><span class="n N">cocina</span></div>
+  <p class="aviso"><b>Ojo:</b> la dirección vieja de la web deja de funcionar. Si la has compartido, tendrás que mandar la nueva.</p>
+</section>
+
+<section id="s-pasos">
+  <div class="progreso"><i id="barra"></i></div>
+
+  <!-- 1 · qué app -->
+  <article class="paso" data-id="app">
+    <header><span class="n">1</span><h3>¿Qué app?</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <div id="mis-apps" hidden><p class="pide" style="margin-bottom:.2rem">Elige una de las que montaste desde este móvil:</p><div class="chips" id="chips"></div><p class="small ink2" style="margin:.2rem 0 0">O escríbela:</p></div>
+      <label class="campo" for="in-app">Nombre de ahora</label>
+      <input class="txt" id="in-app" placeholder="recetas" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <label class="campo" for="in-org">Tu organización de GitHub</label>
+      <input class="txt" id="in-org" placeholder="apps-de-maria" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Buscarla</button></div>
+      <div class="verif" hidden></div>
+    </div>
+  </article>
+
+  <!-- 2 · nombre nuevo -->
+  <article class="paso" data-id="nuevo">
+    <header><span class="n">2</span><h3>¿Cómo se va a llamar?</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <p class="pide">Escribe el nombre nuevo. Minúsculas, sin espacios: lo arreglo yo si hace falta.</p>
+      <label class="campo" for="in-nuevo">Nombre nuevo</label>
+      <input class="txt" id="in-nuevo" placeholder="cocina" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="40">
+      <p class="previa" id="previa-nuevo"></p>
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Hecho</button></div>
+      <div class="verif" hidden></div>
+    </div>
+  </article>
+
+  <!-- 3 · qué cambia -->
+  <article class="paso" data-id="cambios">
+    <header><span class="n">3</span><h3>Qué cambia y quién lo hace</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <table>
+        <tr><th>Dónde</th><th>Qué pasa</th><th>Quién</th></tr>
+        <tr><td><b>GitHub</b></td><td><code class="O">tuorganizacion</code>/<code class="A">recetas</code> pasa a <code class="O">tuorganizacion</code>/<code class="N">cocina</code>. El enlace viejo del código sigue llevando al nuevo.</td><td>El PC</td></tr>
+        <tr><td><b>Web</b></td><td>Pasa a <code id="web-nueva"></code>. <b>La dirección vieja deja de funcionar.</b></td><td>El PC</td></tr>
+        <tr><td><b>Servidor</b></td><td>Fly.io no deja cambiar nombres: creo uno nuevo, <code id="srv-nuevo"></code>, con tu app dentro, y borro el viejo cuando el nuevo responda.</td><td>El PC</td></tr>
+        <tr><td><b>Tu PC</b></td><td>La copia pasa a <b>Documentos\Peripateticos\<span class="N">cocina</span></b>, con sus accesos directos al día.</td><td>El PC</td></tr>
+        <tr><td><b>Textos</b></td><td>«Hola, soy <span class="N">cocina</span>» y el nombre en cada página de tu app.</td><td>Claude</td></tr>
+        <tr><td><b>Drive</b></td><td>La carpeta pasa a llamarse <b class="N">cocina</b>. Si Claude no puede, te digo cómo hacerlo tú.</td><td>Claude</td></tr>
+      </table>
+      <p class="small ink2">Tus conversaciones antiguas con Claude se quedan con el nombre viejo: para lo siguiente, empieza una nueva eligiendo <code><span class="O">tuorganizacion</span>/<span class="N">cocina</span></code>.</p>
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Entendido</button></div>
+      <div class="verif" hidden></div>
+    </div>
+  </article>
+
+  <!-- 4 · PC -->
+  <article class="paso" data-id="pc">
+    <header><span class="n">4</span><h3>El PC cambia GitHub, la web y el servidor</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <p class="pide">Enciende el PC y ábrete allí este enlace. Descargas un archivo, lo abres y, cuando te lo pida, escribes el nombre nuevo.</p>
+      <p class="small ink2" style="margin-top:0">Tarda entre 5 y 10 minutos: el servidor nuevo se construye desde cero. Mientras tanto, el viejo sigue contestando.</p>
+      <div class="acciones"><button class="btn primario" type="button" id="compartir-pc">Enviarme el enlace al PC</button></div>
+      <div class="enlace"><code id="enlace-pc">…</code><button type="button" id="copiar-pc">Copiar</button></div>
+      <p class="aviso"><b>Windows te avisará</b> de que es un archivo bajado de internet: en la ventana gris pulsa <i>Ejecutar</i>; en la azul, <i>Más información</i> y <i>Ejecutar de todas formas</i>.</p>
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Ya lo he abierto en el PC</button></div>
+      <div class="verif" hidden></div>
+      <ol class="linea" id="linea" hidden>
+        <li data-l="repo"><span class="p"></span><span>Cambiando el nombre en GitHub<small></small></span></li>
+        <li data-l="srv"><span class="p"></span><span>Encendiendo el servidor nuevo<small>Tarda entre 2 y 5 minutos. No es un fallo.</small></span></li>
+        <li data-l="viejo"><span class="p"></span><span>Apagando el servidor viejo<small></small></span></li>
+        <li data-l="web"><span class="p"></span><span>Publicando la web nueva<small></small></span></li>
+      </ol>
+    </div>
+  </article>
+
+  <!-- 5 · Claude: textos y Drive -->
+  <article class="paso" data-id="claude">
+    <header><span class="n">5</span><h3>Claude cambia los textos y Drive</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <p class="pide">Abre Claude, entra en <b>Code</b>, empieza una conversación nueva con <code><span class="O">tuorganizacion</span>/<span class="N">cocina</span></code> y pégale esto:</p>
+      <div class="block"><pre id="prompt"></pre><button class="copy" type="button" id="copiar">Copiar</button></div>
+      <div class="acciones"><a class="btn ext" href="https://claude.ai/code" target="_blank" rel="noopener">Abrir Claude Code</a></div>
+      <details class="por"><summary>¿Por qué lo hace Claude?</summary><div>
+        <p>Tu app ha ido cambiando con cada cosa que le has pedido, y el nombre puede estar en sitios que solo Claude conoce. Además, solo Claude puede entrar en tu Google Drive, con su conector.</p>
+        <p>Al terminar deja una nota en tu app y aquí lo verás en un par de minutos.</p>
+      </div></details>
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Hecho, ya se lo he pedido</button></div>
+      <div class="a-mano" id="a-mano" hidden>
+        <b>Cambia tú el nombre de la carpeta en Google Drive</b>
+        <ol>
+          <li>Abre Google Drive y busca la carpeta <b class="A">recetas</b> en «Mi unidad».</li>
+          <li>En el móvil: <b>⋮ → Cambiar nombre</b>. En el ordenador: botón derecho → <b>Cambiar nombre</b>.</li>
+          <li>Escribe <b class="N">cocina</b> y acepta. No cambia nada más: Claude la sigue encontrando.</li>
+        </ol>
+        <div class="hecho-fila"><a class="btn ext" href="https://drive.google.com/drive/my-drive" target="_blank" rel="noopener">Abrir Google Drive</a><button class="btn primario" type="button" id="drive-hecho">Hecho</button></div>
+      </div>
+      <div class="verif" hidden></div>
+    </div>
+  </article>
+
+  <div class="meta" id="meta" hidden>
+    <p class="kicker" style="color:inherit;opacity:.85;margin:0">Hecho</p>
+    <h2>Tu app ahora se llama «<span class="N">cocina</span>»</h2>
+    <dl>
+      <dt>Web</dt><dd><a class="L-web" href="#" target="_blank" rel="noopener"></a></dd>
+      <dt>Servidor</dt><dd><a class="L-srv" href="#" target="_blank" rel="noopener"></a></dd>
+      <dt>Código</dt><dd><a class="L-repo" href="#" target="_blank" rel="noopener"></a></dd>
+      <dt>Tu PC</dt><dd>Documentos\Peripateticos\<span class="N">cocina</span></dd>
+      <dt>Drive</dt><dd id="m-drive">—</dd>
+    </dl>
+    <a class="btn ancho" href="./">Volver al menú</a>
+  </div>
+</section>
+
+<footer>
+  Build <code>DM-B3-20260927-004</code> · <a href="./">Menú</a> · <a href="instalar.html#ayuda">Ayuda</a> · <a href="desinstalar.html">Eliminar una app</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
+</footer>
+</main>
+
+<script>
+(function(){
+  var KEY = 'peripateticos-nombre-v1', INST = 'peripateticos-v1';
+  function lee(k){ try { return JSON.parse(localStorage.getItem(k) || '{}') } catch(e){ return {} } }
+  function escribe(k, v){ try { localStorage.setItem(k, JSON.stringify(v)) } catch(e){} }
+  var st = lee(KEY), inst = lee(INST);
+  st.hechos = st.hechos || {}; st.datos = st.datos || {}; st.info = st.info || {};
+  function guardar(){ escribe(KEY, st) }
+
+  function slug(v){
+    var s = String(v||'').trim().toLowerCase().replace(/[\s_.]+/g,'-').replace(/[^a-z0-9-]/g,'').replace(/-{2,}/g,'-').replace(/^-+|-+$/g,'');
+    if (s.length > 15) { s = s.slice(0,15); if (s.indexOf('-') > 0) s = s.replace(/-[^-]*$/,'') }
+    return s.replace(/-+$/,'');
+  }
+  function nombreFly(v){ return String(v||'').toLowerCase().replace(/[^a-z0-9-]/g,'-').slice(0,30).replace(/-+$/,'') }
+  function cuenta(v){ return String(v||'').trim().replace(/^@/,'').replace(/[^A-Za-z0-9-]/g,'') }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c] }) }
+  var hm = location.hostname.match(/^([^.]+)\.github\.io$/i), trozo = location.pathname.split('/').filter(Boolean)[0];
+  var PLANTILLA = ((hm && trozo) ? hm[1] + '/' + trozo : 'npiobject-labs/DesdeMovil').toLowerCase();
+  function D(){
+    var a = slug(st.datos.app), o = st.info.org || cuenta(st.datos.org), n = slug(st.datos.nuevo), om = (o||'tuorganizacion').toLowerCase();
+    var fv = st.info.flyApp || nombreFly((a||'recetas') + '-' + (o||'tuorganizacion')), fn = nombreFly((n||'cocina') + '-' + (o||'tuorganizacion'));
+    return { app: a, org: o, nuevo: n, flyViejo: fv, flyNuevo: fn,
+      webViejo: 'https://' + om + '.github.io/' + (a||'recetas') + '/', webNuevo: 'https://' + om + '.github.io/' + (n||'cocina') + '/',
+      srvViejo: 'https://' + fv + '.fly.dev/', srvNuevo: 'https://' + fn + '.fly.dev/', repoNuevo: 'https://github.com/' + (o||'tuorganizacion') + '/' + (n||'cocina') };
+  }
+
+  function pide(url, ms){
+    var ctl = ('AbortController' in window) ? new AbortController() : null, t = setTimeout(function(){ if (ctl) ctl.abort() }, ms || 20000);
+    return fetch(url, {cache:'no-store', signal: ctl ? ctl.signal : undefined}).then(function(r){ clearTimeout(t); return r }, function(e){ clearTimeout(t); throw e });
+  }
+  function gh(ruta){
+    return pide('https://api.github.com/' + ruta).then(function(r){
+      var limite = (r.status === 403 || r.status === 429) && r.headers.get('x-ratelimit-remaining') === '0';
+      return r.json().catch(function(){ return null }).then(function(j){ return { status: r.status, json: j, limite: limite || r.status === 429 } });
+    });
+  }
+  function json(url){ return pide(url + (url.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now()).then(function(r){ return r.ok ? r.json() : null }).catch(function(){ return null }) }
+
+  function aplica(){
+    var d = D();
+    [].forEach.call(document.querySelectorAll('.A'), function(e){ e.textContent = d.app || 'recetas' });
+    [].forEach.call(document.querySelectorAll('.N'), function(e){ e.textContent = d.nuevo || 'cocina' });
+    [].forEach.call(document.querySelectorAll('.O'), function(e){ e.textContent = d.org || 'tuorganizacion' });
+    document.getElementById('web-nueva').textContent = d.webNuevo.replace('https://','');
+    document.getElementById('srv-nuevo').textContent = d.srvNuevo.replace('https://','');
+    document.getElementById('previa-nuevo').innerHTML = d.nuevo
+      ? 'Web en <code>' + esc(d.webNuevo.replace('https://','')) + '</code> y servidor en <code>' + esc(d.srvNuevo.replace('https://','')) + '</code>.'
+      : 'Por ejemplo: «cocina», «mi-tienda», «paseos».';
+    document.getElementById('enlace-pc').textContent = enlacePC();
+    document.getElementById('prompt').textContent = prompt();
+    function pon(sel, href){ [].forEach.call(document.querySelectorAll(sel), function(e){ e.href = href; e.textContent = href.replace('https://','') }) }
+    pon('.L-web', d.webNuevo); pon('.L-srv', d.srvNuevo + 'hola'); pon('.L-repo', d.repoNuevo);
+  }
+  function enlacePC(){
+    var d = D(), u = new URL('pc.html', location.href);
+    u.search = '?accion=renombrar&app=' + encodeURIComponent(d.app||'') + '&org=' + encodeURIComponent(d.org||'') + '&nuevo=' + encodeURIComponent(d.nuevo||'');
+    return u.href;
+  }
+  function prompt(){
+    var d = D(), a = d.app || 'recetas', n = d.nuevo || 'cocina', o = d.org || 'tuorganizacion';
+    return 'Esta app se llamaba «' + a + '» y ahora se llama «' + n + '». El PC ya ha cambiado el repositorio (' + o + '/' + n + '), la web (' + d.webNuevo + ') y el servidor de Fly.io (' + d.flyNuevo + '; el viejo, ' + d.flyViejo + ', ya no existe). Termina el cambio:\n\n'
+      + '1. Cambia «' + a + '» por «' + n + '» en todo el repositorio donde sea el nombre de la app: páginas de docs/, README.md, CLAUDE.md, ARRANQUE.md, app/ y tools/. El servidor viejo «' + d.flyViejo + '» pasa a ser «' + d.flyNuevo + '» donde aparezca (por ejemplo, el meta fly-app de docs/index.html y docs/holamundo.html). No toques las entradas antiguas de docs/bitacora/ ni docs/plantilla/.\n'
+      + '2. Si la fila «Carpeta de Drive (id)» de Parámetros en CLAUDE.md tiene un id, con el conector de Google Drive cambia el nombre de esa carpeta a «' + n + '» (update_file con title) y, si está, el de «Ficha de ' + a + '.md» a «Ficha de ' + n + '.md». Nada más en Drive.\n'
+      + '3. Escribe docs/renombrado.json con {"de": "' + a + '", "a": "' + n + '", "fecha": "<ISO con zona>", "drive": "renombrada" | "sin-drive" | "no", "motivo": "<solo si no pudiste>"}, sin ids ni datos personales.\n'
+      + '4. Commit y push a main, comprueba que la web y el servidor se publican bien y apunta esta sesión en la bitácora.';
+  }
+
+  var pasos = [].slice.call(document.querySelectorAll('.paso'));
+  function paso(id){ return document.querySelector('.paso[data-id="'+id+'"]') }
+  function primerPendiente(){ for (var i=0;i<pasos.length;i++) if (!st.hechos[pasos[i].dataset.id]) return i; return pasos.length }
+  function pinta(){
+    var act = primerPendiente();
+    pasos.forEach(function(p,i){
+      var id = p.dataset.id, b = p.querySelector('.badge'), h = st.hechos[id];
+      var e = h ? 'hecho' : (i===act ? 'activo' : 'bloqueado');
+      p.dataset.estado = e;
+      if (e==='hecho') { b.className = 'badge ' + (h === 'anotado' || h === 'a-mano' ? 'anotado' : 'ok'); b.textContent = h === 'a-mano' ? 'a mano' : h === 'anotado' ? 'anotado' : id === 'cambios' ? 'entendido' : 'hecho' }
+      else if (e==='activo') { b.className='badge activo'; b.textContent='ahora' }
+      else { b.className='badge'; b.textContent='' }
+    });
+    document.getElementById('barra').style.width = (act/pasos.length*100)+'%';
+    document.getElementById('meta').hidden = act < pasos.length;
+    if (act >= pasos.length) pintaMeta();
+    aplica();
+  }
+  pasos.forEach(function(p){
+    p.querySelector('header').addEventListener('click', function(){ if (p.dataset.estado==='hecho') p.classList.toggle('abierto') });
+    p.querySelector('.hecho').addEventListener('click', function(){ comprobar(p) });
+  });
+  function verif(p, clase, titulo, texto){
+    var v = p.querySelector('.verif'); v.hidden = false; v.className = 'verif '+clase;
+    var ic = {espera:'', ok:'✓', anotado:'…', err:'!'}[clase];
+    v.innerHTML = '<span class="ic">'+ic+'</span><div><b>'+titulo+'</b>'+(texto?'<p>'+texto+'</p>':'')+'</div>';
+  }
+  function avanza(){ setTimeout(function(){ pinta(); var s = pasos[primerPendiente()]; (s || document.getElementById('meta')).scrollIntoView({behavior:'smooth',block:'start'}) }, 900) }
+  function comprobar(p){
+    var id = p.dataset.id, btn = p.querySelector('.hecho');
+    if (id === 'pc') { vigilar(); return }
+    if (id === 'claude') { vigilarClaude(); return }
+    btn.disabled = true; verif(p, 'espera', 'Comprobando…', '');
+    COMPRUEBA[id]().catch(function(e){
+      return { estado:'anotado', titulo:'No he podido comprobarlo ahora', texto:'No llego a GitHub desde este móvil ('+esc(e.message||e)+'). Lo comprobará el PC antes de cambiar nada.' };
+    }).then(function(r){
+      btn.disabled = false; verif(p, r.estado, r.titulo, r.texto);
+      if (r.estado !== 'err') { st.hechos[id] = r.estado === 'anotado' ? 'anotado' : true; guardar(); avanza() }
+    });
+  }
+  var COMPRUEBA = {
+    app: function(){
+      st.datos.app = document.getElementById('in-app').value; st.datos.org = document.getElementById('in-org').value; st.info = {}; guardar(); aplica();
+      var a = slug(st.datos.app), o = cuenta(st.datos.org);
+      if (!a) return Promise.resolve({estado:'err', titulo:'Falta el nombre de la app', texto:'El de ahora, tal como está en GitHub.'});
+      if (!o) return Promise.resolve({estado:'err', titulo:'Falta tu organización', texto:'La que pusiste al montarla.'});
+      return gh('repos/' + encodeURIComponent(o) + '/' + encodeURIComponent(a)).then(function(r){
+        if (r.limite) return {estado:'anotado', titulo:'Anotada: ' + esc(o) + '/' + esc(a), texto:'GitHub no me deja preguntar ahora. El PC lo comprobará antes de cambiar nada.'};
+        if (r.status === 404) return {estado:'err', titulo:'No encuentro ' + esc(o) + '/' + esc(a) + ' en GitHub', texto:'Revisa cómo se escribe.'};
+        if (r.status !== 200 || !r.json) return {estado:'anotado', titulo:'Anotada', texto:'GitHub no ha contestado bien ('+r.status+'). El PC lo comprobará.'};
+        var j = r.json;
+        if (String(j.name).toLowerCase() !== a) return {estado:'err', titulo:'Esa app ya se llama «' + esc(j.name) + '»', texto:'GitHub redirige el nombre viejo. Si quieres cambiarlo otra vez, escribe «' + esc(j.name) + '».'};
+        if (j.is_template || String(j.full_name).toLowerCase() === PLANTILLA) return {estado:'err', titulo:esc(j.full_name) + ' es el molde de Peripatéticos', texto:'Su nombre no se cambia desde aquí: de él nacen todas las apps.'};
+        st.info.org = j.owner && j.owner.login || o;
+        return json(D().webViejo + 'nacimiento.json').then(function(n){
+          if (n) { if (n.fly_app) st.info.flyApp = n.fly_app; st.info.drive = !!n.drive }
+          guardar(); aplica();
+          return {estado:'ok', titulo:'Encontrada: ' + esc(j.full_name), texto:'Servidor <code>' + esc(D().flyViejo) + '</code>. Todavía no se ha cambiado nada.'};
+        });
+      });
+    },
+    nuevo: function(){
+      st.datos.nuevo = document.getElementById('in-nuevo').value; guardar(); aplica();
+      var d = D();
+      if (!d.nuevo) return Promise.resolve({estado:'err', titulo:'Necesito el nombre nuevo', texto:'Cualquiera vale: «cocina», «mi-tienda», «paseos».'});
+      if (d.nuevo.length < 2) return Promise.resolve({estado:'err', titulo:'Un poco más largo', texto:'Con dos letras o más.'});
+      if (d.nuevo === d.app) return Promise.resolve({estado:'err', titulo:'Es el mismo nombre', texto:'Elige uno distinto de «' + esc(d.app) + '».'});
+      return gh('repos/' + encodeURIComponent(d.org) + '/' + encodeURIComponent(d.nuevo)).then(function(r){
+        if (r.limite) return {estado:'anotado', titulo:'«' + esc(d.nuevo) + '» vale como nombre', texto:'GitHub no me deja preguntar ahora si está libre. Lo comprobará el PC.'};
+        if (r.status === 200) return {estado:'err', titulo:'Ya tienes una app «' + esc(d.nuevo) + '» en ' + esc(d.org), texto:'Elige otro nombre.'};
+        return {estado:'ok', titulo:'«' + esc(d.nuevo) + '» está libre en ' + esc(d.org), texto:'En Fly.io lo comprobará el PC: sus nombres son únicos en todo el mundo.'};
+      });
+    },
+    cambios: function(){ return Promise.resolve({estado:'ok', titulo:'Entendido', texto:'Todavía no se ha cambiado nada.'}) }
+  };
+
+  // ---------------------------------------------------------------- paso 4: vigilar el cambio
+  var vig = null;
+  function vigilar(){
+    if (vig) return;
+    st.vig = st.vig || { inicio: Date.now() }; guardar();
+    var p = paso('pc'), lin = document.getElementById('linea'); lin.hidden = false; p.querySelector('.verif').hidden = true;
+    var li = {}; [].forEach.call(lin.children, function(x){ li[x.dataset.l] = x });
+    var hecho = {}, fallos = 0, sinApi = false;
+    function marca(k, texto){ hecho[k] = true; li[k].className = 'ok'; li[k].querySelector('.p').textContent = '✓'; li[k].querySelector('small').innerHTML = texto }
+    function activa(){ var o = ['repo','srv','viejo','web']; for (var i=0;i<o.length;i++) if (!hecho[o[i]]) { li[o[i]].className = 'act'; return } }
+    function vuelta(){
+      var d = D(), t = [];
+      if (!hecho.repo && !sinApi) t.push(gh('repos/' + d.org + '/' + d.nuevo).then(function(r){
+        if (r.limite) { sinApi = true; return }
+        if (r.status === 200 && r.json && String(r.json.name).toLowerCase() === d.nuevo) marca('repo', 'Ahora es github.com/' + esc(d.org) + '/' + esc(d.nuevo));
+      }).catch(function(){}));
+      if (!hecho.srv) t.push(pide(d.srvNuevo + 'hola', 30000).then(function(r){ return r.ok ? r.json() : null }).catch(function(){ return null }).then(function(j){
+        if (j && String(j.app).toLowerCase() === d.nuevo) marca('srv', '«' + esc(j.mensaje) + '»');
+        else if (j) li.srv.querySelector('small').textContent = 'Contesta, pero dice «' + (j.mensaje||'') + '». Sigo esperando.';
+      }));
+      if (hecho.srv && !hecho.viejo && d.flyViejo !== d.flyNuevo) t.push(pide(d.srvViejo + 'hola', 30000).then(function(r){ return r.ok ? r.json() : null }).catch(function(){ return null }).then(function(j){
+        if (j && String(j.app).toLowerCase() === d.app) { fallos = 0; li.viejo.querySelector('small').textContent = 'Todavía contesta: el PC lo apaga en cuanto el nuevo responde.' }
+        else if (++fallos >= 2) marca('viejo', 'Ya no contesta: ' + esc(d.srvViejo.replace('https://','')));
+      }));
+      if (hecho.srv && d.flyViejo === d.flyNuevo && !hecho.viejo) marca('viejo', 'El servidor se llamaba igual: nada que apagar');
+      if (!hecho.web) t.push(pide(d.webNuevo + '?t=' + Date.now()).then(function(r){ if (r.ok) marca('web', 'Responde: ' + esc(d.webNuevo.replace('https://',''))) }).catch(function(){}));
+      return Promise.all(t).then(function(){
+        if (!hecho.repo && (sinApi || hecho.web) && hecho.web) marca('repo', 'Ahora es github.com/' + esc(d.org) + '/' + esc(d.nuevo));
+        activa();
+        if (hecho.repo && hecho.srv && hecho.viejo && hecho.web) {
+          vig = null; st.hechos.pc = true; delete st.vig; guardar(); actualizaApps();
+          verif(p, 'ok', 'GitHub, web y servidor ya se llaman «' + esc(d.nuevo) + '»', 'Puedes apagar el PC. Falta Claude: los textos y Drive.');
+          avanza(); return;
+        }
+        if (Date.now() - st.vig.inicio > 45*60*1000) {
+          vig = null; delete st.vig; guardar();
+          verif(p, 'anotado', 'Esto está tardando más de lo normal', 'Mira lo que dice la ventana del PC. Si escribiste otra cosa o la cerraste, no se ha cambiado nada: vuelve a abrir el archivo. Cuando termine, pulsa el botón otra vez.');
+          return;
+        }
+        vig = setTimeout(vuelta, 10000);
+      });
+    }
+    activa(); vig = true; vuelta();
+  }
+
+  // ---------------------------------------------------------------- paso 5: Claude deja docs/renombrado.json
+  var vigC = null;
+  function vigilarClaude(){
+    if (vigC) return;
+    var p = paso('claude'), btn = p.querySelector('.hecho');
+    st.vigC = st.vigC || { inicio: Date.now() }; guardar();
+    btn.disabled = true; vigC = true;
+    function vuelta(){
+      var d = D(), s = Math.round((Date.now() - st.vigC.inicio) / 1000);
+      verif(p, 'espera', 'Esperando a que Claude termine…', 'Llevo ' + (s >= 60 ? Math.floor(s/60) + ' min ' + (s%60) + ' s' : s + ' s') + '. Cambiar los textos le lleva unos minutos; aparece aquí solo cuando se publique.');
+      json(d.webNuevo + 'renombrado.json').then(function(j){
+        if (!st.vigC) return;
+        if (j && String(j.a).toLowerCase() === d.nuevo) {
+          vigC = null; btn.disabled = false; delete st.vigC; st.driveFin = j.drive; guardar();
+          if (j.drive === 'no') {
+            verif(p, 'err', 'Textos cambiados; la carpeta de Drive, no', (j.motivo ? esc(j.motivo) + '. ' : '') + 'Cámbiale tú el nombre: aquí abajo tienes cómo.');
+            document.getElementById('a-mano').hidden = false; return;
+          }
+          st.hechos.claude = true; guardar();
+          verif(p, 'ok', 'Claude ha cambiado el nombre en tu app', j.drive === 'renombrada' ? 'Y tu carpeta de Drive ya se llama «' + esc(d.nuevo) + '».' : 'Tu app no tiene carpeta en Drive.');
+          avanza(); return;
+        }
+        if (Date.now() - st.vigC.inicio > 45*60*1000) {
+          vigC = null; btn.disabled = false; delete st.vigC; guardar();
+          verif(p, 'anotado', 'Todavía no lo veo', '¿Le has pegado la petición a Claude en ' + esc(d.org) + '/' + esc(d.nuevo) + '? Cuando te diga que ha terminado, vuelve a pulsar el botón.');
+          return;
+        }
+        vigC = setTimeout(vuelta, 10000);
+      });
+    }
+    vuelta();
+  }
+  document.getElementById('drive-hecho').addEventListener('click', function(){
+    var p = paso('claude'); st.hechos.claude = 'a-mano'; st.driveFin = 'a-mano'; guardar();
+    verif(p, 'anotado', 'Anotado: la has renombrado tú', 'No puedo comprobarlo desde aquí.'); avanza();
+  });
+
+  // «Tus apps» y el instalador, con el nombre nuevo.
+  function actualizaApps(){
+    var d = D(); inst = lee(INST);
+    (inst.apps || []).forEach(function(x){ if (x.app === d.app && String(x.org).toLowerCase() === String(d.org).toLowerCase()) { x.app = d.nuevo; x.web = d.webNuevo; x.servidor = d.srvNuevo } });
+    if (inst.datos && slug(inst.datos.nombre) === d.app) inst.datos.nombre = d.nuevo;
+    escribe(INST, inst);
+  }
+  function pintaMeta(){
+    var m = document.getElementById('m-drive');
+    m.textContent = st.driveFin === 'renombrada' ? 'la carpeta ya se llama «' + D().nuevo + '»' : st.driveFin === 'a-mano' ? 'la renombraste tú' : 'sin carpeta';
+  }
+
+  function copia(t, b, etiqueta){
+    function ok(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = etiqueta }, 1500) }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, ok); else ok();
+  }
+  document.getElementById('copiar').addEventListener('click', function(){ copia(prompt(), this, 'Copiar') });
+  document.getElementById('copiar-pc').addEventListener('click', function(){ copia(enlacePC(), this, 'Copiar') });
+  document.getElementById('compartir-pc').addEventListener('click', function(){
+    var d = D(), url = enlacePC();
+    if (navigator.share) navigator.share({ title: 'Renombrar ' + d.app + ' desde mi PC', text: 'Ábrelo en el PC con Windows:', url: url }).catch(function(){});
+    else location.href = 'mailto:?subject=' + encodeURIComponent('Renombrar ' + d.app + ' desde mi PC') + '&body=' + encodeURIComponent('Ábrelo en el PC con Windows:\n' + url);
+  });
+  var root = document.documentElement;
+  function setT(t){ inst = lee(INST); inst.tema = t; escribe(INST, inst); if (t) root.setAttribute('data-theme', t); else root.removeAttribute('data-theme') }
+  if (inst.tema) root.setAttribute('data-theme', inst.tema);
+  document.getElementById('tema').addEventListener('click', function(){ var o = ['','light','dark']; setT(o[(o.indexOf(lee(INST).tema||'')+1)%3]) });
+
+  var apps = inst.apps || [];
+  if (apps.length) {
+    document.getElementById('mis-apps').hidden = false;
+    document.getElementById('chips').innerHTML = apps.map(function(x, i){ return '<button class="chip" type="button" data-i="' + i + '">' + esc(x.app) + ' <span class="mute">· ' + esc(x.org) + '</span></button>' }).join('');
+    [].forEach.call(document.querySelectorAll('#chips .chip'), function(c){ c.addEventListener('click', function(){
+      var x = apps[+c.dataset.i]; document.getElementById('in-app').value = x.app; document.getElementById('in-org').value = x.org;
+      [].forEach.call(document.querySelectorAll('#chips .chip'), function(o){ o.setAttribute('aria-pressed', o === c) });
+      st.datos.app = x.app; st.datos.org = x.org; guardar(); aplica();
+    }) });
+  }
+  var q = new URLSearchParams(location.search);
+  if (q.get('app') && q.get('org') && (!st.hechos.app || primerPendiente() >= pasos.length)) { st = { hechos: {}, datos: { app: slug(q.get('app')), org: cuenta(q.get('org')) }, info: {} }; guardar() }
+  if (q.get('app')) try { history.replaceState(null, '', location.pathname) } catch(e){}
+  document.getElementById('in-app').value = st.datos.app || '';
+  document.getElementById('in-org').value = st.datos.org || (inst.perfil && inst.perfil.org) || '';
+  document.getElementById('in-nuevo').value = st.datos.nuevo || '';
+  [['in-app','app'],['in-org','org'],['in-nuevo','nuevo']].forEach(function(k){ document.getElementById(k[0]).addEventListener('input', function(){ st.datos[k[1]] = this.value; guardar(); aplica() }) });
+  document.getElementById('reiniciar').addEventListener('click', function(){
+    if (!confirm('¿Empezar de nuevo? Se olvida lo que has hecho en esta página. Lo que ya se haya cambiado sigue cambiado.')) return;
+    st = { hechos: {}, datos: {}, info: {} }; guardar(); location.href = location.pathname;
+  });
+
+  pinta();
+  if (st.vig && !st.hechos.pc) vigilar();
+  if (st.vigC && !st.hechos.claude) vigilarClaude();
+})();
+</script>
+</body>
+</html>

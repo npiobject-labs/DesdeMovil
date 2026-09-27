@@ -182,3 +182,43 @@ Pruebas: 73 comprobaciones de extremo a extremo en Chromium (portada con «Tus a
 
 - **[SUPUESTO]** El token OAuth de `gh` (con `repo`) basta para añadir un repositorio a la instalación de Claude. Plan B: el aviso con el enlace directo a «Repository access», ya implementado.
 - Siguiente paso posible, no hecho: montar la segunda app **sin PC**. La llave de Fly ya está en la organización; faltaría crear el repositorio desde la plantilla y activar Pages, que hoy exigen una credencial con permisos de administración que solo tiene el PC. Hacerlo desde el móvil pediría al usuario dos pasos a mano en GitHub, contra la regla de oro.
+
+## 14. Menú, eliminar y cambiar el nombre (27-sep)
+
+Pedido: una página de desinstalar «que dé sensación de peligro» (Fly, GitHub, Drive y, si no se puede, aviso para que el usuario lo haga; y dejar claro que la copia local se queda y que él decide), otra para cambiar el nombre de un proyecto (Fly, GitHub, Drive y local, con indicaciones donde no se llegue) y un menú «Peripatéticos» que envuelva todas las páginas.
+
+### Qué hay
+
+| Pieza | Fichero | Qué hace |
+|---|---|---|
+| Menú | `docs/index.html` | La raíz de Pages. Empieza aquí (qué es, instalar, en el PC), con tu app (ficha, pedir, errores y ayuda, cambiar el nombre), zona de peligro (eliminar) y documentación (recorrido, bitácora, análisis, guías, versiones). Enseña «Tus apps» con renombrar y eliminar por app, y por dónde va un montaje o una baja a medias. Los enlaces viejos a la raíz (`#instalar`, `#ayuda`, `?u=…&org=…`) se redirigen a `instalar.html` |
+| Instalador | `docs/instalar.html` | El de antes, movido. La marca lleva al menú; la ayuda y «Tus apps» enlazan renombrar y eliminar. Guarda también el id de Drive de cada app en el navegador (nunca en `docs/`) |
+| Eliminar | `docs/desinstalar.html` | Franja de obra, alarma roja con triángulo que late, «Se borra para siempre» / «Se queda» y casilla «Entiendo que no se puede recuperar». Cinco pasos: qué app (API de GitHub: existe, no es el molde, no es un nombre viejo redirigido), la copia del PC se queda, escribir el nombre (no se puede pegar), Drive con Claude (o a mano, o «no tiene Drive») y el PC. Vigila que el servidor deje de contestar, que GitHub dé 404 y que la web desaparezca; al final la quita de «Tus apps» |
+| Cambiar el nombre | `docs/renombrar.html` | Cinco pasos: qué app, nombre nuevo (saneado y libre en la organización), qué cambia y quién lo hace, el PC (vigila repositorio nuevo, servidor nuevo, viejo apagado y web nueva) y Claude (textos y Drive, vigila `docs/renombrado.json`). Pone al día «Tus apps» |
+| Página del PC | `docs/pc.html` | Tres modos con `?accion=`: `montar` (por defecto, como antes), `eliminar` (roja, `eliminar-<app>.cmd`) y `renombrar` (`renombrar-<app>.cmd`, con `nuevo`) |
+| Programa del PC | `docs/instalador/mantenimiento.ps1` | `eliminar`: plan en rojo y verde, escribir el nombre, Fly.io primero y GitHub el último (pide el permiso `delete_repo` si falta), comprueba y abre la carpeta de Drive si sigue ahí. No toca la copia local: la señala. `renombrar`: reserva el nombre en Fly (si está cogido, para sin tocar nada), renombra el repositorio, `FLY_APP`, `CLAUDE.md`, `nacimiento.json` y la constante `NOMBRE` de `main.rs` (ese commit despliega el servidor nuevo), espera a que responda, destruye el viejo y renombra la copia del PC con sus accesos. Reanudable |
+| Reglas | `CLAUDE.md` | Sección **Eliminar o renombrar la app** (qué hace Claude, `docs/baja.json`, `docs/renombrado.json`) y la excepción a «nunca borrar ni renombrar en Drive», solo a petición |
+
+### Decisiones
+
+- **El menú es la raíz** y el instalador pasa a `instalar.html`. Es la página que se comparte; los enlaces viejos siguen funcionando por la redirección.
+- **Eliminar: Drive antes que el PC.** Claude necesita el repositorio para saber qué carpeta es. La manda a la papelera de Drive (recuperable 30 días), no la borra del todo.
+- **Renombrar: el PC antes que Claude.** Así Claude trabaja ya en el repositorio con el nombre nuevo. El PC cambia él mismo la constante `NOMBRE` para que `deploy.yml` (que exige que `/hola` diga el nombre del repositorio) despliegue en verde sin esperar a Claude; si no la encuentra, espera a que Claude la cambie.
+- **Fly.io no renombra apps**: servidor nuevo, y el viejo se destruye solo cuando el nuevo contesta. Mientras tanto la app sigue viva.
+- **La copia del PC nunca se borra**: se dice en la alarma, en un paso propio, en la ventana del PC y en el final.
+- **Las peticiones a Claude son autosuficientes**: valen para apps nacidas antes de que `CLAUDE.md` tuviera la sección nueva.
+- Un solo programa para eliminar y renombrar (comparte ayudantes, entradas y comprobaciones) y una sola página del PC con modos.
+
+### Cómo se ha probado
+
+- **Programa del PC** con PowerShell 7.4 en modo `Legacy` (pasa los argumentos como 5.1) contra `gh` y `flyctl` simulados con estado, que rechazan un `jq` roto, y un servidor local que hace de Fly.io: 30 comprobaciones en 14 escenarios. Eliminar: simulación, nombre mal escrito, borrado con permiso `delete_repo` que falta, Drive ya en la papelera, el molde protegido, nombre viejo redirigido tras un cambio de nombre, nada que borrar, servidor huérfano. Renombrar: completo (repositorio, variables, `CLAUDE.md`, `main.rs`, `nacimiento.json`, servidores, copia, accesos), reanudación, nombre cogido en Fly, nombre cogido en GitHub, sin `NOMBRE` en `main.rs` (espera a Claude), confirmación mal escrita. Además, la orden de PowerShell **de los propios `.cmd`** generados, bajando el programa de la web local.
+- **Extremo a extremo en Chromium**, 76 comprobaciones a 390 px con la red simulada: menú y sus 19 enlaces internos, redirecciones, instalador movido, `pc.html` en los tres modos (descarga ASCII con CRLF), eliminar entero (errores de app inexistente, molde y nombre redirigido; confirmación; Drive a mano, Claude que no puede y Claude que sí; vigilancia del PC y final) y renombrar entero. Sin errores de JavaScript ni scroll horizontal. Capturas en claro y oscuro revisadas.
+- `init-plantilla.yml` ejecutado sobre una copia como `apps-de-maria/recetas`: sin residuos; el hijo nace sin menú, instalar, renombrar, desinstalar, página del PC ni programas.
+
+### Supuestos
+
+- **[SUPUESTO]** `gh auth refresh --hostname github.com --scopes delete_repo` sin terminal imprime el código igual que `gh auth login --web`. Plan B: si falla, la ventana enseña las líneas de `gh` y el usuario puede borrar el repositorio a mano en *Settings → Danger zone*.
+- **[SUPUESTO]** El conector de Google Drive puede mandar a la papelera (`trash_file`) y renombrar (`update_file` con `title`) una carpeta que creó el usuario. No se ha probado en la carpeta de este proyecto porque sus reglas prohíben borrar o renombrar en ella. Plan B: `"drive": "no"` y la página explica cómo hacerlo a mano.
+- **[SUPUESTO]** Tras renombrar el repositorio, Pages sirve la web en la dirección nueva con el despliegue siguiente (el commit de `main.rs` lo lanza), y la vieja deja de funcionar: GitHub no redirige las webs de proyecto. La página lo avisa.
+- **[SUPUESTO]** `flyctl apps destroy` de una app que no existe dice «Could not find App» o «not found». Plan B: la ventana enseña el texto de Fly.
+- Nada de esto se ha ejecutado aún en un Windows real: conviene estrenarlo con una app de prueba.

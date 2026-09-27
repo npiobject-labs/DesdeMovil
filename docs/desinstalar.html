@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build" content="DM-B3-20260927-003">
+<meta name="description" content="Peripatéticos · zona de peligro: eliminar una app de GitHub, Fly.io y Google Drive. No se puede deshacer.">
+<title>Eliminar una app · Peripatéticos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F6F2EA; --bg2:#FFFFFF; --ink:#1E2528; --ink2:#4E585C; --mute:#7C868A; --line:#DED7C9;
+  --acc:#B3261E; --acc2:#B3261E12; --acc-ink:#FFFFFF;
+  --ok:#2E7D4F; --ok2:#2E7D4F16; --warn:#8F6400; --warn2:#8F640016; --err:#B3261E; --err2:#B3261E14;
+  --haz:#E8B400; --noche:#1F0D0B; --noche2:#3A1511;
+  --code:#EFEBE2; --shadow:0 1px 2px rgba(30,37,40,.05),0 8px 24px -14px rgba(30,37,40,.3);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15191B; --bg2:#1E2427; --ink:#E9E6DE; --ink2:#B4BBBE; --mute:#838C90; --line:#2E3639;
+    --acc:#F28B82; --acc2:#F28B821C; --acc-ink:#2A0E0C;
+    --ok:#6CC493; --ok2:#6CC4931F; --warn:#E2B94A; --warn2:#E2B94A1F; --err:#F28B82; --err2:#F28B821F;
+    --haz:#D9A800; --noche:#210B09; --noche2:#3F1410; --code:#101416; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15191B; --bg2:#1E2427; --ink:#E9E6DE; --ink2:#B4BBBE; --mute:#838C90; --line:#2E3639;
+  --acc:#F28B82; --acc2:#F28B821C; --acc-ink:#2A0E0C;
+  --ok:#6CC493; --ok2:#6CC4931F; --warn:#E2B94A; --warn2:#E2B94A1F; --err:#F28B82; --err2:#F28B821F;
+  --haz:#D9A800; --noche:#210B09; --noche2:#3F1410; --code:#101416; --shadow:none;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);overflow-x:hidden}
+[hidden]{display:none!important}
+a{color:var(--acc);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.12;margin:0;text-wrap:balance}
+h2{font-size:1.45rem;margin:2rem 0 .6rem}
+h3{font-size:1.08rem}
+p{margin:.55rem 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.08em .35em;border-radius:4px;word-break:break-word}
+pre{font:.82rem/1.5 var(--mono);background:var(--code);border:1px solid var(--line);border-radius:8px;padding:.8rem .9rem;margin:0;white-space:pre-wrap;word-break:break-word}
+.wrap{max-width:32rem;margin:0 auto;padding:0 16px 5rem}
+.ink2{color:var(--ink2)}.mute{color:var(--mute)}.small{font-size:.88rem}
+
+.top{position:sticky;top:0;z-index:20;background:var(--bg)}
+.top .in{max-width:32rem;margin:0 auto;padding:.55rem 16px;display:flex;align-items:center;gap:.6rem}
+.brand{font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--ink);text-decoration:none;flex:1;white-space:nowrap}
+.pill{font-size:.74rem;font-weight:700;padding:.22rem .6rem;border-radius:99px;background:var(--err);color:#fff;white-space:nowrap;letter-spacing:.03em;text-transform:uppercase}
+.ibtn{display:inline-flex;align-items:center;justify-content:center;width:2.3rem;height:2.3rem;border:1px solid var(--line);border-radius:8px;background:var(--bg2);color:var(--ink);cursor:pointer;padding:0}
+.ibtn svg{width:1.1rem;height:1.1rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.franja{height:.6rem;background:repeating-linear-gradient(-45deg,var(--haz) 0 12px,#15191B 12px 24px)}
+
+/* ---------- la advertencia */
+.alarma{margin:1.2rem 0 0;padding:1.5rem 1.1rem 1.2rem;border-radius:16px;background:radial-gradient(120% 90% at 50% 0%,var(--noche2),var(--noche));color:#F7E9E6;position:relative;overflow:hidden;box-shadow:0 18px 40px -22px rgba(179,38,30,.8)}
+.alarma::after{content:"";position:absolute;left:0;right:0;bottom:0;height:.45rem;background:repeating-linear-gradient(-45deg,var(--haz) 0 12px,#111 12px 24px)}
+.alarma .kicker{font:700 .78rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#FF8A80;margin:0 0 .5rem;display:flex;align-items:center;gap:.4rem}
+.alarma h1{font-size:clamp(2rem,8vw,2.8rem);color:#fff}
+.alarma .lede{color:#EBC9C3;font-size:1.04rem}
+.triangulo{display:block;width:4.2rem;height:4.2rem;margin:0 0 .8rem;color:#FF5A4E;animation:late 2.4s ease-in-out infinite}
+@keyframes late{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(255,90,78,0))}50%{transform:scale(1.06);filter:drop-shadow(0 0 14px rgba(255,90,78,.55))}}
+@media (prefers-reduced-motion: reduce){.triangulo{animation:none}}
+.balance{display:grid;gap:.6rem;margin:1rem 0 .4rem}
+.balance div{border-radius:10px;padding:.7rem .85rem;font-size:.93rem}
+.balance > div > b{display:block;font:700 .78rem var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem}
+.balance ul{list-style:none;padding:0;margin:0}
+.balance li{padding:.18rem 0 .18rem 1.4rem;position:relative}
+.balance .fuera{background:rgba(255,90,78,.14);border:1px solid rgba(255,90,78,.45)}
+.balance .fuera > b{color:#FF8A80}
+.balance .fuera li::before{content:"✕";position:absolute;left:0;color:#FF5A4E;font-weight:700}
+.balance .queda{background:rgba(108,196,147,.1);border:1px solid rgba(108,196,147,.4)}
+.balance .queda > b{color:#8FD9AE}
+.balance .queda li::before{content:"✓";position:absolute;left:0;color:#8FD9AE;font-weight:700}
+.acepto{display:flex;gap:.6rem;align-items:flex-start;margin:1rem 0 .2rem;font-size:.95rem;cursor:pointer}
+.acepto input{width:1.25rem;height:1.25rem;margin:.15rem 0 0;accent-color:#FF5A4E;flex:none}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;font:600 .98rem var(--sans);padding:.72rem 1.1rem;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);text-decoration:none;cursor:pointer;min-height:2.9rem;text-align:center}
+.btn.primario{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.btn.peligro{background:#C62828;border-color:#C62828;color:#fff;box-shadow:0 0 0 3px rgba(198,40,40,.18)}
+.btn.fantasma{background:transparent}
+.btn.claro{background:transparent;color:#F7E9E6;border-color:rgba(247,233,230,.35)}
+.btn.ancho{width:100%}
+.btn.grande{font-size:1.06rem;padding:.9rem 1.3rem}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.ext::after{content:"↗";font-weight:400;opacity:.8}
+.acciones{display:flex;flex-direction:column;gap:.6rem;margin:1rem 0}
+
+/* ---------- pasos */
+.progreso{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:.9rem 0 1.4rem}
+.progreso i{display:block;height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--acc) 0 8px,#8E1E17 8px 16px);transition:width .4s}
+.paso{background:var(--bg2);border:1px solid var(--line);border-radius:14px;margin:.7rem 0;box-shadow:var(--shadow);overflow:hidden}
+.paso > header{display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem}
+.paso .n{display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:50%;border:2px solid var(--line);font:700 .9rem var(--sans);color:var(--mute);flex:none}
+.paso h3{flex:1}
+.paso .badge{font-size:.74rem;font-weight:600;padding:.18rem .55rem;border-radius:99px;white-space:nowrap}
+.paso .cuerpo{padding:0 1rem 1rem;border-top:1px solid var(--line)}
+.paso[data-estado="bloqueado"]{opacity:.55}
+.paso[data-estado="bloqueado"] .cuerpo{display:none}
+.paso[data-estado="hecho"] .n{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.paso[data-estado="hecho"] .cuerpo{display:none}
+.paso[data-estado="hecho"] > header{cursor:pointer}
+.paso[data-estado="hecho"].abierto .cuerpo{display:block}
+.paso[data-estado="activo"]{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc2)}
+.paso[data-estado="activo"] .n{border-color:var(--acc);color:var(--acc)}
+.badge.ok{background:var(--ok2);color:var(--ok)}.badge.anotado{background:var(--warn2);color:var(--warn)}.badge.activo{background:var(--acc2);color:var(--acc)}
+.pide{font-size:1.04rem;margin:.9rem 0 .6rem}
+details.por{margin:.6rem 0;border:1px dashed var(--line);border-radius:10px;background:var(--bg)}
+details.por summary{cursor:pointer;padding:.6rem .85rem;font-weight:600;font-size:.92rem;color:var(--ink2);list-style:none;display:flex;gap:.5rem;align-items:center}
+details.por summary::-webkit-details-marker{display:none}
+details.por summary::before{content:"+";display:inline-grid;place-items:center;width:1.2rem;height:1.2rem;border-radius:50%;background:var(--acc2);color:var(--acc);font-weight:700;flex:none}
+details.por[open] summary::before{content:"–"}
+details.por > div{padding:0 .9rem .8rem;font-size:.93rem;color:var(--ink2);overflow-wrap:anywhere}
+label.campo{display:block;margin:.8rem 0 .4rem;font-weight:600;font-size:.92rem}
+input.txt{width:100%;font:1rem var(--sans);padding:.7rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--bg2);color:var(--ink)}
+input.txt.confirma{font:600 1.1rem var(--mono);border:2px solid var(--acc);letter-spacing:.02em}
+input.txt.confirma.bien{border-color:var(--ok)}
+.previa{font-size:.86rem;color:var(--ink2);margin:.4rem 0 0}
+.chips{display:flex;gap:.45rem;flex-wrap:wrap;margin:.6rem 0}
+.chip{font:500 .86rem var(--sans);padding:.4rem .75rem;border-radius:99px;border:1px solid var(--line);background:var(--bg2);color:var(--ink2);cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--acc);color:var(--acc);background:var(--acc2)}
+.verif{margin:.8rem 0 0;padding:.7rem .85rem;border-radius:10px;font-size:.94rem;display:flex;gap:.6rem;align-items:flex-start}
+.verif .ic{flex:none;width:1.3rem;height:1.3rem;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.verif.espera{background:var(--code);color:var(--ink2)}.verif.espera .ic{border:2px solid var(--mute);border-top-color:transparent;animation:gira .8s linear infinite}
+.verif.ok{background:var(--ok2);color:var(--ok)}.verif.ok .ic{background:var(--ok);color:#fff}
+.verif.anotado{background:var(--warn2);color:var(--warn)}.verif.anotado .ic{background:var(--warn);color:#fff}
+.verif.err{background:var(--err2);color:var(--err)}.verif.err .ic{background:var(--err);color:#fff}
+.verif b{display:block}.verif p{margin:.2rem 0 0;color:inherit}
+@keyframes gira{to{transform:rotate(360deg)}}
+.hecho-fila{display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap}
+.hecho-fila .btn{flex:1}
+.inventario{list-style:none;padding:0;margin:.5rem 0 0;font-size:.9rem}
+.inventario li{padding:.3rem 0 .3rem 1.4rem;position:relative;border-top:1px dashed var(--line);overflow-wrap:anywhere}
+.inventario li:first-child{border-top:0}
+.inventario li::before{content:"✕";position:absolute;left:0;color:var(--err);font-weight:700}
+.inventario li.q::before{content:"✓";color:var(--ok)}
+.copia{margin:.8rem 0;padding:.9rem 1rem;border-radius:12px;background:var(--ok2);border:1px solid var(--ok)}
+.copia b.ruta{display:block;font-family:var(--mono);font-size:.86rem;margin:.3rem 0;overflow-wrap:anywhere}
+.enlace{display:flex;gap:.4rem;align-items:center;margin:.5rem 0;padding:.45rem .5rem .45rem .7rem;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.enlace code{flex:1;background:none;padding:0;font-size:.78rem;color:var(--ink2);word-break:break-all}
+.enlace button{font:600 .78rem var(--sans);color:var(--acc);background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:.3rem .6rem;cursor:pointer;flex:none}
+.block{position:relative;margin:.6rem 0}
+.block .copy{position:absolute;top:.5rem;right:.5rem;font:600 .76rem var(--sans);color:var(--acc);background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:.28rem .55rem;cursor:pointer}
+.block pre{padding-right:5rem}
+.aviso{margin:.6rem 0;padding:.6rem .85rem;border-left:3px solid var(--warn);background:var(--warn2);border-radius:0 8px 8px 0;font-size:.9rem}
+.a-mano{margin:.8rem 0 0;padding:.8rem .9rem;border:2px dashed var(--warn);border-radius:12px;background:var(--warn2);font-size:.93rem}
+.a-mano ol{margin:.4rem 0;padding-left:1.2rem}
+.linea{list-style:none;padding:0;margin:.9rem 0 0}
+.linea li{display:flex;gap:.7rem;align-items:flex-start;padding:.45rem 0;border-top:1px dashed var(--line);font-size:.95rem;color:var(--mute)}
+.linea li:first-child{border-top:0}
+.linea .p{flex:none;width:1.3rem;height:1.3rem;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.75rem;font-weight:700;margin-top:.1rem}
+.linea li.act{color:var(--ink)}.linea li.act .p{border-color:var(--acc);border-top-color:transparent;animation:gira .8s linear infinite}
+.linea li.ok{color:var(--ink)}.linea li.ok .p{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.linea small{display:block;color:var(--mute);word-break:break-word}
+.term{font:.74rem/1.5 var(--mono);background:#0C0C0C;color:#CCCCCC;border-radius:10px;padding:.8rem .9rem;margin:.5rem 0;white-space:pre-wrap;word-break:break-word}
+.term .c{color:#3B9EFF}.term .g{color:#16C60C}.term .r{color:#E74856}.term .y{color:#F9F1A5}.term .w{color:#fff;font-weight:600}
+.term .bg{background:#C50F1F;color:#fff}
+
+.fin{margin:1.2rem 0;padding:1.4rem 1.1rem;border-radius:16px;background:var(--noche);color:#EFE3E0;text-align:center}
+.fin h2{margin:.3rem 0 .4rem;color:#fff;font-size:1.7rem}
+.fin .kicker{font:700 .78rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#FF8A80;margin:0}
+.fin ul{text-align:left;margin:1rem 0;padding-left:1.1rem;font-size:.93rem;color:#E0CFCB}
+.fin ul li{margin:.35rem 0}
+.fin a{color:#FFB4AB}
+.fin .btn{margin-top:.4rem}
+.fin .btn.primario{background:#fff;color:#1E2528;border-color:#fff}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.8rem;color:var(--mute)}
+footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="in">
+  <a class="brand" href="./">Peripatéticos</a>
+  <span class="pill">Zona de peligro</span>
+  <button class="ibtn" id="tema" type="button" aria-label="Cambiar tema" title="Tema">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
+  </button>
+</div><div class="franja" aria-hidden="true"></div></div>
+
+<main class="wrap">
+
+<!-- ============================================================ ADVERTENCIA -->
+<section class="alarma" id="alarma">
+  <svg class="triangulo" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 5 61 57H3z" fill="currentColor"/><path d="M32 23v17" stroke="#1F0D0B" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="48" r="3.6" fill="#1F0D0B"/></svg>
+  <p class="kicker">Cuidado</p>
+  <h1>Vas a eliminar todo tu proyecto.</h1>
+  <p class="lede">Tu app desaparece de internet: el código y su historia en GitHub, su web, su servidor en Fly.io y su carpeta de Google Drive. <b>No hay papelera ni botón de deshacer.</b></p>
+  <div class="balance">
+    <div class="fuera"><b>Se borra para siempre</b><ul>
+      <li>El repositorio en GitHub: todo el código y cada cambio que le pediste.</li>
+      <li>La web y su bitácora. Quien tenga el enlace verá un error.</li>
+      <li>El servidor en Fly.io. «Saluda» dejará de contestar.</li>
+      <li>La carpeta de Google Drive, si le diste una (va a la papelera de Drive).</li>
+    </ul></div>
+    <div class="queda"><b>Se queda</b><ul>
+      <li>Tu copia de seguridad en el PC, en <b>Documentos\Peripateticos</b>. Tú decides si la guardas o la borras.</li>
+      <li>Tus cuentas de GitHub, Fly.io, Claude y Google.</li>
+      <li>Tu organización y su llave del servidor: sirven para tus otras apps.</li>
+      <li>Tus otras apps: no se tocan.</li>
+    </ul></div>
+  </div>
+  <label class="acepto"><input type="checkbox" id="acepto"> <span>Entiendo que lo que se borra <b>no se puede recuperar</b>.</span></label>
+  <div class="acciones">
+    <button class="btn peligro grande" type="button" id="seguir" disabled>Seguir, quiero eliminar una app</button>
+    <a class="btn claro" href="./">No, llévame al menú</a>
+  </div>
+</section>
+
+<!-- ============================================================ PASOS -->
+<section id="s-pasos" hidden>
+  <h2>Eliminar paso a paso</h2>
+  <p class="ink2">Nada se borra hasta el paso 4. Hasta entonces puedes dejarlo cuando quieras.</p>
+  <div class="progreso"><i id="barra"></i></div>
+
+  <!-- 1 · qué app -->
+  <article class="paso" data-id="app">
+    <header><span class="n">1</span><h3>¿Qué app quieres eliminar?</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <div id="mis-apps" hidden><p class="pide" style="margin-bottom:.2rem">Elige una de las que montaste desde este móvil:</p><div class="chips" id="chips"></div><p class="small ink2" style="margin:.2rem 0 0">O escríbela:</p></div>
+      <label class="campo" for="in-app">Nombre de la app</label>
+      <input class="txt" id="in-app" placeholder="recetas" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <label class="campo" for="in-org">Tu organización de GitHub</label>
+      <input class="txt" id="in-org" placeholder="apps-de-maria" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <p class="previa" id="previa-app"></p>
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Buscarla</button></div>
+      <div class="verif" hidden></div>
+    </div>
+  </article>
+
+  <!-- 2 · la copia del PC se queda -->
+  <article class="paso" data-id="copia">
+    <header><span class="n">2</span><h3>Tu copia del PC se queda</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <div class="copia">
+        <p style="margin:0">Cuando montaste la app, el PC guardó una copia de seguridad en:</p>
+        <b class="ruta">Documentos\Peripateticos\<span class="A">recetas</span></b>
+        <p style="margin:0">con su ficha, accesos directos, «Actualizar copia» y un acceso en el escritorio. <b>Nadie la va a borrar.</b></p>
+      </div>
+      <p>Es tuya y queda en tus manos:</p>
+      <ul class="inventario">
+        <li class="q"><b>Consérvala</b> como recuerdo o como copia de seguridad: dentro, <code>repo</code> tiene el código entero tal como estaba.</li>
+        <li class="q"><b>O bórrala</b> tú cuando quieras: botón derecho sobre la carpeta → Eliminar. Y el acceso del escritorio, igual.</li>
+      </ul>
+      <p class="small ink2">«Actualizar copia» dejará de funcionar: ya no habrá nada en GitHub que bajar. No estropea la copia; solo avisa de que no puede.</p>
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Entendido</button></div>
+      <div class="verif" hidden></div>
+    </div>
+  </article>
+
+  <!-- 3 · confirmar -->
+  <article class="paso" data-id="confirma">
+    <header><span class="n">3</span><h3>Escribe su nombre para confirmar</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <p class="pide">Para seguir, escribe <b class="A">recetas</b> tal cual. Es la forma de estar seguros de que no te equivocas de app.</p>
+      <ul class="inventario" id="inventario"></ul>
+      <label class="campo" for="in-confirma">Nombre de la app</label>
+      <input class="txt confirma" id="in-confirma" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="hecho-fila"><button class="btn peligro hecho" type="button" disabled>Sí, eliminar «<span class="A">recetas</span>»</button></div>
+      <div class="verif" hidden></div>
+    </div>
+  </article>
+
+  <!-- 4 · Drive, con Claude -->
+  <article class="paso" data-id="drive">
+    <header><span class="n">4</span><h3>Su carpeta de Google Drive</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <p class="pide">Primero, Drive: solo Claude puede entrar en tu carpeta. Abre Claude, entra en <b>Code</b>, elige <code><span class="O">tuorganizacion</span>/<span class="A">recetas</span></code> y pégale esto:</p>
+      <div class="block"><pre id="prompt-drive"></pre><button class="copy" type="button" id="copiar-drive">Copiar</button></div>
+      <div class="acciones"><a class="btn ext" href="https://claude.ai/code" target="_blank" rel="noopener">Abrir Claude Code</a></div>
+      <details class="por"><summary>¿Por qué va antes que lo demás?</summary><div>
+        <p>Ni esta página ni el PC pueden entrar en tu Google Drive: solo Claude, con el conector de Google Drive. Y Claude necesita tu app para saber cuál es la carpeta: por eso Drive va antes de que el PC la borre de GitHub.</p>
+        <p>La carpeta va a la <b>papelera de Drive</b>: allí la puedes recuperar durante 30 días, y después Google la borra sola.</p>
+      </div></details>
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Hecho, ya se lo he pedido</button></div>
+      <p class="small" style="margin:.7rem 0 0"><button class="btn fantasma" type="button" id="drive-mano" style="min-height:0;padding:.4rem .7rem;font-size:.85rem">La borro yo a mano</button> <button class="btn fantasma" type="button" id="sin-drive" style="min-height:0;padding:.4rem .7rem;font-size:.85rem">Mi app no tiene Drive</button></p>
+      <div class="a-mano" id="a-mano" hidden>
+        <b>Bórrala tú en Google Drive</b>
+        <ol>
+          <li>Abre Google Drive<span id="con-enlace" hidden> (o <a id="enlace-carpeta" href="#" target="_blank" rel="noopener">tu carpeta directamente</a>)</span>.</li>
+          <li>Busca la carpeta <b class="A">recetas</b> en «Mi unidad».</li>
+          <li>En el móvil: <b>⋮ → Mover a la papelera</b>. En el ordenador: botón derecho → <b>Mover a la papelera</b>.</li>
+        </ol>
+        <div class="hecho-fila"><a class="btn ext" href="https://drive.google.com/drive/my-drive" target="_blank" rel="noopener">Abrir Google Drive</a><button class="btn primario" type="button" id="drive-hecho">Hecho, está en la papelera</button></div>
+      </div>
+      <div class="verif" hidden></div>
+    </div>
+  </article>
+
+  <!-- 5 · PC: GitHub y Fly.io -->
+  <article class="paso" data-id="pc">
+    <header><span class="n">5</span><h3>El PC la borra de GitHub y Fly.io</h3><span class="badge"></span></header>
+    <div class="cuerpo">
+      <p class="pide">Enciende el PC y ábrete allí este enlace. Descargas un archivo, lo abres y, cuando te lo pida, escribes el nombre de tu app. Eso borra tu app para siempre.</p>
+      <p class="small ink2" style="margin-top:0">Si la montaste desde ese mismo PC, no te pedirá iniciar sesión (salvo un permiso nuevo en GitHub: «borrar repositorios»).</p>
+      <div class="acciones"><button class="btn primario" type="button" id="compartir-pc">Enviarme el enlace al PC</button></div>
+      <div class="enlace"><code id="enlace-pc">…</code><button type="button" id="copiar-pc">Copiar</button></div>
+      <p class="aviso"><b>Windows te avisará</b> de que es un archivo bajado de internet: en la ventana gris pulsa <i>Ejecutar</i>; en la azul, <i>Más información</i> y <i>Ejecutar de todas formas</i>.</p>
+      <details class="por"><summary>Lo que verás en la pantalla del PC</summary><div>
+<div class="term"><span class="bg">  ==========================================================  </span>
+<span class="bg">    PELIGRO :: eliminar la app "<span class="A">recetas</span>"                    </span>
+<span class="bg">    Borra tu app de internet. No se puede deshacer.         </span>
+<span class="bg">  ==========================================================  </span>
+<span class="c">== 4/6 Lo que hay de '<span class="A">recetas</span>'</span>
+   <span class="r">SE BORRA, PARA SIEMPRE:</span>
+   <span class="r">x  el servidor en Fly.io   <span class="F">recetas-tuorganizacion</span></span>
+   <span class="r">x  tu app en GitHub         <span class="O">tuorganizacion</span>/<span class="A">recetas</span></span>
+   <span class="g">SE QUEDA:</span>
+   +  tu copia en este PC      ...\Documentos\Peripateticos\<span class="A">recetas</span>
+
+   <span class="bg">Esto NO se puede deshacer.</span>
+   Nombre de la app (<span class="A">recetas</span>): <span class="w"><span class="A">recetas</span></span>
+<span class="c">== 5/6 Borrando</span>
+   <span class="g">OK</span>  Servidor borrado de Fly.io
+   <span class="g">OK</span>  <span class="O">tuorganizacion</span>/<span class="A">recetas</span> borrada de GitHub, con su web y su bitacora
+<span class="bg">================ <span class="A">recetas</span> eliminada en 2.1 min ================</span></div>
+        <p>Si escribes otra cosa, o cierras la ventana, no se borra nada.</p>
+      </div></details>
+      <div class="hecho-fila"><button class="btn primario hecho" type="button">Ya lo he abierto en el PC</button></div>
+      <div class="verif" hidden></div>
+      <ol class="linea" id="linea" hidden>
+        <li data-l="srv"><span class="p"></span><span>Apagando su servidor en Fly.io<small></small></span></li>
+        <li data-l="repo"><span class="p"></span><span>Borrándola de GitHub<small></small></span></li>
+        <li data-l="web"><span class="p"></span><span>Retirando su web<small></small></span></li>
+      </ol>
+    </div>
+  </article>
+
+  <!-- ============================================================ FIN -->
+  <div class="fin" id="fin" hidden>
+    <p class="kicker">Eliminada</p>
+    <h2>«<span class="A">recetas</span>» ya no existe</h2>
+    <p>Ni en GitHub, ni en Fly.io, ni en su web.</p>
+    <ul id="queda"></ul>
+    <div class="acciones">
+      <a class="btn primario" href="./">Volver al menú</a>
+      <a class="btn claro" href="instalar.html#portada">Montar otra app</a>
+      <button class="btn claro" type="button" id="otra-baja">Eliminar otra app</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Build <code>DM-B3-20260927-003</code> · <a href="./">Menú</a> · <a href="instalar.html#ayuda">Ayuda</a> · <a href="renombrar.html">Cambiar el nombre</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
+</footer>
+</main>
+
+<script>
+(function(){
+  var KEY = 'peripateticos-baja-v1', INST = 'peripateticos-v1';
+  function lee(k){ try { return JSON.parse(localStorage.getItem(k) || '{}') } catch(e){ return {} } }
+  function escribe(k, v){ try { localStorage.setItem(k, JSON.stringify(v)) } catch(e){} }
+  var st = lee(KEY), inst = lee(INST);
+  st.hechos = st.hechos || {}; st.datos = st.datos || {}; st.info = st.info || {};
+  function guardar(){ escribe(KEY, st) }
+
+  // ---------------------------------------------------------------- nombres (las reglas del instalador)
+  function slug(v){
+    var s = String(v||'').trim().toLowerCase().replace(/[\s_.]+/g,'-').replace(/[^a-z0-9-]/g,'').replace(/-{2,}/g,'-').replace(/^-+|-+$/g,'');
+    if (s.length > 15) { s = s.slice(0,15); if (s.indexOf('-') > 0) s = s.replace(/-[^-]*$/,'') }
+    return s.replace(/-+$/,'');
+  }
+  function nombreFly(v){ return String(v||'').toLowerCase().replace(/[^a-z0-9-]/g,'-').slice(0,30).replace(/-+$/,'') }
+  function cuenta(v){ return String(v||'').trim().replace(/^@/,'').replace(/[^A-Za-z0-9-]/g,'') }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c] }) }
+  // El molde de esta misma web (owner.github.io/repo): nunca se borra desde aquí.
+  var hm = location.hostname.match(/^([^.]+)\.github\.io$/i), trozo = location.pathname.split('/').filter(Boolean)[0];
+  var PLANTILLA = ((hm && trozo) ? hm[1] + '/' + trozo : 'npiobject-labs/DesdeMovil').toLowerCase();
+  function D(){
+    var a = slug(st.datos.app), o = st.info.org || cuenta(st.datos.org);
+    var fa = st.info.flyApp || nombreFly((a||'recetas') + '-' + (o||'tuorganizacion'));
+    return { app: a, org: o, flyApp: fa, web: 'https://' + (o||'tuorganizacion').toLowerCase() + '.github.io/' + (a||'recetas') + '/', servidor: 'https://' + fa + '.fly.dev/' };
+  }
+
+  // ---------------------------------------------------------------- red
+  function pide(url, ms){
+    var ctl = ('AbortController' in window) ? new AbortController() : null, t = setTimeout(function(){ if (ctl) ctl.abort() }, ms || 20000);
+    return fetch(url, {cache:'no-store', signal: ctl ? ctl.signal : undefined}).then(function(r){ clearTimeout(t); return r }, function(e){ clearTimeout(t); throw e });
+  }
+  function gh(ruta){
+    return pide('https://api.github.com/' + ruta).then(function(r){
+      var limite = (r.status === 403 || r.status === 429) && r.headers.get('x-ratelimit-remaining') === '0';
+      return r.json().catch(function(){ return null }).then(function(j){ return { status: r.status, json: j, limite: limite || r.status === 429 } });
+    });
+  }
+  function json(url){ return pide(url + (url.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now()).then(function(r){ return r.ok ? r.json() : null }).catch(function(){ return null }) }
+
+  // ---------------------------------------------------------------- pintar
+  function aplica(){
+    var d = D(), a = d.app || 'recetas', o = d.org || 'tuorganizacion';
+    [].forEach.call(document.querySelectorAll('.A'), function(e){ e.textContent = a });
+    [].forEach.call(document.querySelectorAll('.O'), function(e){ e.textContent = o });
+    [].forEach.call(document.querySelectorAll('.F'), function(e){ e.textContent = d.flyApp });
+    document.getElementById('previa-app').innerHTML = d.app && d.org ? 'Buscaré <code>github.com/' + esc(o) + '/' + esc(a) + '</code>.' : '';
+    document.getElementById('prompt-drive').textContent = promptDrive();
+    document.getElementById('enlace-pc').textContent = enlacePC();
+    var id = driveId(); document.getElementById('con-enlace').hidden = !id;
+    if (id) document.getElementById('enlace-carpeta').href = 'https://drive.google.com/drive/folders/' + id;
+    var inv = [], i = st.info;
+    if (d.app && d.org) {
+      inv.push('<li>GitHub: <code>' + esc(o) + '/' + esc(a) + '</code>, con todo su código y su historia</li>');
+      inv.push('<li>La web: <code>' + esc(d.web.replace('https://','')) + '</code></li>');
+      inv.push('<li>El servidor: <code>' + esc(d.servidor.replace('https://','')) + '</code></li>');
+      if (i.drive !== false) inv.push('<li>Su carpeta de Google Drive' + (i.drive === null || i.drive === undefined ? ', si tiene' : '') + ' (a la papelera)</li>');
+      inv.push('<li class="q">Se queda tu copia del PC: <code>Documentos\\Peripateticos\\' + esc(a) + '</code></li>');
+    }
+    document.getElementById('inventario').innerHTML = inv.join('');
+  }
+  // El id de la carpeta, si este navegador lo sabe (lo guardó el instalador). Nunca sale de aquí.
+  function driveId(){
+    var d = D(), apps = inst.apps || [];
+    for (var k = 0; k < apps.length; k++) if (apps[k].app === d.app && apps[k].org === d.org && apps[k].driveId) return apps[k].driveId;
+    var dd = inst.datos || {};
+    var m = String(dd.drive||'').match(/\/folders\/([A-Za-z0-9_-]{25,})/);
+    return (slug(dd.nombre) === d.app && m) ? m[1] : '';
+  }
+  function promptDrive(){
+    var a = D().app || 'recetas';
+    return 'Voy a eliminar esta app («' + a + '») por completo con Peripatéticos. Antes, borra su carpeta de Google Drive:\n\n'
+      + '1. Toma el id de la fila «Carpeta de Drive (id)» de Parámetros en CLAUDE.md. Si está vacía, no hay carpeta: ve al paso 3 con "drive": "sin-drive".\n'
+      + '2. Con el conector de Google Drive, manda esa carpeta a la papelera (trash_file con ese id). Solo esa carpeta. Es una excepción a la regla de no borrar en Drive: te lo pido yo, su dueño.\n'
+      + '3. Escribe docs/baja.json con {"drive": "papelera" | "sin-drive" | "no", "fecha": "<ISO con zona>", "motivo": "<solo si no pudiste, en una frase>"}, sin el id de la carpeta, y haz commit y push a main.\n\n'
+      + 'No hace falta resumen de sesión ni bitácora: la app se va a borrar. Dime el resultado en una frase.';
+  }
+  function enlacePC(){
+    var d = D(), u = new URL('pc.html', location.href);
+    u.search = '?accion=eliminar&app=' + encodeURIComponent(d.app||'') + '&org=' + encodeURIComponent(d.org||'');
+    return u.href;
+  }
+
+  // ---------------------------------------------------------------- pasos
+  var pasos = [].slice.call(document.querySelectorAll('.paso'));
+  function paso(id){ return document.querySelector('.paso[data-id="'+id+'"]') }
+  function primerPendiente(){ for (var i=0;i<pasos.length;i++) if (!st.hechos[pasos[i].dataset.id]) return i; return pasos.length }
+  function pinta(){
+    var act = primerPendiente();
+    pasos.forEach(function(p,i){
+      var id = p.dataset.id, b = p.querySelector('.badge');
+      var e = st.hechos[id] ? 'hecho' : (i===act ? 'activo' : 'bloqueado');
+      p.dataset.estado = e;
+      if (e==='hecho') {
+        var h = st.hechos[id];
+        b.className = 'badge ' + (h === 'anotado' || h === 'a-mano' ? 'anotado' : 'ok');
+        b.textContent = h === 'a-mano' ? 'a mano' : h === 'omitido' ? 'sin Drive' : h === 'anotado' ? 'anotado' : id === 'confirma' ? 'confirmado' : id === 'copia' ? 'entendido' : id === 'pc' ? 'borrada' : 'hecho';
+        if (h === 'omitido') b.className = 'badge';
+      }
+      else if (e==='activo') { b.className='badge activo'; b.textContent='ahora' }
+      else { b.className='badge'; b.textContent='' }
+    });
+    document.getElementById('barra').style.width = (act/pasos.length*100)+'%';
+    document.getElementById('fin').hidden = act < pasos.length;
+    // La alarma se queda hasta elegir la app; al terminar ya no tiene sentido.
+    if (st.aceptado) document.getElementById('alarma').hidden = act >= pasos.length || !!st.hechos.app;
+    if (act >= pasos.length) terminar();
+    aplica();
+  }
+  pasos.forEach(function(p){
+    p.querySelector('header').addEventListener('click', function(){ if (p.dataset.estado==='hecho') p.classList.toggle('abierto') });
+    p.querySelector('.hecho').addEventListener('click', function(){ comprobar(p) });
+  });
+  function verif(p, clase, titulo, texto){
+    var v = p.querySelector('.verif'); v.hidden = false; v.className = 'verif '+clase;
+    var ic = {espera:'', ok:'✓', anotado:'…', err:'!'}[clase];
+    v.innerHTML = '<span class="ic">'+ic+'</span><div><b>'+titulo+'</b>'+(texto?'<p>'+texto+'</p>':'')+'</div>';
+  }
+  function avanza(){ setTimeout(function(){ pinta(); var s = pasos[primerPendiente()]; (s || document.getElementById('fin')).scrollIntoView({behavior:'smooth',block:'start'}) }, 900) }
+  function comprobar(p){
+    var id = p.dataset.id, btn = p.querySelector('.hecho');
+    if (id === 'pc') { vigilar(); return }
+    if (id === 'drive') { vigilarDrive(); return }
+    btn.disabled = true; verif(p, 'espera', 'Comprobando…', '');
+    COMPRUEBA[id]().catch(function(e){
+      return { estado:'anotado', titulo:'No he podido comprobarlo ahora', texto:'No llego a GitHub desde este móvil ('+esc(e.message||e)+'). Lo comprobará el PC antes de borrar nada.' };
+    }).then(function(r){
+      btn.disabled = false; verif(p, r.estado, r.titulo, r.texto);
+      if (id === 'confirma') btn.disabled = !coincide();
+      if (r.estado !== 'err') { st.hechos[id] = r.estado === 'anotado' ? 'anotado' : true; guardar(); avanza() }
+    });
+  }
+  var COMPRUEBA = {
+    app: function(){
+      st.datos.app = document.getElementById('in-app').value; st.datos.org = document.getElementById('in-org').value; st.info = {}; guardar(); aplica();
+      var a = slug(st.datos.app), o = cuenta(st.datos.org);
+      if (!a) return Promise.resolve({estado:'err', titulo:'Falta el nombre de la app', texto:'Tal como se llama en GitHub: «recetas», «mi-tienda»…'});
+      if (!o) return Promise.resolve({estado:'err', titulo:'Falta tu organización', texto:'La que pusiste en el paso 3 al montarla.'});
+      return gh('repos/' + encodeURIComponent(o) + '/' + encodeURIComponent(a)).then(function(r){
+        if (r.limite) return {estado:'anotado', titulo:'Anotada: ' + esc(o) + '/' + esc(a), texto:'GitHub no me deja preguntar ahora (límite de consultas). El PC comprobará que existe antes de borrar nada.'};
+        if (r.status === 404) return {estado:'err', titulo:'No encuentro ' + esc(o) + '/' + esc(a) + ' en GitHub', texto:'Revisa cómo se escribe. Si ya la borraste, no hay nada que hacer aquí.'};
+        if (r.status !== 200 || !r.json) return {estado:'anotado', titulo:'Anotada', texto:'GitHub no ha contestado bien ('+r.status+'). El PC lo comprobará.'};
+        var j = r.json;
+        if (String(j.name).toLowerCase() !== a) return {estado:'err', titulo:'Esa app ahora se llama «' + esc(j.name) + '»', texto:'GitHub redirige el nombre viejo. Escribe «' + esc(j.name) + '».'};
+        if (j.is_template || String(j.full_name).toLowerCase() === PLANTILLA) return {estado:'err', titulo:esc(j.full_name) + ' es el molde de Peripatéticos', texto:'De él nacen todas las apps. No se borra desde aquí.'};
+        st.info.org = j.owner && j.owner.login || o;
+        var d = D();
+        return json(d.web + 'nacimiento.json').then(function(n){
+          if (n) { if (n.fly_app) st.info.flyApp = n.fly_app; st.info.drive = !!n.drive; if (n.creado) st.info.creado = n.creado }
+          else st.info.drive = null;
+          guardar(); aplica(); var d2 = D();
+          var fecha = st.info.creado ? ' · nacida el ' + new Date(st.info.creado).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}) : '';
+          return {estado:'ok', titulo:'Encontrada: ' + esc(j.full_name) + fecha, texto:'Servidor <code>' + esc(d2.flyApp) + '</code>' + (st.info.drive === true ? ' · con carpeta en Drive' : st.info.drive === false ? ' · sin Drive' : '') + '. Todavía no se ha borrado nada.'};
+        });
+      });
+    },
+    copia: function(){ return Promise.resolve({estado:'ok', titulo:'Tu copia se queda en tu PC', texto:'Tú decides qué hacer con ella.'}) },
+    confirma: function(){
+      if (!coincide()) return Promise.resolve({estado:'err', titulo:'No coincide', texto:'Escribe exactamente «' + esc(D().app) + '».'});
+      return Promise.resolve({estado:'ok', titulo:'Confirmado', texto:'Aún no se ha borrado nada: lo harán Claude (Drive) y el PC (GitHub y Fly.io), en los dos pasos siguientes.'});
+    }
+  };
+  var inConf = document.getElementById('in-confirma');
+  function coincide(){ return inConf.value.trim() === D().app && !!D().app }
+  inConf.addEventListener('input', function(){ var ok = coincide(); inConf.classList.toggle('bien', ok); paso('confirma').querySelector('.hecho').disabled = !ok });
+  inConf.addEventListener('paste', function(e){ e.preventDefault() });   // escrito a mano, no pegado
+
+  // ---------------------------------------------------------------- paso 4: Drive
+  // Claude deja docs/baja.json en la app; esta página lo lee de la web.
+  var vigD = null;
+  function vigilarDrive(){
+    if (vigD) return;
+    var p = paso('drive'), btn = p.querySelector('.hecho');
+    st.vigDrive = st.vigDrive || { inicio: Date.now() }; guardar();
+    btn.disabled = true; vigD = true;
+    function vuelta(){
+      var d = D(), s = Math.round((Date.now() - st.vigDrive.inicio) / 1000);
+      verif(p, 'espera', 'Esperando a que Claude lo haga…', 'Llevo ' + (s >= 60 ? Math.floor(s/60) + ' min ' + (s%60) + ' s' : s + ' s') + '. Cuando Claude termine y se publique, aparece aquí solo (un par de minutos).');
+      json(d.web + 'baja.json').then(function(j){
+        if (!st.vigDrive) return;
+        if (j && (j.drive === 'papelera' || j.drive === 'sin-drive')) {
+          vigD = null; btn.disabled = false; delete st.vigDrive; st.hechos.drive = j.drive === 'papelera' ? true : 'omitido'; st.driveFin = j.drive; guardar();
+          verif(p, 'ok', j.drive === 'papelera' ? 'Tu carpeta de Drive está en la papelera' : 'Tu app no tenía carpeta en Drive', j.drive === 'papelera' ? 'Google la borrará sola dentro de 30 días.' : 'Nada que borrar ahí.');
+          avanza(); return;
+        }
+        if (j && j.drive === 'no') {
+          vigD = null; btn.disabled = false; delete st.vigDrive; guardar();
+          verif(p, 'err', 'Claude no ha podido borrar tu carpeta', (j.motivo ? esc(j.motivo) + '. ' : '') + 'Bórrala tú: aquí abajo tienes cómo. Después sigue con el paso 5.');
+          document.getElementById('a-mano').hidden = false; return;
+        }
+        if (Date.now() - st.vigDrive.inicio > 30*60*1000) {
+          vigD = null; btn.disabled = false; delete st.vigDrive; guardar();
+          verif(p, 'anotado', 'Todavía no lo veo', '¿Le has pegado la petición a Claude en el repositorio de tu app? Si prefieres, bórrala tú a mano.');
+          return;
+        }
+        vigD = setTimeout(vuelta, 10000);
+      });
+    }
+    vuelta();
+  }
+  document.getElementById('copiar-drive').addEventListener('click', function(){ copia(promptDrive(), this, 'Copiar') });
+  document.getElementById('drive-mano').addEventListener('click', function(){ document.getElementById('a-mano').hidden = false; document.getElementById('a-mano').scrollIntoView({behavior:'smooth',block:'center'}) });
+  document.getElementById('drive-hecho').addEventListener('click', function(){
+    if (vigD && vigD !== true) clearTimeout(vigD); vigD = null; delete st.vigDrive;
+    var p = paso('drive'); p.querySelector('.hecho').disabled = false;
+    st.hechos.drive = 'a-mano'; st.driveFin = 'a-mano'; guardar();
+    verif(p, 'anotado', 'Anotado: la has mandado tú a la papelera', 'No puedo comprobarlo desde aquí. Google la borrará sola dentro de 30 días.');
+    avanza();
+  });
+  document.getElementById('sin-drive').addEventListener('click', function(){
+    if (vigD && vigD !== true) clearTimeout(vigD); vigD = null; delete st.vigDrive;
+    var p = paso('drive'); p.querySelector('.hecho').disabled = false;
+    st.hechos.drive = 'omitido'; st.driveFin = 'sin-drive'; guardar();
+    verif(p, 'anotado', 'Sin Drive', 'Nada que borrar ahí.');
+    avanza();
+  });
+
+  // ---------------------------------------------------------------- paso 5: vigilar que desaparece
+  // Lo contrario del instalador: la API de GitHub da 404, el servidor deja de
+  // contestar y la web deja de publicarse. El PC borra primero el servidor.
+  var vig = null;
+  function vigilar(){
+    if (vig) return;
+    st.vig = st.vig || { inicio: Date.now() }; guardar();
+    var p = paso('pc'), lin = document.getElementById('linea'); lin.hidden = false; p.querySelector('.verif').hidden = true;
+    var li = {}; [].forEach.call(lin.children, function(x){ li[x.dataset.l] = x });
+    var hecho = {}, fallos = { srv: 0, web: 0 }, sinApi = false;
+    function marca(k, texto){ hecho[k] = true; li[k].className = 'ok'; li[k].querySelector('.p').textContent = '✓'; li[k].querySelector('small').innerHTML = texto }
+    function activa(){ ['srv','repo','web'].forEach(function(k){ if (!hecho[k]) li[k].className = 'act' }) }
+    function vuelta(){
+      var d = D(), t = [];
+      if (!hecho.srv) t.push(pide(d.servidor + 'hola', 30000).then(function(r){ return r.ok ? r.json() : null }).catch(function(){ return null }).then(function(j){
+        if (j && String(j.app).toLowerCase() === d.app) { fallos.srv = 0; li.srv.querySelector('small').textContent = 'Todavía contesta: «' + (j.mensaje||'') + '»' }
+        else if (++fallos.srv >= 2) marca('srv', 'Ya no contesta: ' + esc(d.servidor.replace('https://','')));
+      }));
+      if (!hecho.repo && !sinApi) t.push(gh('repos/' + d.org + '/' + d.app).then(function(r){
+        if (r.limite) { sinApi = true; return }
+        if (r.status === 404) marca('repo', 'github.com/' + esc(d.org) + '/' + esc(d.app) + ' ya no existe');
+        else if (r.status === 200) li.repo.querySelector('small').textContent = 'Todavía está en GitHub';
+      }).catch(function(){}));
+      if (!hecho.web) t.push(pide(d.web + '?t=' + Date.now()).then(function(r){ return r.status }).catch(function(){ return 0 }).then(function(s){
+        if (s === 200) { fallos.web = 0; li.web.querySelector('small').textContent = 'Todavía se ve' }
+        else if (++fallos.web >= 2) marca('web', 'Ya no se publica: ' + esc(d.web.replace('https://','')));
+      }));
+      return Promise.all(t).then(function(){
+        // Sin la API de GitHub (límite de consultas), la web caída dice lo mismo que el 404.
+        if (!hecho.repo && sinApi && hecho.web) marca('repo', 'Su web ya no existe: GitHub la ha borrado');
+        activa();
+        if (hecho.srv && hecho.repo) {
+          if (!hecho.web) li.web.querySelector('small').textContent = 'Desaparecerá en unos minutos: es la caché de GitHub.';
+          vig = null; st.hechos.pc = true; delete st.vig; guardar();
+          verif(p, 'ok', 'Borrada de GitHub y de Fly.io', 'Ya puedes apagar el PC.');
+          avanza(); return;
+        }
+        if (Date.now() - st.vig.inicio > 45*60*1000) {
+          vig = null; delete st.vig; guardar();
+          verif(p, 'anotado', 'Todavía la veo', 'Mira lo que dice la ventana del PC. Si has escrito otra cosa o la has cerrado, no se ha borrado nada: vuelve a abrir el archivo. Cuando termine, pulsa el botón otra vez.');
+          return;
+        }
+        vig = setTimeout(vuelta, 10000);
+      });
+    }
+    activa(); vig = true; vuelta();
+  }
+
+  // ---------------------------------------------------------------- final
+  function terminar(){
+    var d = D();
+    if (!st.fin) {
+      st.fin = { fecha: new Date().toISOString() }; guardar();
+      // Fuera de «Tus apps», y si el instalador la tenía a medias o montada, limpio.
+      inst = lee(INST);
+      inst.apps = (inst.apps || []).filter(function(x){ return !(x.app === d.app && String(x.org).toLowerCase() === String(d.org).toLowerCase()) });
+      if (inst.datos && slug(inst.datos.nombre) === d.app) inst = { tema: inst.tema, perfil: inst.perfil, apps: inst.apps, hechos: {}, datos: {}, reales: {}, verif: {} };
+      escribe(INST, inst);
+    }
+    var q = [];
+    q.push('<li><b>Tu copia en el PC sigue ahí</b>: Documentos\\Peripateticos\\' + esc(d.app) + '. Guárdala como copia de seguridad o bórrala tú cuando quieras.</li>');
+    if (st.driveFin === 'a-mano') q.push('<li><b>Drive</b>: la mandaste tú a la papelera. Si no lo hiciste aún, <a href="https://drive.google.com/drive/my-drive" target="_blank" rel="noopener">hazlo ahora</a>.</li>');
+    else if (st.driveFin === 'papelera') q.push('<li><b>Drive</b>: tu carpeta está en la papelera; Google la borra sola a los 30 días.</li>');
+    q.push('<li><b>Claude</b>: tus conversaciones sobre esta app siguen en Claude Code. Archívalas si quieres.</li>');
+    q.push('<li><b>Tus cuentas</b> y tu organización siguen ahí, listas para otra app.</li>');
+    document.getElementById('queda').innerHTML = q.join('');
+  }
+
+  // ---------------------------------------------------------------- enviar, copiar, tema
+  function copia(t, b, etiqueta){
+    function ok(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = etiqueta }, 1500) }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, ok); else ok();
+  }
+  document.getElementById('copiar-pc').addEventListener('click', function(){ copia(enlacePC(), this, 'Copiar') });
+  document.getElementById('compartir-pc').addEventListener('click', function(){
+    var d = D(), url = enlacePC();
+    if (navigator.share) navigator.share({ title: 'Eliminar ' + d.app + ' desde mi PC', text: 'Ábrelo en el PC con Windows:', url: url }).catch(function(){});
+    else location.href = 'mailto:?subject=' + encodeURIComponent('Eliminar ' + d.app + ' desde mi PC') + '&body=' + encodeURIComponent('Ábrelo en el PC con Windows:\n' + url);
+  });
+
+  var root = document.documentElement;
+  function setT(t){ inst = lee(INST); inst.tema = t; escribe(INST, inst); if (t) root.setAttribute('data-theme', t); else root.removeAttribute('data-theme') }
+  if (inst.tema) root.setAttribute('data-theme', inst.tema);
+  document.getElementById('tema').addEventListener('click', function(){ var o = ['','light','dark']; setT(o[(o.indexOf(lee(INST).tema||'')+1)%3]) });
+
+  // ---------------------------------------------------------------- advertencia y arranque
+  var acepto = document.getElementById('acepto'), seguir = document.getElementById('seguir');
+  acepto.addEventListener('change', function(){ seguir.disabled = !acepto.checked });
+  function abrePasos(){ document.getElementById('s-pasos').hidden = false }
+  seguir.addEventListener('click', function(){ st.aceptado = true; guardar(); abrePasos(); pinta(); document.getElementById('s-pasos').scrollIntoView({behavior:'smooth'}) });
+
+  // Apps montadas desde este navegador, para elegir sin escribir.
+  var apps = inst.apps || [];
+  if (apps.length) {
+    document.getElementById('mis-apps').hidden = false;
+    document.getElementById('chips').innerHTML = apps.map(function(x, i){ return '<button class="chip" type="button" data-i="' + i + '">' + esc(x.app) + ' <span class="mute">· ' + esc(x.org) + '</span></button>' }).join('');
+    [].forEach.call(document.querySelectorAll('#chips .chip'), function(c){ c.addEventListener('click', function(){
+      var x = apps[+c.dataset.i]; document.getElementById('in-app').value = x.app; document.getElementById('in-org').value = x.org;
+      [].forEach.call(document.querySelectorAll('#chips .chip'), function(o){ o.setAttribute('aria-pressed', o === c) });
+      st.datos.app = x.app; st.datos.org = x.org; guardar(); aplica();
+    }) });
+  }
+  // Desde el menú: ?app=…&org=… elige la app (si no hay otra baja a medias).
+  var q = new URLSearchParams(location.search);
+  if (q.get('app') && st.fin) { st = { hechos: {}, datos: {}, info: {} }; guardar() }
+  if (q.get('app') && q.get('org') && !st.hechos.app) { st.datos.app = slug(q.get('app')); st.datos.org = cuenta(q.get('org')); guardar() }
+  if (q.get('app')) try { history.replaceState(null, '', location.pathname) } catch(e){}
+  document.getElementById('in-app').value = st.datos.app || '';
+  document.getElementById('in-org').value = st.datos.org || (inst.perfil && inst.perfil.org) || '';
+  ['in-app','in-org'].forEach(function(id){ document.getElementById(id).addEventListener('input', function(){ st.datos[id === 'in-app' ? 'app' : 'org'] = this.value; guardar(); aplica() }) });
+
+  document.getElementById('otra-baja').addEventListener('click', function(){ st = { aceptado: true, hechos: {}, datos: {}, info: {} }; guardar(); location.href = location.pathname });
+  document.getElementById('reiniciar').addEventListener('click', function(){
+    if (!confirm('¿Empezar de nuevo? Se olvida lo que has hecho en esta página. Lo que ya se haya borrado sigue borrado.')) return;
+    st = { hechos: {}, datos: {}, info: {} }; guardar(); location.href = location.pathname;
+  });
+
+  if (st.aceptado) { acepto.checked = true; seguir.disabled = false; abrePasos() }
+  pinta();
+  if (st.vig && !st.hechos.pc) vigilar();
+  if (st.vigDrive && !st.hechos.drive) vigilarDrive();
+})();
+</script>
+</body>
+</html>
