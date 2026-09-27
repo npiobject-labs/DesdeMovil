@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260927-007">
+<meta name="build" content="DM-B3-20260927-008">
 <meta name="description" content="Peripatéticos: monta tu app una vez en el PC y desarróllala para siempre desde el móvil, hablando.">
 <!-- La app de Fly de esta misma plantilla: la usa la demo de la portada. -->
 <meta name="fly-app" content="desdemovil-npiobject-labs">
@@ -168,6 +168,7 @@ textarea.txt{min-height:4.6rem;resize:vertical;line-height:1.45}
 .chips{display:flex;gap:.45rem;flex-wrap:wrap;margin:.6rem 0}
 .chip{font:500 .82rem var(--sans);padding:.35rem .7rem;border-radius:99px;border:1px solid var(--line);background:var(--bg2);color:var(--ink2);cursor:pointer}
 .chip:hover{border-color:var(--acc);color:var(--acc)}
+.chip[aria-pressed="true"]{border-color:var(--acc);background:var(--acc2);color:var(--acc);font-weight:600}
 .block{position:relative;margin:.6rem 0}
 .block .copy{position:absolute;top:.5rem;right:.5rem;font:600 .76rem var(--sans);color:var(--acc);background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:.28rem .55rem;cursor:pointer}
 .block pre{padding-right:5rem;min-height:5.5rem}
@@ -514,18 +515,27 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     <dl>
       <dt>Para qué sirve</dt><dd>Es la tarjeta de identidad de tu app: su dirección en internet, su servidor, dónde se guarda y dónde van las copias.</dd>
       <dt>Qué puedes hacer</dt><dd>Abrir cada enlace, y pulsar <b>Saluda</b> para comprobar que tu app está encendida y contesta.</dd>
-      <dt>Si sale «recetas»</dt><dd>Es el ejemplo: en este navegador aún no has terminado de instalar ninguna app.</dd>
+      <dt>Si aún no tienes ninguna</dt><dd>Te lo digo aquí y te llevo a instalarla. Solo salen apps que existen de verdad.</dd>
     </dl>
   </div>
+  <div class="demo" id="f-vacia" hidden>
+    <h3 style="margin-top:0">Todavía no tienes ninguna app terminada</h3>
+    <p>La ficha aparece cuando termina la instalación: aquí verás las direcciones de tu app y podrás saludarla.</p>
+    <p id="f-vacia-medias" hidden></p>
+    <div class="acciones"><a class="btn primario" href="#instalar" id="f-vacia-ir">Instalar una app</a></div>
+    <p class="small ink2" style="margin-bottom:0">¿La montaste desde otro móvil u ordenador? Esta página solo recuerda las apps montadas desde este navegador.</p>
+  </div>
+  <div id="f-llena" hidden>
   <p class="kicker">Ficha de la app</p>
+  <div class="chips" id="f-elige" hidden></div>
   <div class="ficha">
-    <div class="nombre A">recetas</div>
-    <p class="ink2" style="margin:.2rem 0 0" id="f-nacida">Vive en <span class="O">tuorganizacion</span></p>
+    <div class="nombre" id="f-nombre"></div>
+    <p class="ink2" style="margin:.2rem 0 0" id="f-nacida"></p>
     <dl>
-      <dt>Web</dt><dd><a class="L-web" href="#" target="_blank" rel="noopener"></a></dd>
-      <dt>Servidor</dt><dd><a class="L-srv" href="#" target="_blank" rel="noopener"></a></dd>
-      <dt>Bitácora</dt><dd><a class="L-bit" href="#" target="_blank" rel="noopener">qué se pidió y qué cambió</a></dd>
-      <dt>Dónde vive</dt><dd><a class="L-repo" href="#" target="_blank" rel="noopener"></a></dd>
+      <dt>Web</dt><dd><a id="f-web" href="#" target="_blank" rel="noopener"></a></dd>
+      <dt>Servidor</dt><dd><a id="f-srv" href="#" target="_blank" rel="noopener"></a></dd>
+      <dt>Bitácora</dt><dd><a id="f-bit" href="#" target="_blank" rel="noopener">qué se pidió y qué cambió</a></dd>
+      <dt>Dónde vive</dt><dd><a id="f-repo" href="#" target="_blank" rel="noopener"></a></dd>
       <dt>Claude</dt><dd id="f-claude">—</dd>
       <dt>Copias</dt><dd id="f-drive"><span class="mute">Google Drive, sin configurar</span> · <a href="#ayuda" class="small">cómo activarlo</a></dd>
     </dl>
@@ -538,6 +548,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   <div class="acciones">
     <a class="btn primario" href="#pedir">Pídele lo primero desde el móvil</a>
     <button class="btn" type="button" id="compartir">Copiar el enlace de tu app</button>
+  </div>
   </div>
 </section>
 
@@ -552,7 +563,15 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
       <dt>Después</dt><dd>Claude hace el cambio, lo publica y te da el enlace para verlo. Tú contestas «vale» o le dices qué cambiar.</dd>
     </dl>
   </div>
-  <p class="ink2">Abre Claude, entra en <b>Code</b>, elige <code><span class="O">tuorganizacion</span>/<span class="A">recetas</span></code> y pega lo que salga aquí abajo. Solo tienes que rellenar tres cosas.</p>
+  <div class="demo" id="pd-vacia" hidden>
+    <h3 style="margin-top:0">Primero necesitas una app terminada</h3>
+    <p>Aquí se preparan los encargos para tu app, y en este navegador todavía no hay ninguna terminada.</p>
+    <p id="pd-vacia-medias" hidden></p>
+    <div class="acciones"><a class="btn primario" href="#instalar" id="pd-vacia-ir">Instalar una app</a></div>
+  </div>
+  <div id="pd-cuerpo" hidden>
+  <div class="chips" id="pd-elige" hidden></div>
+  <p class="ink2">Abre Claude, entra en <b>Code</b>, elige <code><span id="pd-org"></span>/<span id="pd-app"></span></code> y pega lo que salga aquí abajo. Solo tienes que rellenar tres cosas.</p>
   <div class="chips" id="chips">
     <button class="chip" type="button" data-q="Una lista de la compra que se comparte con mi pareja" data-g="Nada de registro con contraseña; con un enlace secreto vale" data-m="Cuando los dos podamos añadir y tachar cosas desde el móvil">Lista de la compra</button>
     <button class="chip" type="button" data-q="Un diario de paseos: cada día apunto por dónde fui y cuántos minutos" data-g="Sin mapas ni GPS, solo texto; y que no se vea sin mi enlace" data-m="Cuando pueda apuntar el paseo de hoy y ver los de la semana">Diario de paseos</button>
@@ -574,6 +593,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     <li>Contesta «vale» o dile qué cambiar. Así, hasta que sea lo que querías.</li>
     <li>Cada sesión queda anotada en la bitácora de tu app: qué pediste y qué cambió.</li>
   </ul>
+  </div>
 </section>
 
 <!-- ============================================================ AYUDA -->
@@ -609,7 +629,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 </section>
 
 <footer>
-  Build <code>DM-B3-20260927-007</code> · <a href="./">Menú</a> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="renombrar.html">Cambiar el nombre</a> · <a href="desinstalar.html">Eliminar una app</a> · <button type="button" id="reiniciar">Empezar otra app</button>
+  Build <code>DM-B3-20260927-008</code> · <a href="./">Menú</a> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="renombrar.html">Cambiar el nombre</a> · <a href="desinstalar.html">Eliminar una app</a> · <button type="button" id="reiniciar">Empezar otra app</button>
 </footer>
 </main>
 
@@ -673,11 +693,6 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
       ? 'Se llamará <code>'+esc(a)+'</code>. Tendrá una web en <code>'+esc(o.toLowerCase())+'.github.io/'+esc(a)+'</code> y un servidor en <code>'+esc(d.flyApp)+'.fly.dev</code>.'
       : 'Por ejemplo: «recetas», «mi-tienda», «paseos».';
     document.getElementById('previa-org').innerHTML = d.org ? 'Tu app vivirá en <code>github.com/'+esc(o)+'/'+esc(a)+'</code>.' : '';
-    function pon(sel, href, txt){ [].forEach.call(document.querySelectorAll(sel), function(e){ e.href = href; if (txt !== null) e.textContent = txt }) }
-    pon('.L-web', d.web, d.web.replace('https://',''));
-    pon('.L-srv', d.servidor, d.servidor.replace('https://',''));
-    pon('.L-bit', d.web + 'bitacora.html', null);
-    pon('.L-repo', d.repo, d.repo.replace('https://',''));
     document.getElementById('enlace-pc').textContent = enlacePC();
     document.getElementById('prompt-drive').textContent = promptDrive();
   }
@@ -717,6 +732,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     pantallas.forEach(function(p){ document.getElementById('p-'+p).hidden = (p!==h) });
     document.getElementById('pill-paso').hidden = (h!=='instalar');
     if (h==='ficha') pintaFicha();
+    if (h==='pedir') pintaPedir();
   }
   window.addEventListener('hashchange', ruta);
 
@@ -992,33 +1008,89 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     saludar('https://' + app + '.fly.dev/hola', this, document.getElementById('demo-resp'), 'Saludar otra vez');
   });
   document.getElementById('saluda').addEventListener('click', function(){
-    saludar(D().servidor + 'hola', this, document.getElementById('respuesta'), 'Saluda otra vez');
+    saludar(appFicha().servidor + 'hola', this, document.getElementById('respuesta'), 'Saluda otra vez');
   });
 
   // ---------------------------------------------------------------- ficha
   function fechaLarga(iso){ return new Date(iso).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}) }
+  // La ficha y «Pedirle cambios» son de una app terminada: la de este montaje
+  // si llegó a la meta, la elegida o la última de «Tus apps». Sin ninguna, lo
+  // dicen y llevan a instalar, en vez de enseñar direcciones de ejemplo.
+  var elegida = '';
+  function appFicha(){
+    var apps = st.apps || [], d = D(), fin = primerPendiente() >= pasos.length, x = null;
+    apps.forEach(function(a){ if (a.app + '/' + a.org === elegida) x = a });
+    if (!x && fin) apps.forEach(function(a){ if (a.app === d.app && a.org === d.org) x = a });
+    x = x || apps[apps.length - 1];
+    if (!x) return null;
+    return { app: x.app, org: x.org, web: x.web, servidor: x.servidor, repo: 'https://github.com/' + x.org + '/' + x.app,
+      drive: x.driveId || '', fecha: x.fecha, actual: fin && x.app === d.app && x.org === d.org };
+  }
+  // Sin app: qué falta y el botón para ir a instalar (o seguir).
+  function sinApp(pre){
+    var i = primerPendiente(), a = D().app, med = !!st.hechos.nombre && i < pasos.length, p = document.getElementById(pre + '-vacia-medias');
+    p.hidden = !med;
+    if (med) p.innerHTML = 'Tienes <b>' + esc(a ? '«' + a + '»' : 'una app') + '</b> a medias: vas por el paso ' + (i + 1) + ' de ' + pasos.length + '.';
+    document.getElementById(pre + '-vacia-ir').textContent = med ? 'Seguir instalando' : 'Instalar una app';
+  }
+  // Con varias apps, se elige cuál.
+  function pintaElige(id, f){
+    var apps = st.apps || [], c = document.getElementById(id);
+    c.hidden = apps.length < 2;
+    c.innerHTML = apps.length < 2 ? '' : apps.map(function(a){
+      var k = a.app + '/' + a.org;
+      return '<button class="chip" type="button" data-k="' + esc(k) + '" aria-pressed="' + (f.app + '/' + f.org === k) + '">' + esc(a.app) + '</button>';
+    }).join('');
+  }
+  ['f-elige','pd-elige'].forEach(function(id){
+    document.getElementById(id).addEventListener('click', function(e){
+      var b = e.target.closest('[data-k]'); if (!b) return;
+      elegida = b.dataset.k; document.getElementById('respuesta').hidden = true; pintaFicha(); pintaPedir();
+    });
+  });
   function pintaFicha(){
-    var d = D();
+    var f = appFicha();
+    document.getElementById('f-vacia').hidden = !!f; document.getElementById('f-llena').hidden = !f;
+    if (!f) { sinApp('f'); return }
+    pintaElige('f-elige', f);
+    function pon(id, href, txt){ var e = document.getElementById(id); e.href = href; if (txt) e.textContent = txt }
+    document.getElementById('f-nombre').textContent = f.app;
+    pon('f-web', f.web, f.web.replace('https://',''));
+    pon('f-srv', f.servidor, f.servidor.replace('https://',''));
+    pon('f-bit', f.web + 'bitacora.html');
+    pon('f-repo', f.repo, f.repo.replace('https://',''));
+    function nacida(iso, org){ document.getElementById('f-nacida').textContent = (iso ? 'Nacida el ' + fechaLarga(iso) + ' · ' : '') + 'vive en ' + org }
     function pintaClaude(){
-      var c = document.getElementById('f-claude');
-      if (st.verif.claude === true) c.textContent = 'tiene permiso en ' + d.org;
-      else if (st.verif.claude === false) c.innerHTML = 'falta darle permiso · <a href="https://github.com/apps/claude/installations/new" target="_blank" rel="noopener">darlo ahora</a>';
+      var c = document.getElementById('f-claude'), ok = f.actual ? st.verif.claude : (st.perfil && st.perfil.org === f.org && st.perfil.verif && st.perfil.verif.claude) || undefined;
+      if (ok === true) c.textContent = 'tiene permiso en ' + f.org;
+      else if (ok === false) c.innerHTML = 'falta darle permiso · <a href="https://github.com/apps/claude/installations/new" target="_blank" rel="noopener">darlo ahora</a>';
       else c.textContent = 'sin comprobar todavía';
     }
-    document.getElementById('f-nacida').textContent = (st.creado ? 'Nacida el ' + fechaLarga(st.creado) + ' · ' : '') + 'vive en ' + (d.org || 'tu organización');
-    if (d.drive) document.getElementById('f-drive').innerHTML = '<a href="https://drive.google.com/drive/folders/' + esc(d.drive) + '" target="_blank" rel="noopener">tu carpeta de Google Drive</a> · ' + (st.driveOk ? 'Claude llega a ella' : 'sin comprobar todavía');
+    nacida(f.actual ? st.creado : f.fecha, f.org);
+    document.getElementById('f-drive').innerHTML = f.drive
+      ? '<a href="https://drive.google.com/drive/folders/' + esc(f.drive) + '" target="_blank" rel="noopener">tu carpeta de Google Drive</a> · ' + (f.actual && st.driveOk ? 'Claude llega a ella' : 'sin comprobar todavía')
+      : '<span class="mute">Google Drive, sin configurar</span> · <a href="#ayuda" class="small">cómo activarlo</a>';
     pintaClaude();
-    pide(d.web + 'nacimiento.json?t=' + Date.now()).then(function(r){ return r.ok ? r.json() : null }).then(function(n){
-      leeNacimiento(n); if (n && n.creado) document.getElementById('f-nacida').textContent = 'Nacida el ' + fechaLarga(n.creado) + ' · vive en ' + (n.org || d.org);
+    pide(f.web + 'nacimiento.json?t=' + Date.now()).then(function(r){ return r.ok ? r.json() : null }).then(function(n){
+      if (f.actual) leeNacimiento(n);
+      if (n && n.creado) nacida(n.creado, n.org || f.org);
       pintaClaude();
     }).catch(function(){});
   }
-  document.getElementById('compartir').addEventListener('click', function(){ copia(D().web, this, 'Copiar el enlace de tu app') });
+  document.getElementById('compartir').addEventListener('click', function(){ copia(appFicha().web, this, 'Copiar el enlace de tu app') });
 
   // ---------------------------------------------------------------- pedir
   var q=document.getElementById('q'), g=document.getElementById('g'), m=document.getElementById('m'), out=document.getElementById('prompt');
+  function pintaPedir(){
+    var f = appFicha();
+    document.getElementById('pd-vacia').hidden = !!f; document.getElementById('pd-cuerpo').hidden = !f;
+    if (!f) { sinApp('pd'); return }
+    pintaElige('pd-elige', f);
+    document.getElementById('pd-org').textContent = f.org; document.getElementById('pd-app').textContent = f.app;
+    prompt();
+  }
   function prompt(){
-    var a = D().app || 'recetas';
+    var f = appFicha(), a = f ? f.app : '';
     out.textContent = 'Trabaja en mi app «'+a+'».\n\nQuiero: '+(q.value.trim()||'…')+'\nNo debe pasar: '+(g.value.trim()||'…')+'\nEstá terminado cuando: '+(m.value.trim()||'…')+'\n\nCuando esté publicado dime el enlace para verlo en el móvil, y apunta esta sesión en la bitácora.';
   }
   [q,g,m].forEach(function(t){ t.addEventListener('input', prompt) });
@@ -1047,10 +1119,9 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     }).join('') || '<li><span>Tus cuentas están guardadas; todavía no has montado ninguna app desde este navegador.</span></li>';
     document.getElementById('empezar').textContent = (st.perfil && st.perfil.org) ? 'Montar otra app · unos 10 minutos' : 'Empezar · unos 30 minutos';
   }
-  // Empieza una app nueva con las cuentas guardadas. GitHub y la organización
-  // se vuelven a mirar en la API por si han cambiado; Fly y Claude se dan por
-  // buenos si la app anterior los dejó verificados.
-  // Las cuentas guardadas siguen existiendo en GitHub.
+  // Al empezar otra app, las cuentas guardadas se vuelven a mirar en la API de
+  // GitHub por si han cambiado; Fly y Claude se dan por buenos si la app
+  // anterior los dejó verificados.
   function revalida(){
     var pf = st.perfil; if (!pf || !pf.org) return;
     gh('users/' + encodeURIComponent(pf.usuario)).then(function(r){
