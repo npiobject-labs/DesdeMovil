@@ -2,23 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<!-- Mock archivado: las rutas cuelgan de la raíz del sitio, como la página real. -->
+<base href="../">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="build" content="DM-B3-20260927-014">
-<meta name="description" content="Peripatéticos: el menú. Instalar una app, pedirle cosas desde el móvil, resolver errores, eliminarla y toda la documentación.">
-<title>Peripatéticos</title>
+<meta name="description" content="Mock: la barra de progreso de lectura, arriba o abajo de la barra flotante, para elegir.">
+<title>Mock · barra de progreso</title>
 <script src="menu.js?b=DM-B3-20260927-014"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<script>
-// Enlaces antiguos a la raíz (#instalar, #ayuda, ?u=…&org=…): el instalador vivía aquí hasta el 27-sep.
-(function(){
-  function aInstalar(){
-    var h = location.hash.slice(1), q = location.search;
-    if (['portada','instalar','ficha','pedir','ayuda','como'].indexOf(h) >= 0 || (/[?&]u=/.test(q) && /[?&]org=/.test(q))) location.replace('instalar.html' + q + location.hash);
-  }
-  aInstalar(); window.addEventListener('hashchange', aInstalar);
-})();
-</script>
 <style>
 :root{
   --bg:#F6F2EA; --bg2:#FFFFFF; --ink:#1E2528; --ink2:#4E585C; --mute:#7C868A; --line:#DED7C9;
@@ -113,12 +105,24 @@ code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.08e
 .medias .b.pri{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
 .medias .small{font-size:.86rem;color:var(--ink2);margin:.3rem 0 0}
 
+/* ---- Mock: barra de progreso de lectura ---- */
+.progreso{position:absolute;left:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transform-origin:0 50%;pointer-events:none;z-index:3;transition:transform .08s linear}
+body[data-barra="arriba"] .progreso{top:0}
+body[data-barra="abajo"] .progreso{bottom:-1px}
+body[data-barra="no"] .progreso{display:none}
+.mock-nota{margin:1rem 0 0;padding:.8rem 1rem;border:2px dashed var(--acc);border-radius:12px;background:var(--acc2);font-size:.92rem;color:var(--ink)}
+.mock-panel{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:50;width:min(22rem,calc(100% - 24px));padding:.6rem .7rem;background:var(--bg2);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px -10px rgba(0,0,0,.45);font-size:.85rem}
+.mock-panel b{display:block;margin:0 0 .4rem;color:var(--ink2);font-weight:600}
+.mock-panel .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem}
+.mock-panel button{min-height:2.4rem;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 .88rem var(--sans);cursor:pointer}
+.mock-panel button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+
 footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.8rem;color:var(--mute)}
 </style>
 </head>
-<body>
+<body data-barra="arriba">
 
-<div class="top"><div class="in">
+<div class="top"><i class="progreso" id="progreso" aria-hidden="true"></i><div class="in">
   <a class="brand" href="./">Peripatéticos</a>
   <button class="ibtn" id="tema" type="button" aria-label="Cambiar tema" title="Tema">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
@@ -147,6 +151,8 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
     <div class="acc"><a class="b pri" href="instalar.html#instalar">Seguir con ella</a><button class="b" type="button" id="m-otra">Dejarla y empezar otra</button></div>
     <p class="small">Si empiezas otra, lo que escribiste para esta se borra de este navegador. Tus cuentas se quedan guardadas.</p>
   </section>
+
+  <p class="mock-nota"><b>Mock para elegir.</b> Baja por la página: la línea de color marca cuánto llevas leído. Con los botones de abajo la cambias de sitio. El resto de la página funciona como la real.</p>
 
   <details class="pm-intro">
     <summary class="pm-t">Qué hace esta página<span class="pm-flecha" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
@@ -215,8 +221,32 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
     <a class="doc" href="semilla/"><b>Una app recién nacida</b><span>La portada con la que nace cada app el primer día.</span></a>
   </div>
 
-  <footer>Build <code>DM-B3-20260927-014</code></footer>
+  <footer style="padding-bottom:6rem">Build <code>DM-B3-20260927-014</code> · mock de la barra de progreso</footer>
 </main>
+
+<div class="mock-panel" role="group" aria-label="Dónde va la barra de progreso">
+  <b>Barra de progreso</b>
+  <div class="seg"><button type="button" data-b="arriba" aria-pressed="true">Arriba</button><button type="button" data-b="abajo" aria-pressed="false">Abajo</button><button type="button" data-b="no" aria-pressed="false">Sin barra</button></div>
+</div>
+<script>
+// Mock: la línea se llena con lo que se ha bajado de la página.
+(function(){
+  var barra = document.getElementById('progreso'), pendiente = false;
+  function mide(){
+    pendiente = false;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    barra.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+  }
+  window.addEventListener('scroll', function(){ if (!pendiente) { pendiente = true; requestAnimationFrame(mide) } }, { passive: true });
+  window.addEventListener('resize', mide); mide();
+  [].forEach.call(document.querySelectorAll('.mock-panel [data-b]'), function(b){
+    b.addEventListener('click', function(){
+      document.body.dataset.barra = b.dataset.b;
+      [].forEach.call(document.querySelectorAll('.mock-panel [data-b]'), function(x){ x.setAttribute('aria-pressed', String(x === b)) });
+    });
+  });
+})();
+</script>
 
 <script>
 (function(){

@@ -74,6 +74,10 @@
     + ':root .pm-scroll .ibtn{width:1.85rem;height:1.85rem}'
     + ':root .pm-scroll .pm-btn{height:1.85rem;font-size:.8rem}'
     + '@media (prefers-reduced-motion:reduce){.pm-flota,.pm-flota::after,.pm-fila,.pm-flota .ibtn,.pm-flota .pm-btn,.pm-fila>.brand,.pm-fila>a.b,.pm-cab>b{transition:none}}';
+  css += ''
+    // Aparición suave: las tarjetas que aún no se ven suben un poco y se funden al entrar en pantalla.
+    + ':root .pm-aparece{opacity:0;transform:translateY(14px);transition:opacity .55s ease-out,transform .55s cubic-bezier(.2,.7,.2,1)}'
+    + ':root .pm-aparece.pm-visto{opacity:1;transform:none}';
   var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
 
   function lee(k){ try { return JSON.parse(localStorage.getItem(k) || '{}') || {} } catch(e){ return {} } }
@@ -175,6 +179,30 @@
     return mira;
   }
 
+  // Aparición suave de las tarjetas que están por debajo de la pantalla al cargar.
+  // Las que ya se ven no se tocan, y sin animaciones si el sistema pide reducirlas.
+  function aparece(){
+    if (!('IntersectionObserver' in window) || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var sel = '.ops > li, .docs > .doc, .paso, .demo, .tarjetas > li, .tres > div, .faq > details, .ficha, .pm-intro, .medias, .apps, table';
+    var obs = new IntersectionObserver(function(entradas){
+      var n = 0;
+      entradas.forEach(function(e){
+        if (!e.isIntersecting) return;
+        var el = e.target, espera = n++ * 70;
+        obs.unobserve(el);
+        el.style.transitionDelay = espera + 'ms';
+        el.classList.add('pm-visto');
+        // Al acabar, la tarjeta recupera sus propias transiciones.
+        setTimeout(function(){ el.classList.remove('pm-aparece', 'pm-visto'); el.style.transitionDelay = '' }, 650 + espera);
+      });
+    }, { rootMargin: '0px 0px -6% 0px' });
+    [].forEach.call(document.querySelectorAll(sel), function(el){
+      if (el.closest('.pm-panel, [hidden]') || (el.parentElement && el.parentElement.closest('.pm-aparece'))) return;
+      if (el.getBoundingClientRect().top < window.innerHeight) return;
+      el.classList.add('pm-aparece'); obs.observe(el);
+    });
+  }
+
   function monta(){
     var barra = document.querySelector('.top .in') || document.querySelector('.top .fila') || document.querySelector('.top');
     if (!barra || document.getElementById('pm-btn')) return;
@@ -211,5 +239,6 @@
     });
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', monta); else monta();
+  function arranca(){ monta(); aparece() }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arranca); else arranca();
 })();
