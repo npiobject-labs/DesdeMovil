@@ -1,0 +1,35 @@
+{
+  "fecha": "2026-09-27T17:55:00+02:00",
+  "titulo": "Peripatéticos: «Qué hace esta página» plegado, con flecha",
+  "objetivo": "Que el recuadro explicativo de cada página salga plegado y se despliegue al tocarlo.",
+  "prompts": [
+    {
+      "texto": "En la sección que hace en cada página deberá llevar un icono de desplegable y que aparezca plegado pincharse se despliega y se ve lo que lo que hace",
+      "nota": "Con una captura del menú principal con el recuadro abierto."
+    },
+    {
+      "texto": "Desarrolla hasta el final e integralo cuando lo tengas listo me avisas"
+    }
+  ],
+  "cambios": [
+    "docs/index.html, docs/instalar.html, docs/pc.html, docs/renombrar.html, docs/desinstalar.html, docs/recorrido.html: el recuadro «Qué hace esta página» es un <details> plegado con flecha. Build DM-B3-20260927-009.",
+    "docs/menu.js: estilos del título plegable y de la flecha; el texto de ayuda del menú lo explica.",
+    "CLAUDE.md: descripción del recuadro actualizada."
+  ],
+  "sha": "4d690ac",
+  "sha_completo": "4d690ac551953a2eb5dd023b9b35a443b6b78238",
+  "run": "36331266006",
+  "build": "DM-B3-20260927-009",
+  "pagina": "index.html",
+  "fly": null,
+  "pendiente": [
+    "Verlo en el móvil."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #34",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/34"
+    }
+  ],
+  "notas": "Continuación de las sesiones 20260927-1514 y 20260927-1532, en la misma conversación."
+}
