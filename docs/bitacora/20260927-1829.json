@@ -1,0 +1,34 @@
+{
+  "fecha": "2026-09-27T18:29:00+02:00",
+  "titulo": "Peripatéticos: la barra de arriba flota con sombra al desplazar",
+  "objetivo": "Que las barras flotantes de arriba se estrechen, se vuelvan algo transparentes y proyecten sombra (oscura de día, clara de noche) cuando el contenido pasa por debajo.",
+  "prompts": [
+    {
+      "texto": "En todas las pantallas la barra de arriba cuando se hace scroll deberán hacerse un poquito más estrecha y generar una sombra en la parte inferior como si dando la sensación como si la la primera línea la primera caja se abriese para entrar el scroll el texto debajo de ella también tendrías que hacerlo ligeramente transparente esto lo aplicas a todos los menús o primeras cajas que permanecen flotantes en toda en toda la aplicación entonces repito cuando se hace scroll y el texto un desaparece por la parte superior la caja tiene que hacerse ligeramente transparente un poquito más estrecha y generar una sombra ojo esa sombra si está en modo noche tiene que ser clara y si está en modo día tiene que ser oscura",
+      "nota": "Con una captura del menú ≡ abierto en modo noche."
+    }
+  ],
+  "cambios": [
+    "docs/menu.js: barras flotantes (.top de cada página y cabecera del menú ≡) que al desplazar se estrechan, se vuelven algo transparentes y proyectan sombra oscura de día y clara de noche.",
+    "docs/pc.html: su barra queda fija arriba como las demás.",
+    "index, instalar, pc, renombrar, desinstalar y recorrido: build DM-B3-20260927-011.",
+    "CLAUDE.md: documentado."
+  ],
+  "sha": "e376f1d",
+  "sha_completo": "e376f1d352e4b6639e9136cd8f01af5dfe72559b",
+  "run": "36333390489",
+  "build": "DM-B3-20260927-011",
+  "pagina": "index.html",
+  "fly": null,
+  "pendiente": [
+    "Verlo en el móvil.",
+    "DT-1: copia limpia «peripateticos»."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #38",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/38"
+    }
+  ],
+  "notas": "Continuación de las sesiones anteriores del 27-09, en la misma conversación."
+}
