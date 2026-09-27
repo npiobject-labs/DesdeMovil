@@ -1,0 +1,45 @@
+{
+  "fecha": "2026-09-27T15:14:00+02:00",
+  "titulo": "Peripatéticos: menú ≡, empezar de cero y explicación en cada página",
+  "objetivo": "Poder dejar una app a medias y empezar otra, tener un menú desplegable con todas las opciones y que cada página explique claramente qué hace a quien no sabe de qué va esto.",
+  "prompts": [
+    {
+      "texto": "He probado la aplicación peripatéticos a continuación te doy el enlace [(https://npiobject-labs.github.io/DesdeMovil/)](https://npiobject-labs.github.io/DesdeMovil/) partida en lo que falta es una opción para resetear la aplicación la creación de una nueva aplicación porque ahora está trabado en quiere continuar con una aplicación que quedó ayer a medio instalar y lo que me lo que he hecho de menos lo que he hecho en falta es eh un menú un menú donde desglosee eh o sea tenga todas las opciones y al principio explique mmm al principio de la hoja a la que te lleva cada opción del menú explique claramente que hace no encuentro las explicaciones que has dado o que pones no las encuentro muy claras para una persona que no sabe de qué va esto no sé afina esa esa parte o sea que son dos cosas una montar un menú en la aplicación menú desplegable y plegable en las tres rayitas y por otro lado era resetear la aplicación un botón para resetear bien pues esto es esto es todo"
+    },
+    {
+      "texto": "No entiendo las secciones a y b explícamelo de forma más sencilla y clara",
+      "nota": "Sobre las dos formas de dar acceso al repositorio DesdeMovil desde la sesión de prupru."
+    },
+    {
+      "texto": "Si añade DesdeMovil"
+    },
+    {
+      "texto": "Sí integralo"
+    }
+  ],
+  "cambios": [
+    "docs/menu.js (nuevo): botón «Menú» (≡) en la barra de todas las páginas, desplegable y plegable, con todas las opciones descritas y la página actual marcada; al final, «Empezar de cero»: «Dejarla y empezar otra» y «Borrar todo lo guardado en este navegador». Da estilo al recuadro «Qué hace esta página».",
+    "docs/instalar.html: ?nueva=1 empieza otra app conservando las cuentas ya comprobadas, aunque la primera no llegara a terminarse; aviso «Estás montando…» con salida; recuadro explicativo en las cinco pantallas; nueva pregunta en la ayuda. Build DM-B3-20260927-007.",
+    "docs/index.html: aviso «Tienes una app a medias» con «Seguir con ella» y «Dejarla y empezar otra»; entradilla y descripciones en lenguaje llano. Build DM-B3-20260927-007.",
+    "docs/pc.html, docs/renombrar.html, docs/desinstalar.html, docs/recorrido.html: menú y recuadro «Qué hace esta página». Build DM-B3-20260927-007.",
+    ".github/workflows/init-plantilla.yml: los hijos nacen sin menu.js.",
+    "CLAUDE.md: documentados menu.js, ?nueva=1 y el recuadro .pm-intro."
+  ],
+  "sha": "6df1aa2",
+  "sha_completo": "6df1aa2c2cc960653f53577f9324e645d032f638",
+  "run": "36321642420",
+  "build": "DM-B3-20260927-007",
+  "pagina": "index.html",
+  "fly": null,
+  "pendiente": [
+    "Probarlo en el móvil con la app que se quedó a medias: Menú → Empezar de cero → Dejarla y empezar otra.",
+    "Si el PC llegó a crear aquella app en GitHub o Fly.io, quitarla con «Eliminar una app»."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #30",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/30"
+    }
+  ],
+  "notas": "La sesión se abrió sobre el repositorio prupru; DesdeMovil se añadió a mitad con permiso del usuario. No se archivó mock nuevo: los cambios son del instalador de la plantilla."
+}
