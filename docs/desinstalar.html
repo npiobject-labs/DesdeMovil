@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260927-003">
+<meta name="build" content="DM-B3-20260927-007">
 <meta name="description" content="Peripatéticos · zona de peligro: eliminar una app de GitHub, Fly.io y Google Drive. No se puede deshacer.">
 <title>Eliminar una app · Peripatéticos</title>
+<script src="menu.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -52,6 +53,8 @@ pre{font:.82rem/1.5 var(--mono);background:var(--code);border:1px solid var(--li
 .top .in{max-width:32rem;margin:0 auto;padding:.55rem 16px;display:flex;align-items:center;gap:.6rem}
 .brand{font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--ink);text-decoration:none;flex:1;white-space:nowrap}
 .pill{font-size:.74rem;font-weight:700;padding:.22rem .6rem;border-radius:99px;background:var(--err);color:#fff;white-space:nowrap;letter-spacing:.03em;text-transform:uppercase}
+/* En el móvil la etiqueta deja sitio al botón Menú: el título de la página ya dice lo mismo. */
+@media (max-width:480px){.top .pill{display:none}}
 .ibtn{display:inline-flex;align-items:center;justify-content:center;width:2.3rem;height:2.3rem;border:1px solid var(--line);border-radius:8px;background:var(--bg2);color:var(--ink);cursor:pointer;padding:0}
 .ibtn svg{width:1.1rem;height:1.1rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .franja{height:.6rem;background:repeating-linear-gradient(-45deg,var(--haz) 0 12px,#15191B 12px 24px)}
@@ -185,6 +188,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 <main class="wrap">
 
 <!-- ============================================================ ADVERTENCIA -->
+<div class="pm-intro">
+  <p class="pm-t">Qué hace esta página</p>
+  <dl>
+    <dt>Para qué sirve</dt><dd>Borra una app de internet para siempre: su código, su web, su servidor y su carpeta de Drive.</dd>
+    <dt>Qué vas a hacer</dt><dd>Elegir la app, escribir su nombre para confirmar y abrir un archivo en el PC, que es quien la borra.</dd>
+    <dt>Si solo se te quedó a medias</dt><dd>No hace falta eliminar nada. Abre el <b>Menú</b> (las tres rayitas) y pulsa <b>Dejarla y empezar otra</b>.</dd>
+  </dl>
+</div>
 <section class="alarma" id="alarma">
   <svg class="triangulo" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 5 61 57H3z" fill="currentColor"/><path d="M32 23v17" stroke="#1F0D0B" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="48" r="3.6" fill="#1F0D0B"/></svg>
   <p class="kicker">Cuidado</p>
@@ -345,7 +356,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 </section>
 
 <footer>
-  Build <code>DM-B3-20260927-003</code> · <a href="./">Menú</a> · <a href="instalar.html#ayuda">Ayuda</a> · <a href="renombrar.html">Cambiar el nombre</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
+  Build <code>DM-B3-20260927-007</code> · <a href="./">Menú</a> · <a href="instalar.html#ayuda">Ayuda</a> · <a href="renombrar.html">Cambiar el nombre</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
 </footer>
 </main>
 

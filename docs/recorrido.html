@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260927-006">
+<meta name="build" content="DM-B3-20260927-007">
 <meta name="description" content="Guion gráfico de Peripatéticos: las veinte pantallas que ve el usuario, en el móvil y en el PC, desde la portada hasta la primera petición.">
 <title>Peripatéticos · recorrido</title>
+<script src="menu.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -211,12 +212,18 @@ body.todas footer{padding-bottom:2rem}
     <span class="brand">Peripatéticos <small>recorrido</small></span>
     <span class="esp"></span>
     <button class="tog" id="todas" type="button" aria-pressed="false">Todas seguidas</button>
-    <a class="tog" href="instalar.html" style="text-decoration:none">Instalador</a>
   </div>
   <div class="menu" id="menu"></div>
 </div>
 
 <main class="esc" id="esc">
+<div class="pm-intro" style="margin-top:.4rem">
+  <p class="pm-t">Qué hace esta página</p>
+  <dl>
+    <dt>Para qué sirve</dt><dd>Te enseña, antes de empezar, todas las pantallas que vas a ver al instalar una app: en el móvil y en el PC, en orden.</dd>
+    <dt>Qué vas a hacer</dt><dd>Solo mirar. Pasa de una a otra con <b>Siguiente</b> y <b>Anterior</b>, o con los números de arriba; o pulsa <b>Todas seguidas</b>. Aquí no se instala nada.</dd>
+  </dl>
+</div>
 
 <!-- ================================================== 1 -->
 <section class="marco" data-t="Portada" data-g="Móvil">
@@ -689,7 +696,7 @@ Cuando esté publicado dime el enlace para verlo en el móvil, y apunta esta ses
 
 </main>
 
-<footer>Build <code>DM-B3-20260927-006</code> · veinte pantallas dibujadas a partir del instalador real · <a href="./">menú</a> · <a href="instalar.html">el instalador</a> · <a href="pc.html?app=recetas-de-la&amp;org=apps-de-maria">la página del PC</a> · <a href="bitacora.html">bitácora</a></footer>
+<footer>Build <code>DM-B3-20260927-007</code> · veinte pantallas dibujadas a partir del instalador real · <a href="./">menú</a> · <a href="instalar.html">el instalador</a> · <a href="pc.html?app=recetas-de-la&amp;org=apps-de-maria">la página del PC</a> · <a href="bitacora.html">bitácora</a></footer>
 
 <div class="nav"><div class="fila">
   <button type="button" id="ant">← Anterior</button>

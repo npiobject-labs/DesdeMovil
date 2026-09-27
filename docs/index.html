@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260927-001">
+<meta name="build" content="DM-B3-20260927-007">
 <meta name="description" content="Peripatéticos: el menú. Instalar una app, pedirle cosas desde el móvil, resolver errores, eliminarla y toda la documentación.">
 <title>Peripatéticos</title>
+<script src="menu.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <script>
@@ -105,6 +106,13 @@ code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.08e
 .apps li a.x{font-size:.8rem;color:var(--err)}
 .apps li a.r{font-size:.8rem}
 
+.medias{margin-top:1rem;padding:1rem 1.1rem;background:var(--bg2);border:2px solid var(--acc);border-radius:14px;box-shadow:var(--shadow)}
+.medias .t{margin:0;font-family:var(--serif);font-weight:700;font-size:1.2rem}
+.medias .acc{display:flex;flex-wrap:wrap;gap:.5rem;margin:.8rem 0 .4rem}
+.medias .b{display:inline-flex;align-items:center;justify-content:center;min-height:2.6rem;padding:.5rem 1rem;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);font:600 .95rem var(--sans);text-decoration:none;cursor:pointer}
+.medias .b.pri{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.medias .small{font-size:.86rem;color:var(--ink2);margin:.3rem 0 0}
+
 footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.8rem;color:var(--mute)}
 </style>
 </head>
@@ -121,7 +129,7 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
   <div class="hero">
     <p class="kicker">Menú</p>
     <h1>Peripatéticos</h1>
-    <p class="lede">Apps que nacen en tu PC una sola vez y crecen desde el móvil, hablando. Aquí está todo: montar una, pedirle cosas, arreglar lo que se atasque y, si hace falta, borrarla.</p>
+    <p class="lede">Te ayuda a tener tu propia app —una página web con su propio servidor— sin saber programar. La creas una vez con el ordenador y, a partir de ahí, la cambias desde el móvil pidiéndole a Claude lo que quieres, con tus palabras.</p>
     <svg class="huellas" viewBox="0 0 480 60" aria-hidden="true" fill="currentColor">
       <ellipse cx="30" cy="40" rx="9" ry="13" transform="rotate(-18 30 40)"/><circle cx="24" cy="24" r="3"/><circle cx="31" cy="21" r="2.6"/><circle cx="38" cy="22" r="2.2"/>
       <ellipse cx="95" cy="22" rx="9" ry="13" transform="rotate(18 95 22)" opacity=".85"/><circle cx="101" cy="6" r="3" opacity=".85"/><circle cx="94" cy="4" r="2.6" opacity=".85"/><circle cx="87" cy="6" r="2.2" opacity=".85"/>
@@ -133,6 +141,22 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
     </svg>
   </div>
 
+  <section class="medias" id="s-medias" hidden>
+    <p class="t">Tienes una app a medias</p>
+    <p style="margin:.3rem 0 0"><b id="m-app"></b>: vas por el paso <span id="m-paso"></span> de 8.</p>
+    <div class="acc"><a class="b pri" href="instalar.html#instalar">Seguir con ella</a><button class="b" type="button" id="m-otra">Dejarla y empezar otra</button></div>
+    <p class="small">Si empiezas otra, lo que escribiste para esta se borra de este navegador. Tus cuentas se quedan guardadas.</p>
+  </section>
+
+  <div class="pm-intro">
+    <p class="pm-t">Qué hace esta página</p>
+    <dl>
+      <dt>Para qué sirve</dt><dd>Es la página principal. Desde aquí llegas a todo: crear una app, ver las que tienes, pedirles cambios, cambiarles el nombre o borrarlas.</dd>
+      <dt>Cómo se usa</dt><dd>Toca una opción. Cada página empieza con un recuadro como este que explica qué hace. El botón <b>Menú</b> (las tres rayitas, arriba a la derecha) te trae estas mismas opciones desde cualquier página.</dd>
+      <dt>Si te has atascado</dt><dd>En el <b>Menú</b>, abajo del todo, está <b>Empezar de cero</b>: deja la app que tengas a medias y empieza otra.</dd>
+    </dl>
+  </div>
+
   <section id="s-apps" hidden>
     <h2>Tus apps</h2>
     <div class="apps"><ul id="lista-apps"></ul></div>
@@ -142,38 +166,38 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
   <ul class="ops">
     <li><a class="op" href="instalar.html#portada">
       <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg></span>
-      <span class="tx"><b>Qué es</b><span class="d">La presentación: para quién es, cómo funciona, qué necesitas y qué cuesta. Con una app de verdad a la que puedes saludar.</span></span>
+      <span class="tx"><b>Qué es</b><span class="d">La presentación: qué consigues, qué necesitas y cuánto cuesta. Solo para leer.</span></span>
       <span class="fl" aria-hidden="true">→</span></a></li>
     <li><a class="op principal" href="instalar.html#instalar" id="op-instalar">
       <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></span>
-      <span class="tx"><b>Instalar una app</b><span class="d">Ocho pasos, uno cada vez, y cada uno comprobado de verdad. El PC se enciende una sola vez.</span><em class="estado" id="e-instalar">Unos 30 minutos</em></span>
+      <span class="tx"><b>Instalar una app</b><span class="d">Crea tu app en ocho pasos guiados. El ordenador solo hace falta en uno de ellos, una vez.</span><em class="estado" id="e-instalar">Unos 30 minutos</em></span>
       <span class="fl" aria-hidden="true">→</span></a></li>
     <li><a class="op" href="pc.html">
       <span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8"/><path d="M12 16v4"/></svg></span>
-      <span class="tx"><b>En el PC</b><span class="d">La página que abres en el PC con Windows para descargar el archivo que monta tu app. Lo normal es llegar con el enlace del paso 7.</span></span>
+      <span class="tx"><b>En el PC</b><span class="d">La página que abres en el ordenador con Windows para descargar el archivo que monta tu app. Normalmente llegas con el enlace que te da el paso 7.</span></span>
       <span class="fl" aria-hidden="true">→</span></a></li>
   </ul>
 
-  <h2>Con tu app</h2>
+  <h2>Con tu app ya hecha</h2>
   <ul class="ops">
     <li><a class="op" href="instalar.html#ficha">
       <span class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
-      <span class="tx"><b>Ficha y «Saluda»</b><span class="d">Dónde vive cada cosa de tu app y un botón que llama a su servidor.</span></span>
+      <span class="tx"><b>Ficha de tu app</b><span class="d">Las direcciones de tu app y un botón para comprobar que está encendida y contesta.</span></span>
       <span class="fl" aria-hidden="true">→</span></a></li>
     <li><a class="op" href="instalar.html#pedir">
       <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/></svg></span>
-      <span class="tx"><b>Pedirle cosas</b><span class="d">Qué quieres, qué no debe pasar y cuándo está terminado: tres campos que construyen la petición para Claude.</span></span>
+      <span class="tx"><b>Pedirle cambios</b><span class="d">Te ayuda a escribir el encargo para Claude: qué quieres, qué no debe pasar y cuándo está terminado.</span></span>
       <span class="fl" aria-hidden="true">→</span></a></li>
     <li><a class="op" href="instalar.html#ayuda">
       <span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7"/><path d="M12 17h.01"/></svg></span>
-      <span class="tx"><b>Errores y ayuda</b><span class="d">Qué hacer si un paso se atasca: el usuario que no aparece, el aviso de Windows, el servidor que tarda, Fly.io y la tarjeta…</span></span>
+      <span class="tx"><b>Si algo se atasca</b><span class="d">Soluciones a los problemas habituales: el usuario que no aparece, el aviso de Windows, el servidor que tarda…</span></span>
       <span class="fl" aria-hidden="true">→</span></a></li>
   </ul>
 
   <ul class="ops" style="margin-top:.6rem">
     <li><a class="op" href="renombrar.html">
       <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span>
-      <span class="tx"><b>Cambiar el nombre</b><span class="d">En GitHub, en la dirección de la web, en el servidor, en tu carpeta de Drive y en la copia del PC. Donde no llego, te digo cómo.</span></span>
+      <span class="tx"><b>Cambiar el nombre</b><span class="d">Ponerle otro nombre a una app que ya tienes. Cambia en todos los sitios donde aparece; donde yo no llego, te digo cómo.</span></span>
       <span class="fl" aria-hidden="true">→</span></a></li>
   </ul>
 
@@ -181,11 +205,11 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
   <ul class="ops">
     <li><a class="op peligro" href="desinstalar.html" id="op-borrar">
       <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5"/><path d="M12 18h.01"/></svg></span>
-      <span class="tx"><b>Eliminar una app</b><span class="d">Borra tu app de GitHub, Fly.io y Google Drive. No se puede deshacer. Tu copia del PC se queda.</span><em class="estado" id="e-borrar" hidden></em></span>
+      <span class="tx"><b>Eliminar una app</b><span class="d">Borra tu app de internet para siempre: de GitHub, Fly.io y Google Drive. No se puede deshacer. Tu copia del PC se queda.</span><em class="estado" id="e-borrar" hidden></em></span>
       <span class="fl" aria-hidden="true">→</span></a></li>
   </ul>
 
-  <h2>Documentación</h2>
+  <h2 id="documentacion">Guías y documentación</h2>
   <div class="docs">
     <a class="doc" href="recorrido.html"><b>El recorrido</b><span>Las veinte pantallas del montaje, en el móvil y en el PC, una a una.</span></a>
     <a class="doc" href="bitacora.html"><b>Bitácora</b><span>Qué se pidió en cada sesión y qué cambió.</span></a>
@@ -199,7 +223,7 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
     <a class="doc" href="https://github.com/npiobject-labs/DesdeMovil" target="_blank" rel="noopener"><b>El código</b><span>El molde del que nacen todas las apps, en GitHub.</span></a>
   </div>
 
-  <footer>Build <code>DM-B3-20260927-001</code> · <a href="bitacora.html">Bitácora</a> · <a href="mocks/">Versiones anteriores</a></footer>
+  <footer>Build <code>DM-B3-20260927-007</code> · <a href="bitacora.html">Bitácora</a> · <a href="mocks/">Versiones anteriores</a></footer>
 </main>
 
 <script>
@@ -220,7 +244,14 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-si
   while (i < orden.length && h[orden[i]]) i++;
   var app = String((st.datos && st.datos.nombre) || '').trim(), e = document.getElementById('e-instalar'), op = document.getElementById('op-instalar');
   if (i >= orden.length) { e.textContent = (app ? '«' + app + '» montada' : 'Montada') + ' · montar otra'; e.className = 'estado ok' }
-  else if (i > 0) { e.textContent = 'Vas por el paso ' + (i+1) + ' de ' + orden.length + (app ? ' · «' + app + '»' : ''); op.querySelector('b').textContent = 'Seguir instalando' }
+  else if (i > 0) {
+    e.textContent = 'Vas por el paso ' + (i+1) + ' de ' + orden.length + (app ? ' · «' + app + '»' : ''); op.querySelector('b').textContent = 'Seguir instalando';
+    // A medias: a la vista, con la salida para empezar otra.
+    document.getElementById('s-medias').hidden = false;
+    document.getElementById('m-app').textContent = app ? '«' + app + '»' : 'Tu app';
+    document.getElementById('m-paso').textContent = i + 1;
+    document.getElementById('m-otra').addEventListener('click', function(){ window.peripateticos.empezarOtra() });
+  }
   else if (st.perfil && st.perfil.org) e.textContent = 'Otra app · unos 10 minutos';
 
   // Una baja a medias.
