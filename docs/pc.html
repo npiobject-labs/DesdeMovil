@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260926-001">
+<meta name="build" content="DM-B3-20260927-002">
 <meta name="description" content="Peripatéticos en el PC: descarga un archivo, ábrelo y tu app queda montada en tus cuentas.">
 <title>Peripatéticos en el PC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -76,12 +76,18 @@ details.por > div{padding:0 .9rem .8rem;font-size:.93rem;color:var(--ink2)}
 .form label{font-weight:600;font-size:.9rem}
 .form input{width:100%;font:1rem var(--sans);padding:.65rem .75rem;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
 .movil{background:var(--acc2);border:1px solid var(--acc);border-radius:12px;padding:.9rem 1rem;margin:1rem 0}
+body.peligro{--acc:#B3261E;--acc2:#B3261E14;--acc-ink:#FFFFFF}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) body.peligro{--acc:#F28B82;--acc2:#F28B821F;--acc-ink:#2A0E0C} }
+.franja{height:.55rem;background:repeating-linear-gradient(-45deg,#E8B400 0 10px,#1E2528 10px 20px)}
+.rojo{padding:.8rem 1rem;border:2px solid var(--acc);background:var(--acc2);border-radius:12px;margin:1rem 0;font-size:.98rem}
+.rojo b{color:var(--acc)}
 footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.8rem;color:var(--mute)}
 </style>
 </head>
 <body>
+<div class="franja" id="franja" hidden></div>
 <main class="wrap">
-  <div class="top"><a class="b" href="./">Peripatéticos</a><span class="nota">en el PC</span></div>
+  <div class="top"><a class="b" href="./">Peripatéticos</a><span class="nota" id="donde">en el PC</span></div>
 
   <div class="movil" id="aviso-movil" hidden>
     <b>Estás en un móvil.</b> Esta página es para el PC con Windows. Mándatela y ábrela allí:
@@ -91,28 +97,32 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
   <section id="sin-datos" hidden>
     <div class="hero">
       <p class="kicker">En el PC</p>
-      <h1>Falta saber qué app montar</h1>
+      <h1 id="falta">Falta saber qué app montar</h1>
       <p class="lede">Lo normal es llegar aquí con el enlace del móvil, que ya lo trae todo. Si no lo tienes a mano, escríbelo:</p>
     </div>
     <form class="form" id="form">
       <label for="f-app">Nombre de tu app</label><input id="f-app" placeholder="recetas" autocomplete="off" spellcheck="false" required>
       <label for="f-org">Tu organización de GitHub</label><input id="f-org" placeholder="apps-de-maria" autocomplete="off" spellcheck="false" required>
+      <label for="f-nuevo" data-solo="renombrar">Nombre nuevo</label><input id="f-nuevo" data-solo="renombrar" placeholder="cocina" autocomplete="off" spellcheck="false">
       <button class="btn primario" type="submit">Seguir</button>
     </form>
   </section>
 
   <section id="con-datos" hidden>
     <div class="hero">
-      <p class="kicker">En el PC · una sola vez</p>
-      <h1>Montar «<span class="A"></span>» en este PC</h1>
-      <p class="lede">Tu app se creará en tu organización <b class="O"></b>. Tardará unos 8 minutos y al terminar podrás apagar el PC: no vuelve a hacer falta.</p>
+      <p class="kicker" id="kicker">En el PC · una sola vez</p>
+      <h1 id="titulo">Montar «<span class="A"></span>» en este PC</h1>
+      <p class="lede" data-solo="montar">Tu app se creará en tu organización <b class="O"></b>. Tardará unos 8 minutos y al terminar podrás apagar el PC: no vuelve a hacer falta.</p>
       <p class="nota" id="con-drive" hidden>Los resúmenes de cada sesión irán a tu carpeta de Google Drive.</p>
+      <p class="lede" data-solo="eliminar">Este archivo borra de internet tu app <b class="A"></b>: su servidor en Fly.io y todo lo que hay en GitHub —el código, su historia, la web y la bitácora—.</p>
+      <div class="rojo" data-solo="eliminar"><b>No se puede deshacer.</b> No hay papelera ni copia en GitHub ni en Fly.io. Antes de borrar nada, la ventana te enseña lo que va a hacer y te pide que escribas el nombre de tu app. Si no lo escribes, no pasa nada.</div>
+      <p class="lede" data-solo="renombrar">Tu app <b class="A"></b> pasará a llamarse <b class="N"></b>: en GitHub, en la dirección de su web, en su servidor de Fly.io y en la copia de tu PC. Tarda entre 5 y 10 minutos.</p>
     </div>
 
     <ol class="pasos">
       <li><span class="n">1</span><div>
         <h3>Descarga el archivo</h3>
-        <p><button class="btn primario grande" type="button" id="descargar"><span>⬇ Descargar montar-<span class="A"></span>.cmd</span></button></p>
+        <p><button class="btn primario grande" type="button" id="descargar"><span>⬇ Descargar <span class="F"></span></span></button></p>
         <p class="nota">Se guarda en tu carpeta Descargas. Pesa unos 2 KB: solo contiene tu nombre de app y la orden de empezar. <a href="#dentro">Ver qué hay dentro</a>.</p>
       </div></li>
       <li><span class="n">2</span><div>
@@ -124,27 +134,50 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
         <p>Según el navegador, sale una de estas dos pantallas.</p>
         <p><b>Gris, «Advertencia de seguridad»</b>: pulsa <b>Ejecutar</b>.</p>
         <div class="gris" aria-hidden="true"><b>No se pudo comprobar el editor. ¿Está seguro de que desea ejecutar este software?</b>
-          <div class="f">Nombre: montar-<span class="A"></span>.cmd · Editor: Publicador desconocido</div>
+          <div class="f">Nombre: <span class="F"></span> · Editor: Publicador desconocido</div>
           <div class="bots"><span class="az">Ejecutar</span><span>Cancelar</span></div></div>
         <p><b>Azul, «Windows protegió tu PC»</b>: pulsa <b>Más información</b> (texto pequeño) y después <b>Ejecutar de todas formas</b>.</p>
         <div class="smart" aria-hidden="true"><div class="c"><b>Windows protegió tu PC</b>SmartScreen impidió que se iniciara una aplicación desconocida…</div>
           <div class="d"><a>Más información</a><div class="bots"><span class="az">Ejecutar de todas formas</span><span>No ejecutar</span></div></div></div>
         <p class="nota">Es normal: Windows lo hace con cualquier archivo bajado de internet que no firme una gran empresa. Solo avisa la primera vez: si vuelves a abrir el archivo, ya no pregunta.</p>
       </div></li>
-      <li><span class="n">4</span><div>
+      <li data-solo="montar"><span class="n">4</span><div>
         <h3>Entra dos veces en el navegador</h3>
         <p>Primero en <b>GitHub</b>: la ventana negra te enseña un código de ocho letras (ya copiado), lo escribes o lo pegas y pulsas <b>Authorize</b>. Después en <b>Fly.io</b>: pulsas <b>Authorize</b>.</p>
         <p class="nota">Es lo único que tienes que hacer. No hay que escribir nada en la ventana negra.</p>
       </div></li>
-      <li><span class="n">5</span><div>
+      <li data-solo="montar"><span class="n">5</span><div>
         <h3>Espera y apaga</h3>
         <p>La ventana va diciendo lo que hace. Cuando ponga <b>«Ya puedes apagar el PC»</b>, vuelve al móvil: el paso 7 se marca solo en cuanto tu app responde.</p>
         <p>Al terminar, te deja en <b>Documentos\Peripateticos\<span class="A"></span></b> una copia de seguridad de tu app —con su ficha, accesos directos y «Actualizar copia» para ponerla al día con doble clic— y un acceso a esa carpeta en el escritorio.</p>
         <p class="nota">Si algo falla, la ventana te dice qué pasa. Volver a abrir el mismo archivo sigue donde lo dejó.</p>
       </div></li>
+      <li data-solo="eliminar renombrar"><span class="n">4</span><div>
+        <h3>Si te lo pide, entra en GitHub y en Fly.io</h3>
+        <p>Si montaste la app desde este PC, lo normal es que no pida nada. Si lo pide, es como al montarla: un código de ocho letras para GitHub (ya copiado) y <b>Authorize</b> en Fly.io.</p>
+        <p data-solo="eliminar">GitHub te pedirá además un permiso nuevo, <b>delete_repo</b> («borrar repositorios»). Es el que permite borrar tu app; pulsa <b>Authorize</b>.</p>
+      </div></li>
+      <li data-solo="eliminar"><span class="n">5</span><div>
+        <h3>Escribe el nombre de tu app</h3>
+        <p>La ventana te enseña en rojo lo que se va a borrar y en verde lo que se queda. Si estás de acuerdo, escribe <b class="A"></b> y pulsa Intro. Es la última puerta: sin eso no se borra nada.</p>
+      </div></li>
+      <li data-solo="renombrar"><span class="n">5</span><div>
+        <h3>Escribe el nombre nuevo</h3>
+        <p>La ventana te enseña lo que va a cambiar. Si estás de acuerdo, escribe <b class="N"></b> y pulsa Intro. Sin eso no se cambia nada.</p>
+      </div></li>
+      <li data-solo="eliminar"><span class="n">6</span><div>
+        <h3>Espera y vuelve al móvil</h3>
+        <p>Cuando ponga <b>«eliminada»</b>, vuelve al móvil: la eliminación se marca sola.</p>
+        <p><b>Tu copia en el PC se queda</b>: <b>Documentos\Peripateticos\<span class="A"></span></b>, con el acceso del escritorio. Es tuya: guárdala como copia de seguridad o bórrala tú cuando quieras.</p>
+      </div></li>
+      <li data-solo="renombrar"><span class="n">6</span><div>
+        <h3>Espera y vuelve al móvil</h3>
+        <p>La ventana crea el servidor nuevo, espera a que responda y borra el viejo. Cuando ponga <b>«ahora es <span class="N"></span>»</b>, vuelve al móvil: falta que Claude cambie el nombre en los textos y en tu carpeta de Drive.</p>
+        <p class="nota">Si algo falla, volver a abrir el mismo archivo sigue donde lo dejó. Mientras el servidor nuevo no responda, el viejo sigue encendido.</p>
+      </div></li>
     </ol>
 
-    <div class="aviso"><b>¿Tienes un Mac o Linux?</b> De momento solo Windows 10 u 11. <a href="./#ayuda">Ayuda</a></div>
+    <div class="aviso"><b>¿Tienes un Mac o Linux?</b> De momento solo Windows 10 u 11. <a href="instalar.html#ayuda">Ayuda</a></div>
 
     <details class="por"><summary>Si Windows no te deja abrir el archivo</summary><div>
       <p>Hay otra forma que no da ese aviso. Pulsa las teclas <b>Windows + X</b>, elige <b>Terminal</b> (o <b>Windows PowerShell</b>), pega esta línea con el botón derecho del ratón y pulsa Intro:</p>
@@ -153,13 +186,13 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
     </div></details>
 
     <details class="por" id="dentro"><summary>Qué hay dentro del archivo</summary><div>
-      <p>Esto es todo lo que contiene. Fija el nombre de tu app y tu organización, descarga el instalador de esta misma web y lo ejecuta:</p>
+      <p>Esto es todo lo que contiene. Fija el nombre de tu app y tu organización, descarga el programa de esta misma web y lo ejecuta:</p>
       <pre id="contenido-cmd"></pre>
-      <p>El instalador está aquí, para quien quiera leerlo: <a id="enlace-ps1" href="instalador/peripateticos.ps1">peripateticos.ps1</a>.</p>
+      <p>El programa está aquí, para quien quiera leerlo: <a id="enlace-ps1" href="instalador/peripateticos.ps1"></a>.</p>
     </div></details>
   </section>
 
-  <footer>Build <code>DM-B3-20260926-001</code> · <a href="./">Peripatéticos</a> · <a href="recorrido.html">Recorrido</a></footer>
+  <footer>Build <code>DM-B3-20260927-002</code> · <a href="./">Menú</a> · <a href="instalar.html">Instalar</a> · <a href="recorrido.html">Recorrido</a></footer>
 </main>
 <script>
 (function(){
@@ -170,61 +203,84 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
   }
   function cuenta(v){ return String(v||'').trim().replace(/^@/,'').replace(/[^A-Za-z0-9-]/g,'') }
   var p = new URLSearchParams(location.search);
-  var app = slug(p.get('app')), org = cuenta(p.get('org')), usuario = cuenta(p.get('u'));
+  // Qué hace el archivo: montar (por defecto), eliminar o renombrar una app.
+  var accion = ({eliminar:1, renombrar:1})[p.get('accion')] ? p.get('accion') : 'montar';
+  var app = slug(p.get('app')), org = cuenta(p.get('org')), usuario = cuenta(p.get('u')), nuevo = slug(p.get('nuevo'));
   var drive = String(p.get('drive')||'').replace(/[^A-Za-z0-9_-]/g,'');   // id de la carpeta de Drive, opcional
 
   // La plantilla de la que nace la app: la de esta misma web (owner.github.io/repo).
   var h = location.hostname.match(/^([^.]+)\.github\.io$/i), trozo = location.pathname.split('/').filter(Boolean)[0];
   var plantilla = (h && trozo) ? h[1] + '/' + trozo : 'npiobject-labs/DesdeMovil';
+  var script = accion === 'montar' ? 'peripateticos.ps1' : 'mantenimiento.ps1';
   var urlPs1 = /^https?:$/.test(location.protocol)
-    ? new URL('instalador/peripateticos.ps1', location.href).href
-    : 'https://raw.githubusercontent.com/npiobject-labs/DesdeMovil/main/docs/instalador/peripateticos.ps1';
+    ? new URL('instalador/' + script, location.href).href
+    : 'https://raw.githubusercontent.com/npiobject-labs/DesdeMovil/main/docs/instalador/' + script;
+  var MODO = {
+    montar:    { fichero: 'montar-',    rem: 'monta la app "APP" en tus cuentas de GitHub y Fly.io.', title: 'montar APP', doc: 'Montar APP · Peripatéticos', kicker: 'En el PC · una sola vez', h1: 'Montar «<span class="A"></span>» en este PC', falta: 'Falta saber qué app montar' },
+    eliminar:  { fichero: 'eliminar-',  rem: 'ELIMINA la app "APP" de tus cuentas de GitHub y Fly.io. Antes pide escribir su nombre.', title: 'ELIMINAR APP', doc: 'Eliminar APP · Peripatéticos', kicker: 'En el PC · zona de peligro', h1: 'Eliminar «<span class="A"></span>» desde este PC', falta: 'Falta saber qué app eliminar' },
+    renombrar: { fichero: 'renombrar-', rem: 'cambia el nombre de la app "APP" a "NUEVO" en GitHub, Fly.io y este PC.', title: 'renombrar APP', doc: 'Renombrar APP · Peripatéticos', kicker: 'En el PC · cambiar el nombre', h1: '«<span class="A"></span>» pasa a llamarse «<span class="N"></span>»', falta: 'Falta saber qué app renombrar' }
+  }[accion];
+  function t(x){ return x.replace(/APP/g, app).replace(/NUEVO/g, nuevo) }
+  function fichero(){ return MODO.fichero + app + '.cmd' }
 
   // El .cmd: solo ASCII. Los valores ya vienen saneados a [A-Za-z0-9-]; en la
   // URL, "%" se dobla porque cmd lo leeria como variable.
   function cmd(){
     var u = urlPs1.replace(/%/g, '%%');
+    var vars = accion === 'montar'
+      ? ['set "PERI_APP=' + app + '"', 'set "PERI_ORG=' + org + '"', 'set "PERI_USUARIO=' + usuario + '"', 'set "PERI_DRIVE=' + drive + '"']
+      : ['set "PERI_ACCION=' + accion + '"', 'set "PERI_APP=' + app + '"', 'set "PERI_ORG=' + org + '"'].concat(accion === 'renombrar' ? ['set "PERI_NUEVO=' + nuevo + '"'] : []);
     return [
       '@echo off',
-      'rem Peripateticos: monta la app "' + app + '" en tus cuentas de GitHub y Fly.io.',
+      'rem Peripateticos: ' + t(MODO.rem),
       'rem Lo genero ' + location.origin + location.pathname,
       'setlocal',
-      'title Peripateticos - montar ' + app,
-      'set "PERI_APP=' + app + '"',
-      'set "PERI_ORG=' + org + '"',
-      'set "PERI_USUARIO=' + usuario + '"',
-      'set "PERI_DRIVE=' + drive + '"',
+      'title Peripateticos - ' + t(MODO.title)
+    ].concat(vars, [
       'set "PERI_PLANTILLA=' + plantilla + '"',
       'set "PERI_URL=' + u + '"',
       'set "PERI_CMD=%~f0"',
-      'powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "try { Unblock-File -LiteralPath $env:PERI_CMD -ErrorAction SilentlyContinue } catch {}; try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $w = New-Object Net.WebClient; $w.Encoding = [Text.Encoding]::UTF8; $s = $w.DownloadString($env:PERI_URL); & ([scriptblock]::Create($s)) } catch { Write-Host (\'No se pudo descargar el instalador: \' + $_.Exception.Message) -ForegroundColor Red }"',
+      'powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "try { Unblock-File -LiteralPath $env:PERI_CMD -ErrorAction SilentlyContinue } catch {}; try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $w = New-Object Net.WebClient; $w.Encoding = [Text.Encoding]::UTF8; $s = $w.DownloadString($env:PERI_URL); & ([scriptblock]::Create($s)) } catch { Write-Host (\'No se pudo descargar el programa: \' + $_.Exception.Message) -ForegroundColor Red }"',
       'echo.',
       'echo Pulsa una tecla para cerrar esta ventana.',
       'pause >nul'
-    ].join('\r\n') + '\r\n';
+    ]).join('\r\n') + '\r\n';
   }
   function lineaPs(){
-    return "[Net.ServicePointManager]::SecurityProtocol = 'Tls12'; $env:PERI_APP='" + app + "'; $env:PERI_ORG='" + org + "'; $env:PERI_USUARIO='" + usuario + "'; $env:PERI_DRIVE='" + drive + "'; $env:PERI_PLANTILLA='" + plantilla + "'; irm " + urlPs1 + " | iex";
+    var v = accion === 'montar'
+      ? "$env:PERI_APP='" + app + "'; $env:PERI_ORG='" + org + "'; $env:PERI_USUARIO='" + usuario + "'; $env:PERI_DRIVE='" + drive + "'; "
+      : "$env:PERI_ACCION='" + accion + "'; $env:PERI_APP='" + app + "'; $env:PERI_ORG='" + org + "'; " + (accion === 'renombrar' ? "$env:PERI_NUEVO='" + nuevo + "'; " : '');
+    return "[Net.ServicePointManager]::SecurityProtocol = 'Tls12'; " + v + "$env:PERI_PLANTILLA='" + plantilla + "'; irm " + urlPs1 + " | iex";
   }
 
   function pinta(){
-    var hay = !!(app && org);
+    document.body.classList.toggle('peligro', accion === 'eliminar');
+    document.getElementById('franja').hidden = accion !== 'eliminar';
+    document.getElementById('donde').textContent = accion === 'montar' ? 'en el PC' : accion === 'eliminar' ? 'en el PC · eliminar' : 'en el PC · renombrar';
+    [].forEach.call(document.querySelectorAll('[data-solo]'), function(e){ e.hidden = e.dataset.solo.split(' ').indexOf(accion) < 0 });
+    document.getElementById('falta').textContent = MODO.falta;
+    document.getElementById('f-nuevo').required = accion === 'renombrar';
+    var hay = !!(app && org && (accion !== 'renombrar' || (nuevo && nuevo !== app)));
     document.getElementById('sin-datos').hidden = hay;
     document.getElementById('con-datos').hidden = !hay;
     if (!hay) return;
+    document.getElementById('kicker').textContent = MODO.kicker;
+    document.getElementById('titulo').innerHTML = MODO.h1;
     [].forEach.call(document.querySelectorAll('.A'), function(e){ e.textContent = app });
+    [].forEach.call(document.querySelectorAll('.N'), function(e){ e.textContent = nuevo });
     [].forEach.call(document.querySelectorAll('.O'), function(e){ e.textContent = org });
-    document.title = 'Montar ' + app + ' · Peripatéticos';
-    document.getElementById('con-drive').hidden = !drive;
+    [].forEach.call(document.querySelectorAll('.F'), function(e){ e.textContent = fichero() });
+    document.title = t(MODO.doc);
+    document.getElementById('con-drive').hidden = !drive || accion !== 'montar';
     document.getElementById('contenido-cmd').textContent = cmd();
     document.getElementById('linea-ps').textContent = lineaPs();
-    document.getElementById('enlace-ps1').href = urlPs1;
+    var a = document.getElementById('enlace-ps1'); a.href = urlPs1; a.textContent = script;
   }
 
   document.getElementById('descargar').addEventListener('click', function(){
     var blob = new Blob([cmd()], {type: 'application/octet-stream'});
     var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'montar-' + app + '.cmd';
+    a.href = URL.createObjectURL(blob); a.download = fichero();
     document.body.appendChild(a); a.click();
     setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove() }, 1000);
   });
@@ -234,9 +290,9 @@ footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-
   });
   document.getElementById('form').addEventListener('submit', function(e){
     e.preventDefault();
-    app = slug(document.getElementById('f-app').value); org = cuenta(document.getElementById('f-org').value);
+    app = slug(document.getElementById('f-app').value); org = cuenta(document.getElementById('f-org').value); nuevo = slug(document.getElementById('f-nuevo').value);
     if (!app || !org) return;
-    try { history.replaceState(null, '', '?app=' + encodeURIComponent(app) + '&org=' + encodeURIComponent(org)) } catch(err){}
+    try { history.replaceState(null, '', '?' + (accion !== 'montar' ? 'accion=' + accion + '&' : '') + 'app=' + encodeURIComponent(app) + '&org=' + encodeURIComponent(org) + (accion === 'renombrar' ? '&nuevo=' + encodeURIComponent(nuevo) : '')) } catch(err){}
     pinta();
   });
 

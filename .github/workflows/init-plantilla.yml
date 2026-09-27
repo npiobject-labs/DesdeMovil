@@ -74,18 +74,19 @@ jobs:
           echo "Inicializando como ${OWNER}/${NOMBRE}"
           echo "  slug: ${SLUG} · usuario del runtime: ${USUARIO} · prefijo de build: ${PREFIJO}-B1"
 
-          # La portada de la plantilla es el instalador de Peripateticos, que
-          # solo tiene sentido aqui. El hijo nace con su propia portada
-          # (docs/semilla/index.html: la ficha con el boton "Saluda") y sin el
-          # instalador, la pagina del PC, el recorrido ni los mocks de la
-          # plantilla. Va antes de las sustituciones para que la portada nueva
+          # La portada de la plantilla es el menu de Peripateticos (instalar,
+          # renombrar, eliminar), que solo tiene sentido aqui. El hijo nace con
+          # su propia portada (docs/semilla/index.html: la ficha con el boton
+          # "Saluda") y sin esas paginas, la del PC, el recorrido ni los mocks
+          # de la plantilla. Va antes de las sustituciones para que la portada nueva
           # reciba el nombre del proyecto.
           if [ -f docs/semilla/index.html ]; then
             mv docs/semilla/index.html docs/index.html
             echo "  docs/index.html: portada del proyecto (desde docs/semilla/)"
           fi
-          rm -rf docs/semilla docs/instalador docs/mocks docs/pc.html docs/recorrido.html
-          echo "  instalador, recorrido y mocks de la plantilla: fuera"
+          rm -rf docs/semilla docs/instalador docs/mocks docs/pc.html docs/recorrido.html \
+                 docs/instalar.html docs/desinstalar.html docs/renombrar.html
+          echo "  menu, instalador, desinstalar, renombrar, recorrido y mocks de la plantilla: fuera"
 
           # El enlace "Use this template" debe seguir apuntando a la plantilla
           # original, asi que se aparta antes de sustituir y se restaura despues.

@@ -23,7 +23,7 @@ El repositorio `npiobject-labs/DesdeMovil`, rama `main`, es la **única** fuente
 Google Drive es **opcional** y, cuando está configurado, **solo un destino de copias**, nunca un origen:
 
 - Si el id de la sección **Parámetros** está vacío, este proyecto no usa Drive: omite el paso sin comentarlo.
-- Si hay id, al cerrar sesión se suben copias de `docs/planificacion/` a esa carpeta. Solo crear o sobrescribir por nombre: nunca borrar ni renombrar nada en Drive.
+- Si hay id, al cerrar sesión se suben copias de `docs/planificacion/` a esa carpeta. Solo crear o sobrescribir por nombre: nunca borrar ni renombrar nada en Drive, salvo lo que describe **Eliminar o renombrar la app**, y solo cuando el usuario lo pide.
 - Nunca se toma nada de Drive como origen ni se importa contenido desde allí. Si el repo y Drive difieren, gana el repo.
 - La carpeta tiene que ser una carpeta normal de `Mi unidad`. Nunca uses el "Proyecto" de Drive del mismo nombre: el conector no puede escribir en él.
 
@@ -33,7 +33,7 @@ La carpeta local del PC es un espejo de solo lectura. Nunca la trates como orige
 
 | Qué | URL | Despliegue |
 |---|---|---|
-| Mock estático (Pages) | https://npiobject-labs.github.io/DesdeMovil/ | `.github/workflows/pages.yml` en push a `main` |
+| Portada (Pages; en la plantilla, el menú de Peripatéticos) | https://npiobject-labs.github.io/DesdeMovil/ | `.github/workflows/pages.yml` en push a `main` |
 | Bitácora (Pages) | https://npiobject-labs.github.io/DesdeMovil/bitacora.html | idem; el índice lo genera `pages.yml` |
 | Backend (Fly.io, opcional) | `https://<app de Fly>.fly.dev/` · `/salud` · `/holamundo` | `.github/workflows/deploy.yml` en push a `main` que toque `app/**` |
 | Comprobación del backend (Pages) | https://npiobject-labs.github.io/DesdeMovil/holamundo.html | página estática que llama a `/holamundo` y `/salud` desde el navegador |
@@ -50,7 +50,7 @@ Pages está siempre activo. Fly también: `FLY_API_TOKEN` es un secreto de la or
 - `app/fly.toml` no lleva clave `app`: el nombre se pasa con `--app` desde `deploy.yml`.
 - El backend escucha en 8080, que es lo que espera Fly; la variable de entorno `PUERTO` solo la usa `tools/arrancar.ps1` para probar en el PC.
 - Mocks estáticos en `docs/`. `docs/index.html` es el mock vivo; los anteriores se archivan en `docs/mocks/NNN-nombre.html`.
-- En la plantilla, `docs/index.html` es el instalador de Peripatéticos (portada + pasos con verificación real), con `docs/pc.html` (la página que se abre en el PC y genera el `.cmd`), `docs/instalador/peripateticos.ps1` (el instalador) y `docs/recorrido.html` (las pantallas del recorrido). `docs/semilla/index.html` es la portada con la que nace cada proyecto: `init-plantilla.yml` la mueve a `docs/index.html` y borra lo demás, que solo tiene sentido aquí. En cada proyecto, `docs/nacimiento.json` lo escribe el instalador y `docs/drive.json` la sesión que comprueba Drive (ver **Comprobación de Drive**); los dos los leen la portada y el instalador.
+- En la plantilla, `docs/index.html` es el **menú de Peripatéticos**, que enlaza todo lo demás: `docs/instalar.html` (portada + instalador con verificación real, ficha, pedir y ayuda; los enlaces viejos a la raíz con `#instalar`, `#ayuda` o `?u=…&org=…` se redirigen allí), `docs/renombrar.html` (cambiar el nombre de una app), `docs/desinstalar.html` (eliminarla, con estética de zona de peligro), `docs/pc.html` (la página que se abre en el PC y genera el `.cmd`; `?accion=eliminar` o `?accion=renombrar&nuevo=…` cambian lo que hace), `docs/instalador/peripateticos.ps1` (el instalador), `docs/instalador/mantenimiento.ps1` (eliminar y renombrar desde el PC) y `docs/recorrido.html` (las pantallas del recorrido). `docs/semilla/index.html` es la portada con la que nace cada proyecto: `init-plantilla.yml` la mueve a `docs/index.html` y borra lo demás, que solo tiene sentido aquí. En cada proyecto, `docs/nacimiento.json` lo escribe el instalador (y lo pone al día `mantenimiento.ps1` al renombrar) y `docs/drive.json` la sesión que comprueba Drive (ver **Comprobación de Drive**); los dos los leen la portada y el instalador. `docs/baja.json` y `docs/renombrado.json` los escribe la sesión de Claude de **Eliminar o renombrar la app**.
 - El índice `docs/mocks/index.html` lo genera `pages.yml` en cada publicación, leyendo el `<title>` y el `<meta name="build">` de cada mock archivado. No lo edites ni lo commitees: está en `.gitignore`.
 - Cada mock lleva `<meta name="build" content="DM-B3-AAAAMMDD-NNN">` con un número nuevo en cada iteración.
 - Nunca pongas claves, endpoints internos ni datos reales en `docs/`: el sitio es público.
@@ -71,6 +71,15 @@ Solo una sesión de Claude con el conector de Google Drive llega a la carpeta: n
 3. Si llegas, sube a la carpeta `Ficha de <nombre del proyecto>.md`, sin conversión a formato Google: qué es la app y sus enlaces (web, servidor, bitácora, repositorio). Solo crear o sobrescribir por nombre.
 4. Escribe `docs/drive.json` con `{"verificado": true, "fecha": "<ISO con zona>", "fichero": "<nombre de la ficha>"}`. Sin el id de la carpeta ni datos personales: `docs/` es público.
 5. Commit + push a `main` y confirma por la API de Actions que `pages.yml` de ese SHA queda en `success`: la página del instalador y la portada de la app leen ese fichero desde Pages.
+
+## Eliminar o renombrar la app
+
+Lo guían `desinstalar.html` y `renombrar.html` de la plantilla. El PC (`mantenimiento.ps1`) hace GitHub, Fly.io y la copia local; Claude, lo que solo él alcanza. Las peticiones que dan esas páginas son autosuficientes (valen para proyectos nacidos antes de esta sección); esto es lo que esperan:
+
+- **Eliminar** (antes de que el PC borre el repositorio): con el id de **Carpeta de Drive (id)**, manda esa carpeta a la papelera con el conector (`trash_file`), solo esa. Escribe `docs/baja.json` con `{"drive": "papelera" | "sin-drive" | "no", "fecha": "<ISO con zona>", "motivo": "<si no se pudo>"}`, commit y push a `main`. Sin resumen ni bitácora: la app se va a borrar.
+- **Renombrar** (después del PC, en una sesión nueva con el repositorio ya renombrado): cambia el nombre viejo por el nuevo en todo el repositorio salvo `docs/bitacora/` antigua y `docs/plantilla/`, y el servidor viejo de Fly por el nuevo (fila **App de Fly.io**, `meta fly-app`). Con el conector, cambia el título de la carpeta de Drive (`update_file`) y el de `Ficha de <viejo>.md`. Escribe `docs/renombrado.json` con `{"de", "a", "fecha", "drive": "renombrada" | "sin-drive" | "no", "motivo"}`, commit y push a `main`, y cierra la sesión como siempre.
+- Nunca el id de la carpeta ni datos personales en esos ficheros: `docs/` es público. Si el conector no puede, `"drive": "no"` con el motivo: la página le explica al usuario cómo hacerlo a mano.
+- Fly.io no renombra apps: `mantenimiento.ps1` crea la nueva, cambia `FLY_APP`, la constante `NOMBRE` de `app/src/main.rs` (ese commit despliega el servidor nuevo) y destruye la vieja cuando la nueva responde.
 
 ## Verificación antes de avisar
 
@@ -98,7 +107,7 @@ Si necesitas comprobar algo desde la sesión, hazlo contra la API de GitHub (`ht
 - Las apps montadas con el instalador de Peripatéticos tienen además una copia de seguridad en `Documentos\Peripateticos\<app>\` (el repositorio en `repo\`, bajado como zip de `main`, sin git), con la ficha, accesos directos y `Actualizar copia.cmd`. Es un espejo de solo lectura, como la carpeta de `aterrizar.ps1`: se sustituye entera al actualizar.
 - Solo a petición y solo con Claude Desktop conectado: `tools/aterrizar.ps1` (idempotente, sobrescribe la copia local sin preguntar). "¿Estoy al día?" = `tools/estado.ps1`. Ambos aceptan `-Proyecto`, `-Owner`, `-Remote`, `-Root` y `-Rama`.
 - `tools/arrancar.ps1` levanta la app entera en el PC sin tocar la nube: compila el backend, lo sirve en `localhost:8080` y publica `docs/` en `localhost:8081`. Acepta `-PuertoApi`, `-PuertoWeb`, `-Release` y `-SinNavegador`. Necesita Rust; no necesita Docker.
-- `tools/eliminar.ps1` borra el proyecto entero: app de Fly, repositorio y copia local. Sin `-Confirmar` solo enseña el plan; con él pide escribir el nombre. Drive y las sesiones quedan a mano. Solo se ejecuta si el usuario lo pide explícitamente.
+- `tools/eliminar.ps1` borra el proyecto entero: app de Fly, repositorio y copia local. Para las apps de Peripatéticos, el camino del usuario es `desinstalar.html`, que no toca la copia local. Sin `-Confirmar` solo enseña el plan; con él pide escribir el nombre. Drive y las sesiones quedan a mano. Solo se ejecuta si el usuario lo pide explícitamente.
 - `tools/nuevo-proyecto-V1.ps1` y `tools/eliminar-proyecto-V1.ps1` **solo existen en esta plantilla**: dan de alta y de baja un proyecto entero (repositorio, Pages, app de Fly y clon local; Drive nunca se toca, solo se apunta su id). El primero enseña el plan y pide confirmación —`-Simular` lo enseña y termina—, es reanudable y verifica por HTTP al final; el segundo simula por defecto y solo borra con `-Confirmar`. `init-plantilla.yml` los borra en los proyectos hijos y no les aplica las sustituciones de nombre, porque sus valores por defecto (`-Plantilla`, `-FlyOrg`, `-Protegidos`) nombran a la plantilla y a la organización de Fly.
 - Servidas desde `localhost`, las páginas de `docs/` llaman al backend local en vez de al de Fly, tomando el puerto de `?api=` (8080 por defecto). En Pages no cambia nada.
 
