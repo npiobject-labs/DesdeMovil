@@ -2,7 +2,7 @@
 // init-plantilla.yml lo borra en los proyectos hijos).
 // Uso: <script src="menu.js"></script> en el <head>. Pone el botón en la barra
 // .top de la página, y da estilo a los recuadros .pm-intro («Qué hace esta
-// página») que cada página lleva al principio.
+// página»): un <details> plegado que cada página lleva al principio.
 (function(){
   var INST = 'peripateticos-v1', BAJA = 'peripateticos-baja-v1', NOMBRE = 'peripateticos-nombre-v1';
   var ORDEN = ['nombre','github','org','fly','claude','drive','pc','verdrive'];
@@ -39,9 +39,16 @@
     + '.pm-borrar{margin-top:.9rem;padding-top:.8rem;border-top:1px dashed var(--line,#DED7C9)}'
     + '.pm-borrar button{padding:0;border:0;background:none;text-align:left;color:var(--err,#B3261E);font:600 .9rem var(--sans,system-ui,sans-serif);text-decoration:underline;text-underline-offset:2px;cursor:pointer}'
     // Recuadro «Qué hace esta página», al principio de cada página.
-    + '.pm-intro{margin:1.2rem 0 1rem;padding:.85rem 1rem;border:1px solid var(--line,#DED7C9);border-left:4px solid var(--acc,#9A4A2C);border-radius:12px;background:var(--bg2,#fff);color:var(--ink,#1E2528)}'
-    + '.pm-intro .pm-t{margin:0 0 .45rem;font:600 .72rem var(--sans,system-ui,sans-serif);letter-spacing:.09em;text-transform:uppercase;color:var(--acc,#9A4A2C)}'
-    + '.pm-intro dl{margin:0;display:grid;gap:.5rem}'
+    // Es un <details> plegado: se despliega al tocar el título.
+    + '.pm-intro{margin:1.2rem 0 1rem;border:1px solid var(--line,#DED7C9);border-left:4px solid var(--acc,#9A4A2C);border-radius:12px;background:var(--bg2,#fff);color:var(--ink,#1E2528)}'
+    + '.pm-intro>summary{display:flex;align-items:center;gap:.6rem;min-height:2.9rem;padding:.55rem .8rem .55rem 1rem;cursor:pointer;list-style:none;font:600 .74rem var(--sans,system-ui,sans-serif);letter-spacing:.09em;text-transform:uppercase;color:var(--acc,#9A4A2C);-webkit-tap-highlight-color:transparent}'
+    + '.pm-intro>summary::-webkit-details-marker{display:none}'
+    + '.pm-flecha{flex:none;margin-left:auto;display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:50%;background:var(--acc2,#9A4A2C14)}'
+    + '.pm-flecha svg{width:1.15rem;height:1.15rem;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}'
+    + '.pm-intro[open] .pm-flecha svg{transform:rotate(180deg)}'
+    + '.pm-intro>summary:focus-visible{outline:2px solid var(--acc,#9A4A2C);outline-offset:2px;border-radius:10px}'
+    + '@media (prefers-reduced-motion:reduce){.pm-flecha svg{transition:none}}'
+    + '.pm-intro dl{margin:0;padding:0 1rem .9rem;display:grid;gap:.5rem}'
     + '.pm-intro dt{font-weight:600;font-size:.93rem;line-height:1.3}'
     + '.pm-intro dd{margin:.1rem 0 0;font-size:.95rem;line-height:1.45;color:var(--ink2,#4E585C)}'
     // Aviso de app a medias, encima del recuadro.
@@ -155,7 +162,7 @@
     panel.id = 'pm-panel'; panel.className = 'pm-panel'; panel.setAttribute('aria-label', 'Menú de Peripatéticos');
     panel.innerHTML = '<div class="pm-in"><div class="pm-cab"><b>Menú</b>'
       + '<button class="pm-btn" type="button" data-pm="cerrar" aria-label="Cerrar el menú"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="pm-txt">Cerrar</span></button></div>'
-      + '<p class="pm-ayuda">Toca una opción para ir a ella. Cada página empieza explicando qué hace.</p>'
+      + '<p class="pm-ayuda">Toca una opción para ir a ella. Al principio de cada página, «Qué hace esta página» se despliega con un toque y lo explica.</p>'
       + '<div class="pm-cuerpo"></div></div>';
     document.body.appendChild(fondo); document.body.appendChild(panel);
 
