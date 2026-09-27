@@ -1,0 +1,32 @@
+{
+  "fecha": "2026-09-27T18:47:00+02:00",
+  "titulo": "Peripatéticos: sombra de hoja curvada bajo la barra",
+  "objetivo": "Que la sombra de la barra flotante parezca la de una hoja curvada: máxima en el centro y nula en los bordes, para dar un aire más profesional.",
+  "prompts": [
+    {
+      "texto": "Bien, podías crear el siguiente efecto en la en la caja del menú de la parte superior el efecto sería el que es sería una hoja que se dobla que se altera en el centro lo que significa es que la sombra del centro es más ancha que la sombra en los bordes sea en el centro tiene máxima sombra y va decayendo hasta los bordes donde no hay sombra porque de alguna forma indica que la hoja esa está tocando a la de abajo este me parece un efecto muy estético no sé si tú tienes alguna otra sugerencia que sea más interesante lo que voy buscando es que el cliente se sienta que pie está delante de una página profesional"
+    }
+  ],
+  "cambios": [
+    "docs/menu.js: sombra de hoja curvada (::after con degradado elíptico y filo que se apaga hacia los bordes), oscura de día y clara de noche.",
+    "index, instalar, pc, renombrar, desinstalar y recorrido: build DM-B3-20260927-013 (también en menu.js?b=).",
+    "CLAUDE.md: descripción actualizada."
+  ],
+  "sha": "ab219ce",
+  "sha_completo": "ab219ce3c766149e3d7238091b2ca57a1d3a1820",
+  "run": "36334491432",
+  "build": "DM-B3-20260927-013",
+  "pagina": "index.html",
+  "fly": null,
+  "pendiente": [
+    "Elegir si se añade la barra de progreso de lectura o la aparición suave de las tarjetas.",
+    "DT-1: copia limpia «peripateticos»."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #42",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/42"
+    }
+  ],
+  "notas": "Continuación de las sesiones anteriores del 27-09, en la misma conversación."
+}
