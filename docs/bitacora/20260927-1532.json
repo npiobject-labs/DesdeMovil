@@ -1,0 +1,30 @@
+{
+  "fecha": "2026-09-27T15:32:00+02:00",
+  "titulo": "Peripatéticos: la ficha ya no enseña una app de ejemplo",
+  "objetivo": "Que la ficha y «Pedirle cambios» no enseñen enlaces a la app de ejemplo «recetas» cuando no hay ninguna montada.",
+  "prompts": [
+    {
+      "texto": "En estos momentos no hay ninguna app montada y sale como enlaces los que tienes en la página adjunta que van las recetas pero recetas no están montadas por lo tanto esto no funciona habría que ponerlo de otra forma",
+      "nota": "Con una captura de la ficha enseñando «recetas»."
+    }
+  ],
+  "cambios": [
+    "docs/instalar.html: la ficha y «Pedirle cambios» enseñan una app de verdad (la del montaje terminado o la última de «Tus apps», con selector si hay varias); sin ninguna, lo dicen y llevan a instalar o a seguir la que está a medias. Build DM-B3-20260927-008."
+  ],
+  "sha": "9b211d3",
+  "sha_completo": "9b211d3aef94ff809fce50a2732bb1488c2959c5",
+  "run": "36322723660",
+  "build": "DM-B3-20260927-008",
+  "pagina": "instalar.html#ficha",
+  "fly": null,
+  "pendiente": [
+    "Terminar una instalación y ver su ficha real."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #32",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/32"
+    }
+  ],
+  "notas": "Continuación de la sesión 20260927-1514, en la misma conversación."
+}
