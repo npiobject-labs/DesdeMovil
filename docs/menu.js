@@ -53,7 +53,21 @@
     + '.pm-intro dd{margin:.1rem 0 0;font-size:.95rem;line-height:1.45;color:var(--ink2,#4E585C)}'
     // Aviso de app a medias, encima del recuadro.
     + '.pm-aviso{margin:1rem 0 0;padding:.8rem 1rem;border:2px solid var(--acc,#9A4A2C);border-radius:12px;background:var(--bg2,#fff);color:var(--ink,#1E2528);font-size:.95rem}'
-    + '.pm-aviso button{padding:0;border:0;background:none;color:var(--acc,#9A4A2C);font:600 .9rem var(--sans,system-ui,sans-serif);text-decoration:underline;text-underline-offset:2px;cursor:pointer}';
+    + '.pm-aviso button{padding:0;border:0;background:none;color:var(--acc,#9A4A2C);font:600 .9rem var(--sans,system-ui,sans-serif);text-decoration:underline;text-underline-offset:2px;cursor:pointer}'
+    // Barras flotantes (la de arriba de cada página y la cabecera del menú ≡): al
+    // pasar el contenido por debajo se estrechan, se vuelven algo transparentes y
+    // proyectan sombra, oscura de día y clara de noche.
+    + ':root{--pm-sombra:rgba(20,24,26,.32)}'
+    + '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pm-sombra:rgba(255,255,255,.3)}}'
+    + ':root[data-theme="dark"]{--pm-sombra:rgba(255,255,255,.3)}'
+    + '.pm-flota{position:sticky;top:0;z-index:20;background-color:var(--bg,#F6F2EA);transition:background-color .2s,box-shadow .2s,border-color .2s}'
+    + '.pm-fila{transition:padding .2s}'
+    + '.pm-flota .ibtn,.pm-flota .pm-btn{transition:height .2s,width .2s}'
+    + ':root .pm-flota.pm-scroll{background-color:color-mix(in srgb,var(--bg,#F6F2EA) 80%,transparent);-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);box-shadow:0 10px 22px -10px var(--pm-sombra);border-bottom-color:transparent}'
+    + ':root .pm-scroll .pm-fila,:root .pm-fila.pm-scroll{padding-top:.28rem;padding-bottom:.28rem}'
+    + ':root .pm-scroll .ibtn{width:2.05rem;height:2.05rem}'
+    + ':root .pm-scroll .pm-btn{height:2.05rem}'
+    + '@media (prefers-reduced-motion:reduce){.pm-flota,.pm-fila,.pm-flota .ibtn,.pm-flota .pm-btn{transition:none}}';
   var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
 
   function lee(k){ try { return JSON.parse(localStorage.getItem(k) || '{}') || {} } catch(e){ return {} } }
@@ -145,9 +159,20 @@
     panel.querySelector('.pm-cuerpo').innerHTML = html;
   }
 
+  // Marca una barra flotante mientras hay contenido pasando por debajo.
+  function flota(barra, fila, desliza){
+    barra.classList.add('pm-flota'); fila.classList.add('pm-fila');
+    var pendiente = false;
+    function mira(){ pendiente = false; barra.classList.toggle('pm-scroll', (desliza === window ? window.scrollY : desliza.scrollTop) > 4) }
+    desliza.addEventListener('scroll', function(){ if (!pendiente) { pendiente = true; requestAnimationFrame(mira) } }, { passive: true });
+    mira();
+    return mira;
+  }
+
   function monta(){
     var barra = document.querySelector('.top .in') || document.querySelector('.top .fila') || document.querySelector('.top');
     if (!barra || document.getElementById('pm-btn')) return;
+    flota(document.querySelector('.top'), barra, window);
 
     var btn = document.createElement('button');
     btn.type = 'button'; btn.id = 'pm-btn'; btn.className = 'pm-btn';
@@ -163,9 +188,10 @@
       + '<p class="pm-ayuda">Toca una opción para ir a ella. Al principio de cada página, «Qué hace esta página» se despliega con un toque y lo explica.</p>'
       + '<div class="pm-cuerpo"></div></div>';
     document.body.appendChild(fondo); document.body.appendChild(panel);
+    var cab = panel.querySelector('.pm-cab'), miraCab = flota(cab, cab, panel);
 
     var raiz = document.documentElement;
-    function abre(){ pinta(panel); raiz.classList.add('pm-abierto'); btn.setAttribute('aria-expanded', 'true'); panel.querySelector('[data-pm="cerrar"]').focus() }
+    function abre(){ pinta(panel); panel.scrollTop = 0; miraCab(); raiz.classList.add('pm-abierto'); btn.setAttribute('aria-expanded', 'true'); panel.querySelector('[data-pm="cerrar"]').focus() }
     function cierra(foco){ if (!raiz.classList.contains('pm-abierto')) return; raiz.classList.remove('pm-abierto'); btn.setAttribute('aria-expanded', 'false'); if (foco) btn.focus() }
     btn.addEventListener('click', function(){ raiz.classList.contains('pm-abierto') ? cierra(true) : abre() });
     fondo.addEventListener('click', function(){ cierra(true) });
