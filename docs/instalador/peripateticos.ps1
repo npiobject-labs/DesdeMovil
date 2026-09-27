@@ -185,8 +185,10 @@ function Instalar-Ayudante([string]$repo, [string]$patron, [string]$exe, [string
 }
 
 # ---------------------------------------------------------------- GitHub: runs y ficheros
+# Ninguna expresion --jq lleva comillas dobles: Windows PowerShell 5.1 se las
+# come al pasar argumentos a un programa externo y gh recibe un jq roto.
 function Runs([string]$wf) {
-  $jq = '.[] | [.databaseId, .status, (.conclusion // ""), .event, .createdAt, .url] | @tsv'
+  $jq = '.[] | [.databaseId, .status, .conclusion, .event, .createdAt, .url] | @tsv'
   $r = Gh @("run", "list", "-R", $script:repo, "--workflow", $wf, "--limit", "20",
             "--json", "databaseId,status,conclusion,event,createdAt,url", "--jq", $jq) -SoloSalida
   $lista = @()
@@ -339,6 +341,8 @@ function Principal {
     Dice "Se va a abrir tu navegador en GitHub."
     Dice "Cuando te pida un codigo, escribe el que sale aqui abajo"
     Dice "(tambien lo tienes copiado: puedes pegarlo)."
+    Dice "Si GitHub te pide 'Confirm access', confirma que eres tu (por ejemplo"
+    Dice "con 'Verify via email' y el codigo que te llega al correo)."
     $script:codigoVisto = $false
     $script:lineasLogin = @()
     # Con la entrada y la salida redirigidas, gh no espera a que se pulse Intro
@@ -380,10 +384,14 @@ function Principal {
   # La app de GitHub de Claude, en la organizacion. Si solo tiene permiso en
   # "los repositorios elegidos", el de esta app hay que anadirselo al crearlo:
   # pasa desde la segunda app de la misma organizacion.
-  $jqClaude = '.installations[] | select(.app_slug | test("claude")) | [.id, .repository_selection] | @tsv'
-  $inst = Gh @("api", "orgs/$Org/installations", "--jq", $jqClaude) -SoloSalida
+  $inst = Gh @("api", "orgs/$Org/installations", "--jq", '.installations[] | [.id, .repository_selection, .app_slug] | @tsv') -SoloSalida
   $claudeId = ""; $claudeSel = ""
-  if ($inst.ok -and $inst.texto) { $p = (($inst.texto -split "`n")[0]).Trim() -split "`t"; $claudeId = $p[0]; if ($p.Count -gt 1) { $claudeSel = $p[1] } }
+  if ($inst.ok -and $inst.texto) {
+    foreach ($l in ($inst.texto -split "`n")) {
+      $p = $l.Trim() -split "`t"
+      if ($p.Count -ge 3 -and $p[2] -match 'claude') { $claudeId = $p[0]; $claudeSel = $p[1]; break }
+    }
+  }
   $claude = [bool]$claudeId
   $claudeUrl = "https://github.com/apps/claude/installations/new"
   if ($claude) { $claudeUrl = "https://github.com/organizations/$Org/settings/installations/$claudeId" }
