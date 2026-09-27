@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260927-004">
+<meta name="build" content="DM-B3-20260927-007">
 <meta name="description" content="Peripatéticos: cambiar el nombre de una app en GitHub, su web, Fly.io, Google Drive y la copia del PC.">
 <title>Cambiar el nombre · Peripatéticos</title>
+<script src="menu.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -51,6 +52,8 @@ pre{font:.82rem/1.5 var(--mono);background:var(--code);border:1px solid var(--li
 .top .in{max-width:32rem;margin:0 auto;padding:.55rem 16px;display:flex;align-items:center;gap:.6rem}
 .brand{font-family:var(--serif);font-weight:700;font-size:1.15rem;color:var(--ink);text-decoration:none;flex:1;white-space:nowrap}
 .pill{font-size:.74rem;font-weight:700;padding:.22rem .6rem;border-radius:99px;background:var(--err);color:#fff;white-space:nowrap;letter-spacing:.03em;text-transform:uppercase}
+/* En el móvil la etiqueta deja sitio al botón Menú: el título de la página ya dice lo mismo. */
+@media (max-width:480px){.top .pill{display:none}}
 .ibtn{display:inline-flex;align-items:center;justify-content:center;width:2.3rem;height:2.3rem;border:1px solid var(--line);border-radius:8px;background:var(--bg2);color:var(--ink);cursor:pointer;padding:0}
 .ibtn svg{width:1.1rem;height:1.1rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
@@ -158,6 +161,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   <p class="kicker">Cambiar el nombre</p>
   <h1>Tu app, con otro nombre.</h1>
   <p class="lede">El nombre está en muchos sitios: GitHub, la dirección de la web, el servidor, tu carpeta de Drive y la copia de tu PC. Lo cambio en todos, o te digo cómo hacerlo donde yo no llego.</p>
+  <div class="pm-intro">
+    <p class="pm-t">Qué hace esta página</p>
+    <dl>
+      <dt>Para qué sirve</dt><dd>Le cambia el nombre a una app que ya tienes, en todos los sitios donde aparece. Lo que hay dentro de la app no cambia.</dd>
+      <dt>Qué vas a hacer</dt><dd>Elegir la app, escribir el nombre nuevo y abrir un archivo en el PC. Después, pedirle a Claude que cambie los textos y la carpeta de Drive.</dd>
+      <dt>Cuánto tarda</dt><dd>Entre 5 y 10 minutos con el PC encendido.</dd>
+    </dl>
+  </div>
   <div class="flecha" aria-hidden="true"><span class="A">recetas</span><i>→</i><span class="n N">cocina</span></div>
   <p class="aviso"><b>Ojo:</b> la dirección vieja de la web deja de funcionar. Si la has compartido, tendrás que mandar la nueva.</p>
 </section>
@@ -271,7 +282,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 </section>
 
 <footer>
-  Build <code>DM-B3-20260927-004</code> · <a href="./">Menú</a> · <a href="instalar.html#ayuda">Ayuda</a> · <a href="desinstalar.html">Eliminar una app</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
+  Build <code>DM-B3-20260927-007</code> · <a href="./">Menú</a> · <a href="instalar.html#ayuda">Ayuda</a> · <a href="desinstalar.html">Eliminar una app</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
 </footer>
 </main>
 

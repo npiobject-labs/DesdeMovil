@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build" content="DM-B3-20260927-005">
+<meta name="build" content="DM-B3-20260927-007">
 <meta name="description" content="Peripatéticos: monta tu app una vez en el PC y desarróllala para siempre desde el móvil, hablando.">
 <!-- La app de Fly de esta misma plantilla: la usa la demo de la portada. -->
 <meta name="fly-app" content="desdemovil-npiobject-labs">
 <title>Instalar · Peripatéticos</title>
+<script src="menu.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -203,6 +204,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     <p class="kicker">Para gente que no programa</p>
     <h1>Tu app nace mientras paseas.</h1>
     <p class="lede">Enciende el PC una vez, media hora. Después, tu app se desarrolla desde el móvil: le cuentas lo que quieres, lo ves en pantalla y dices «vale» o «cámbialo».</p>
+    <div class="pm-intro">
+      <p class="pm-t">Qué hace esta página</p>
+      <dl>
+      <dt>Para qué sirve</dt><dd>Te presenta Peripatéticos: una forma de tener tu propia app —una página web con su propio servidor— sin saber programar. Aquí no hay nada que rellenar.</dd>
+      <dt>Qué vas a hacer</dt><dd>Solo leer: cómo funciona, qué necesitas y cuánto cuesta. Si te convence, pulsa <b>Empezar</b>.</dd>
+      <dt>Después</dt><dd>Pasas a <b>Instalar una app</b>, donde se crea la tuya paso a paso.</dd>
+      </dl>
+    </div>
     <div class="acciones">
       <a class="btn primario grande" href="#instalar" id="empezar">Empezar · unos 30 minutos</a>
       <a class="btn fantasma" href="#como">¿Cómo funciona?</a>
@@ -288,7 +297,16 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 <!-- ============================================================ INSTALAR -->
 <section class="pantalla" id="p-instalar" hidden>
   <h2 style="margin-top:1.4rem">Vamos a montar tu app</h2>
-  <p class="ink2">Un paso cada vez. En cada uno te digo qué hacer, puedes abrir el «por qué» si te apetece, y cuando pulses <b>Hecho</b> lo compruebo de verdad.</p>
+  <p class="pm-aviso" id="medias" hidden>Estás montando <b id="medias-app"></b>. ¿Prefieres dejarla y empezar otra? <button type="button" id="medias-otra">Empezar otra app</button></p>
+  <div class="pm-intro">
+    <p class="pm-t">Qué hace esta página</p>
+    <dl>
+      <dt>Para qué sirve</dt><dd>Crea tu app. Le pones nombre, abres las cuentas que necesita (GitHub, Fly.io y Claude) y enciendes el PC una sola vez para que la monte.</dd>
+      <dt>Qué vas a hacer</dt><dd>Ocho pasos, uno detrás de otro. En cada uno te digo qué tocar; cuando pulses <b>Hecho</b>, compruebo que está bien y se abre el siguiente. El «por qué» de cada paso está plegado, por si te interesa.</dd>
+      <dt>Cuánto tarda</dt><dd>Unos 30 minutos la primera vez. Las siguientes apps, unos 10: tus cuentas quedan guardadas.</dd>
+      <dt>Si lo dejas a medias</dt><dd>Se guarda solo en este navegador: cuando vuelvas, sigues donde lo dejaste.</dd>
+    </dl>
+  </div>
   <div class="progreso"><i id="barra"></i></div>
 
   <!-- 1 · nombre -->
@@ -491,7 +509,15 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 
 <!-- ============================================================ FICHA -->
 <section class="pantalla" id="p-ficha" hidden>
-  <p class="kicker" style="margin-top:1.6rem">Ficha de la app</p>
+  <div class="pm-intro" style="margin-top:1.6rem">
+    <p class="pm-t">Qué hace esta página</p>
+    <dl>
+      <dt>Para qué sirve</dt><dd>Es la tarjeta de identidad de tu app: su dirección en internet, su servidor, dónde se guarda y dónde van las copias.</dd>
+      <dt>Qué puedes hacer</dt><dd>Abrir cada enlace, y pulsar <b>Saluda</b> para comprobar que tu app está encendida y contesta.</dd>
+      <dt>Si sale «recetas»</dt><dd>Es el ejemplo: en este navegador aún no has terminado de instalar ninguna app.</dd>
+    </dl>
+  </div>
+  <p class="kicker">Ficha de la app</p>
   <div class="ficha">
     <div class="nombre A">recetas</div>
     <p class="ink2" style="margin:.2rem 0 0" id="f-nacida">Vive en <span class="O">tuorganizacion</span></p>
@@ -518,6 +544,14 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 <!-- ============================================================ PEDIR -->
 <section class="pantalla" id="p-pedir" hidden>
   <h2 style="margin-top:1.4rem">Tu primera petición</h2>
+  <div class="pm-intro">
+    <p class="pm-t">Qué hace esta página</p>
+    <dl>
+      <dt>Para qué sirve</dt><dd>Te ayuda a escribir el encargo para Claude, que es quien hace los cambios en tu app.</dd>
+      <dt>Qué vas a hacer</dt><dd>Rellenar tres casillas con tus palabras, copiar el texto que se forma debajo y pegarlo en Claude.</dd>
+      <dt>Después</dt><dd>Claude hace el cambio, lo publica y te da el enlace para verlo. Tú contestas «vale» o le dices qué cambiar.</dd>
+    </dl>
+  </div>
   <p class="ink2">Abre Claude, entra en <b>Code</b>, elige <code><span class="O">tuorganizacion</span>/<span class="A">recetas</span></code> y pega lo que salga aquí abajo. Solo tienes que rellenar tres cosas.</p>
   <div class="chips" id="chips">
     <button class="chip" type="button" data-q="Una lista de la compra que se comparte con mi pareja" data-g="Nada de registro con contraseña; con un enlace secreto vale" data-m="Cuando los dos podamos añadir y tachar cosas desde el móvil">Lista de la compra</button>
@@ -545,7 +579,16 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 <!-- ============================================================ AYUDA -->
 <section class="pantalla" id="p-ayuda" hidden>
   <h2 style="margin-top:1.4rem">Si algo se atasca</h2>
+  <div class="pm-intro">
+    <p class="pm-t">Qué hace esta página</p>
+    <dl>
+      <dt>Para qué sirve</dt><dd>Reúne las soluciones a los problemas más habituales al instalar o usar tu app.</dd>
+      <dt>Cómo se usa</dt><dd>Toca la pregunta que se parezca a lo que te pasa y se abre la respuesta.</dd>
+      <dt>Si ninguna encaja</dt><dd>Haz una captura de pantalla y pégasela a Claude, contándole qué intentabas hacer.</dd>
+    </dl>
+  </div>
   <div class="faq">
+    <details><summary>Se me quedó una app a medias y quiero empezar otra</summary><div>Abre el <b>Menú</b> (las tres rayitas, arriba a la derecha) y, al final, pulsa <b>Dejarla y empezar otra</b>. Tus cuentas se quedan guardadas. Si el PC ya llegó a crearla y quieres quitarla de internet, usa <a href="desinstalar.html">Eliminar una app</a>.</div></details>
     <details><summary>No encuentra mi usuario de GitHub</summary><div>Entra en GitHub desde el móvil y mira arriba a la derecha: el nombre que aparece ahí, sin arroba, es el que hay que escribir. Las mayúsculas dan igual; los espacios no valen.</div></details>
     <details><summary>Al crear la organización me pide un plan y tarjeta</summary><div>Elige <b>Free</b>. No pide tarjeta en ese plan. Si te la pide, has entrado en «Team»: vuelve atrás y elige el gratuito.</div></details>
     <details><summary>Fly.io me pide una tarjeta</summary><div>Es normal en muchos países: la usa para comprobar que eres una persona. No cobra nada mientras tu app sea pequeña, y te avisa antes de hacerlo. Si te la pide mientras el PC trabaja, el PC te abre la página, esperas a ponerla y pulsas Intro en la ventana.</div></details>
@@ -566,7 +609,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
 </section>
 
 <footer>
-  Build <code>DM-B3-20260927-005</code> · <a href="./">Menú</a> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="renombrar.html">Cambiar el nombre</a> · <a href="desinstalar.html">Eliminar una app</a> · <button type="button" id="reiniciar">Empezar de nuevo</button>
+  Build <code>DM-B3-20260927-007</code> · <a href="./">Menú</a> · <a href="#ayuda">Ayuda</a> · <a href="recorrido.html">Recorrido</a> · <a href="renombrar.html">Cambiar el nombre</a> · <a href="desinstalar.html">Eliminar una app</a> · <button type="button" id="reiniciar">Empezar otra app</button>
 </footer>
 </main>
 
@@ -576,6 +619,24 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   function cargar(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}') }catch(e){ return {} } }
   function guardar(){ try{ localStorage.setItem(KEY, JSON.stringify(st)) }catch(e){} }
   st.hechos = st.hechos || {}; st.datos = st.datos || {}; st.reales = st.reales || {}; st.verif = st.verif || {};
+
+  // Otra app: se olvida la que está a medias y se conservan las cuentas ya
+  // comprobadas (las del perfil, o las de este montaje si llegó a comprobarlas).
+  // Llega como ?nueva=1 desde el menú ≡, el menú principal o los botones de aquí.
+  function otraApp(s){
+    var pf = s.perfil && s.perfil.org ? s.perfil : null, h = s.hechos, r = s.reales;
+    if (!pf && r.org && h.github && h.org && h.github !== 'anotado' && h.org !== 'anotado')
+      pf = { usuario: r.usuario || limpiaCuenta(s.datos.usuario), org: r.org, verif: { fly: !!(h.fly && s.verif.fly), claude: s.verif.claude === true } };
+    var n = { tema: s.tema, perfil: pf || undefined, apps: s.apps || [], datos: {}, reales: {}, hechos: {}, verif: {} };
+    if (pf) {
+      n.datos = { usuario: pf.usuario, org: pf.org }; n.reales = { usuario: pf.usuario, org: pf.org }; n.hechos = { github: 'guardado', org: 'guardado' };
+      if (pf.verif && pf.verif.fly) n.hechos.fly = 'guardado';
+      if (pf.verif && pf.verif.claude) n.hechos.claude = 'guardado';
+    }
+    return n;
+  }
+  var otraNueva = /[?&]nueva=1/.test(location.search);
+  if (otraNueva) { st = otraApp(st); guardar(); try { history.replaceState(null, '', location.pathname + '#instalar') } catch(e){} }
 
   // ---------------------------------------------------------------- nombres
   // Minúsculas, guiones, 15 caracteres; si hay que cortar, no se parte una palabra.
@@ -686,6 +747,8 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     document.getElementById('barra').style.width = (act/pasos.length*100)+'%';
     document.getElementById('pill-paso').textContent = act>=pasos.length ? 'Meta' : 'Paso '+(act+1)+' de '+pasos.length;
     document.getElementById('meta').hidden = act < pasos.length;
+    document.getElementById('medias').hidden = !(st.hechos.nombre && act < pasos.length);
+    document.getElementById('medias-app').textContent = D().app ? '«' + D().app + '»' : 'una app';
     if (act >= pasos.length) registrarApp();
     pintaTusApps();
     aplica();
@@ -987,21 +1050,9 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   // Empieza una app nueva con las cuentas guardadas. GitHub y la organización
   // se vuelven a mirar en la API por si han cambiado; Fly y Claude se dan por
   // buenos si la app anterior los dejó verificados.
-  function nuevaApp(){
-    var pf = st.perfil; if (!pf || !pf.org) { location.hash = '#instalar'; return }
-    st = { tema: st.tema, perfil: pf, apps: st.apps || [], datos: { usuario: pf.usuario, org: pf.org }, reales: { usuario: pf.usuario, org: pf.org }, hechos: { github: 'guardado', org: 'guardado' }, verif: {} };
-    if (pf.verif && pf.verif.fly) st.hechos.fly = 'guardado';
-    if (pf.verif && pf.verif.claude) st.hechos.claude = 'guardado';
-    guardar();
-    ['in-nombre','in-drive'].forEach(function(id){ document.getElementById(id).value = '' });
-    document.getElementById('in-usuario').value = pf.usuario || ''; document.getElementById('in-org').value = pf.org || '';
-    pasos.forEach(function(p){ p.classList.remove('abierto'); p.querySelector('.verif').hidden = true });
-    document.getElementById('linea').hidden = true;
-    pinta(); location.hash = '#instalar'; window.scrollTo(0,0);
-    revalida();
-  }
+  // Las cuentas guardadas siguen existiendo en GitHub.
   function revalida(){
-    var pf = st.perfil;
+    var pf = st.perfil; if (!pf || !pf.org) return;
     gh('users/' + encodeURIComponent(pf.usuario)).then(function(r){
       if (r.status === 404) { delete st.hechos.github; guardar(); pinta(); verif(paso('github'), 'err', 'Ya no encuentro tu usuario «' + esc(pf.usuario) + '»', '¿Lo has cambiado? Escríbelo otra vez.') }
     }).catch(function(){});
@@ -1014,8 +1065,9 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     u.hash = ''; u.search = '?u=' + encodeURIComponent(pf.usuario || '') + '&org=' + encodeURIComponent(pf.org || '');
     return u.href;
   }
-  document.getElementById('otra-app').addEventListener('click', nuevaApp);
-  document.getElementById('otra-app-meta').addEventListener('click', nuevaApp);
+  ['otra-app','otra-app-meta','medias-otra','reiniciar'].forEach(function(id){
+    document.getElementById(id).addEventListener('click', function(){ window.peripateticos.empezarOtra() });
+  });
   document.getElementById('mi-enlace').addEventListener('click', function(){ copia(enlaceCuentas(), this, 'Copiar enlace con mis cuentas') });
   document.getElementById('olvidar').addEventListener('click', function(){
     if (!confirm('¿Olvidar tus cuentas y la lista de tus apps en este navegador? Tus apps no se tocan: siguen en GitHub, Fly.io y Drive.')) return;
@@ -1029,7 +1081,7 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
     var aMedias = Object.keys(st.hechos).length && primerPendiente() < pasos.length;
     st.perfil = { usuario: u, org: o, verif: (st.perfil && st.perfil.org === o) ? st.perfil.verif : {} }; guardar();
     try { history.replaceState(null, '', location.pathname + (aMedias ? location.hash : '#instalar')) } catch(e){}
-    if (!aMedias) setTimeout(nuevaApp, 0);
+    if (!aMedias) { st = otraApp(st); guardar(); otraNueva = true }
   })();
 
   // ---------------------------------------------------------------- entradas, tema, reinicio
@@ -1047,12 +1099,9 @@ footer button{font:inherit;color:var(--acc);background:none;border:0;padding:0;c
   function setT(t){ st.tema=t; guardar(); if (t) root.setAttribute('data-theme',t); else root.removeAttribute('data-theme') }
   setT(st.tema||'');
   document.getElementById('tema').addEventListener('click', function(){ var o=['','light','dark']; setT(o[(o.indexOf(st.tema||'')+1)%3]) });
-  document.getElementById('reiniciar').addEventListener('click', function(){
-    if (!confirm('¿Empezar de nuevo? Se borra lo que has escrito en esta página (tu app y tus cuentas no se tocan).')) return;
-    st = {tema: st.tema, perfil: st.perfil, apps: st.apps, hechos:{}, datos:{}, reales:{}, verif:{}}; guardar(); location.hash = '#instalar'; location.reload();
-  });
 
   prompt(); pinta(); ruta();
+  if (otraNueva) revalida();
   if (st.vig && !st.hechos.pc) vigilar();   // se cerró la página a mitad de la espera: sigue vigilando
   if (st.vigDrive && !st.hechos.verdrive) vigilarDrive();
 })();

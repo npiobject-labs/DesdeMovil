@@ -85,7 +85,7 @@ jobs:
             echo "  docs/index.html: portada del proyecto (desde docs/semilla/)"
           fi
           rm -rf docs/semilla docs/instalador docs/mocks docs/pc.html docs/recorrido.html \
-                 docs/instalar.html docs/desinstalar.html docs/renombrar.html
+                 docs/instalar.html docs/desinstalar.html docs/renombrar.html docs/menu.js
           echo "  menu, instalador, desinstalar, renombrar, recorrido y mocks de la plantilla: fuera"
 
           # El enlace "Use this template" debe seguir apuntando a la plantilla
