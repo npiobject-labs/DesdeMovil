@@ -182,6 +182,8 @@ function Autorizar([string[]]$orden) {
   Dice "Se va a abrir tu navegador en GitHub."
   Dice "Cuando te pida un codigo, escribe el que sale aqui abajo"
   Dice "(tambien lo tienes copiado: puedes pegarlo)."
+  Dice "Si GitHub te pide 'Confirm access', confirma que eres tu (por ejemplo"
+  Dice "con 'Verify via email' y el codigo que te llega al correo)."
   $script:codigoVisto = $false
   $script:lineasLogin = @()
   "" | & $script:gh @orden 2>&1 | ForEach-Object {
@@ -276,8 +278,10 @@ function Leer-Json([string]$ruta) {
   if (-not $f) { return $null }
   try { return ($f.texto | ConvertFrom-Json) } catch { return $null }
 }
+# Ninguna expresion --jq lleva comillas dobles: Windows PowerShell 5.1 se las
+# come al pasar argumentos a un programa externo y gh recibe un jq roto.
 function Runs([string]$wf) {
-  $jq = '.[] | [.databaseId, .status, (.conclusion // ""), .headSha, .url] | @tsv'
+  $jq = '.[] | [.databaseId, .status, .conclusion, .headSha, .url] | @tsv'
   $r = Gh @("run", "list", "-R", $script:repo, "--workflow", $wf, "--limit", "20",
             "--json", "databaseId,status,conclusion,headSha,url", "--jq", $jq) -SoloSalida
   $lista = @()
