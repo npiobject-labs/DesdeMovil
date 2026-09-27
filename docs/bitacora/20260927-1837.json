@@ -1,0 +1,34 @@
+{
+  "fecha": "2026-09-27T18:37:00+02:00",
+  "titulo": "Peripatéticos: efecto de la barra flotante más visible",
+  "objetivo": "Que el efecto de la barra al desplazar se note en el móvil y que la página del PC no pierda la barra con el menú.",
+  "prompts": [
+    {
+      "texto": "Dos cosas la primera es que apenas notó el efecto no se ve ni transparencia ni sombra ni disminuir el ancho y por otro lado desde el PC pierde el menú la opción pierde el menú",
+      "nota": "Con una captura de la página del PC en el móvil, en modo noche, sin la barra de arriba."
+    }
+  ],
+  "cambios": [
+    "docs/menu.js: barra flotante más marcada (55 → 35 px, fondo al 62 % con desenfoque, sombra más fuerte, filo claro de noche).",
+    "index, instalar, pc, renombrar, desinstalar y recorrido: cargan menu.js?b=DM-B3-20260927-012 para no usar el menu.js viejo guardado. Build DM-B3-20260927-012.",
+    "docs/pc.html: la barra va de borde a borde.",
+    "CLAUDE.md: subir el ?b= de menu.js cada vez que cambie."
+  ],
+  "sha": "25bfb42",
+  "sha_completo": "25bfb42047a930e922a1482dd02890dcccc5cf95",
+  "run": "36333896315",
+  "build": "DM-B3-20260927-012",
+  "pagina": "pc.html",
+  "fly": null,
+  "pendiente": [
+    "Verlo en el móvil con el build DM-B3-20260927-012 en el pie.",
+    "DT-1: copia limpia «peripateticos»."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #40",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/40"
+    }
+  ],
+  "notas": "Continuación de las sesiones anteriores del 27-09, en la misma conversación. En un móvil simulado la barra del PC sí quedaba fija con la versión de la PR #38: lo que vio el usuario era el menu.js anterior guardado."
+}
