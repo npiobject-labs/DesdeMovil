@@ -58,17 +58,19 @@
     // pasar el contenido por debajo se estrechan, se vuelven algo transparentes y
     // proyectan sombra, oscura de día y clara de noche. La sombra es la de una
     // hoja curvada: máxima en el centro y nula en los bordes, donde la hoja toca
-    // la de debajo.
-    + ':root{--pm-sombra:rgba(15,18,20,.55);--pm-filo:rgba(15,18,20,.14)}'
-    + '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pm-sombra:rgba(255,255,255,.4);--pm-filo:rgba(255,255,255,.3)}}'
-    + ':root[data-theme="dark"]{--pm-sombra:rgba(255,255,255,.4);--pm-filo:rgba(255,255,255,.3)}'
+    // la de debajo. Bajo la barra de la página va también la línea de progreso
+    // de lectura (.pm-progreso), del color de la marca.
+    + ':root{--pm-sombra:rgba(15,18,20,.7);--pm-filo:rgba(15,18,20,.18)}'
+    + '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pm-sombra:rgba(255,255,255,.52);--pm-filo:rgba(255,255,255,.38)}}'
+    + ':root[data-theme="dark"]{--pm-sombra:rgba(255,255,255,.52);--pm-filo:rgba(255,255,255,.38)}'
     + '.pm-flota{position:sticky;top:0;z-index:20;background-color:var(--bg,#F6F2EA);transition:background-color .25s,box-shadow .25s,border-color .25s}'
     + '.pm-fila{transition:padding .25s}'
     + '.pm-flota .ibtn,.pm-flota .pm-btn{transition:height .25s,width .25s,font-size .25s}'
     + '.pm-fila>.brand,.pm-fila>a.b,.pm-cab>b{transition:font-size .25s}'
     + ':root .pm-flota.pm-scroll{background-color:color-mix(in srgb,var(--bg,#F6F2EA) 62%,transparent);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4);border-bottom-color:transparent}'
-    + '.pm-flota::after{content:"";position:absolute;left:0;right:0;top:100%;height:clamp(14px,4.5vw,30px);pointer-events:none;opacity:0;transition:opacity .25s;background:linear-gradient(90deg,transparent,var(--pm-filo) 50%,transparent) top/100% 1px no-repeat,radial-gradient(50% 100% at 50% 0,var(--pm-sombra),color-mix(in srgb,var(--pm-sombra) 35%,transparent) 55%,transparent)}'
+    + '.pm-flota::after{content:"";position:absolute;left:0;right:0;top:100%;height:clamp(18px,5.5vw,36px);pointer-events:none;opacity:0;transition:opacity .25s;background:linear-gradient(90deg,transparent,var(--pm-filo) 50%,transparent) top/100% 1px no-repeat,radial-gradient(50% 100% at 50% 0,var(--pm-sombra),color-mix(in srgb,var(--pm-sombra) 45%,transparent) 55%,transparent)}'
     + ':root .pm-flota.pm-scroll::after{opacity:1}'
+    + '.pm-progreso{position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--acc,#9A4A2C);transform:scaleX(0);transform-origin:0 50%;pointer-events:none;z-index:3}'
     + ':root .pm-scroll .pm-fila,:root .pm-fila.pm-scroll{padding-top:.14rem;padding-bottom:.14rem}'
     + ':root .pm-scroll .pm-fila>.brand,:root .pm-scroll .pm-fila>a.b,:root .pm-scroll.pm-cab>b{font-size:.98rem}'
     + ':root .pm-scroll .ibtn{width:1.85rem;height:1.85rem}'
@@ -169,12 +171,22 @@
     panel.querySelector('.pm-cuerpo').innerHTML = html;
   }
 
-  // Marca una barra flotante mientras hay contenido pasando por debajo.
-  function flota(barra, fila, desliza){
+  // Marca una barra flotante mientras hay contenido pasando por debajo. Con
+  // progreso, lleva además en su borde inferior la línea de lo que se ha leído.
+  function flota(barra, fila, desliza, progreso){
     barra.classList.add('pm-flota'); fila.classList.add('pm-fila');
-    var pendiente = false;
-    function mira(){ pendiente = false; barra.classList.toggle('pm-scroll', (desliza === window ? window.scrollY : desliza.scrollTop) > 4) }
-    desliza.addEventListener('scroll', function(){ if (!pendiente) { pendiente = true; requestAnimationFrame(mira) } }, { passive: true });
+    var pendiente = false, linea = null;
+    if (progreso) { linea = document.createElement('i'); linea.className = 'pm-progreso'; linea.setAttribute('aria-hidden', 'true'); barra.appendChild(linea) }
+    function mira(){
+      pendiente = false;
+      var y = desliza === window ? window.scrollY : desliza.scrollTop;
+      barra.classList.toggle('pm-scroll', y > 4);
+      if (linea) { var max = document.documentElement.scrollHeight - window.innerHeight; linea.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')' }
+    }
+    function pide(){ if (!pendiente) { pendiente = true; requestAnimationFrame(mira) } }
+    desliza.addEventListener('scroll', pide, { passive: true });
+    // El alto de la página cambia al cambiar de pantalla o de tamaño.
+    if (linea) { window.addEventListener('resize', pide); window.addEventListener('hashchange', pide); window.addEventListener('load', pide) }
     mira();
     return mira;
   }
@@ -206,7 +218,7 @@
   function monta(){
     var barra = document.querySelector('.top .in') || document.querySelector('.top .fila') || document.querySelector('.top');
     if (!barra || document.getElementById('pm-btn')) return;
-    flota(document.querySelector('.top'), barra, window);
+    flota(document.querySelector('.top'), barra, window, true);
 
     var btn = document.createElement('button');
     btn.type = 'button'; btn.id = 'pm-btn'; btn.className = 'pm-btn';
