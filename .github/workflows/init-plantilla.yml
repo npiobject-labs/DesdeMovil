@@ -179,6 +179,10 @@ jobs:
           sed -i -E 's#^(\| Carpeta de Drive \(id\) \|).*#\1  |#' CLAUDE.md
           echo "  seccion Parametros rellenada; id de Drive vaciado"
 
+          # Lo marcado como solo-plantilla (el producto nuevo) no se hereda.
+          sed -i '/^<!-- solo-plantilla -->$/,/^<!-- \/solo-plantilla -->$/d' CLAUDE.md
+          echo "  secciones solo-plantilla quitadas de CLAUDE.md"
+
           rm -f .plantilla-pendiente
 
       # docs/planificacion/ nace con la planificacion completa de la plantilla

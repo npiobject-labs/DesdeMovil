@@ -28,6 +28,14 @@ Google Drive es **opcional** y, cuando está configurado, **solo un destino de c
 - La carpeta tiene que ser una carpeta normal de `Mi unidad`. Nunca uses el "Proyecto" de Drive del mismo nombre: el conector no puede escribir en él.
 
 La carpeta local del PC es un espejo de solo lectura. Nunca la trates como origen ni construyas un camino local → nube.
+<!-- solo-plantilla -->
+
+## Producto nuevo: preguntas pendientes
+
+Desde el 28-09-2026 se planifica un producto nuevo a partir de Peripatéticos (infraestructura limpia, niveles de prueba y premium, alta sin PC, botón de ayuda, pasarela de IA). Como lleva estrategia y precios, su documento base vive **solo** en Drive, en la carpeta de **Parámetros**: `Peripatéticos · proyecto inicial (vN).md`, la versión más alta. Es la única excepción, decidida por el usuario, a «Drive nunca es origen»; no se copia a `docs/`, que es público.
+
+En cada sesión, léelo con el conector de Google Drive y pregunta al usuario las **Preguntas pendientes** que sigan abiertas, en orden y como mucho tres cada vez, aunque no las mencione: ha pedido que seas tú quien pregunte, porque se le olvidan. Anota las respuestas en **Decisiones tomadas** y sube el documento completo como versión nueva. Sin conector, pídele que conecte Google Drive. `init-plantilla.yml` quita esta sección en los proyectos hijos.
+<!-- /solo-plantilla -->
 
 ## URLs vivas
 
