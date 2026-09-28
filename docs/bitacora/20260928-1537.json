@@ -1,0 +1,33 @@
+{
+  "fecha": "2026-09-28T15:37:00+02:00",
+  "titulo": "Peripatéticos: línea de progreso abajo y sombra más marcada",
+  "objetivo": "Poner la línea de progreso de lectura en el borde inferior de la barra de arriba en toda la aplicación, con algo más de sombra para que no pierda el efecto.",
+  "prompts": [
+    {
+      "texto": "Se vas a poner en toda la aplicación la barra abajo pero le pones un poquito más de sombra al a la primera caja de menú un poquito más porque al tener la barra abajo como que pierde un poco el asombrado el resplandor depende si es día o noche bueno pues haz esto hasta el final y me dices cuando has terminado y miro como como ha quedado"
+    }
+  ],
+  "cambios": [
+    "docs/menu.js: línea de progreso de lectura (.pm-progreso) en el borde inferior de la barra de cada página; sombra de hoja curvada más intensa y más alta, de día y de noche.",
+    "docs/mocks/003-barra-progreso.html: oculta la línea de menu.js para seguir comparando.",
+    "index, instalar, pc, renombrar, desinstalar y recorrido: build DM-B3-20260928-001 (también en menu.js?b=).",
+    "CLAUDE.md: documentada la línea de progreso."
+  ],
+  "sha": "c5303a0",
+  "sha_completo": "c5303a070977c8dee20b0b82190185651e51f2e7",
+  "run": "36429826752",
+  "build": "DM-B3-20260928-001",
+  "pagina": "index.html",
+  "fly": null,
+  "pendiente": [
+    "Verlo en el móvil.",
+    "DT-1: copia limpia «peripateticos»."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #46",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/46"
+    }
+  ],
+  "notas": "Continuación de la conversación del 27-09."
+}
