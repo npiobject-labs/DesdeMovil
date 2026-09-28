@@ -106,6 +106,8 @@ code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.08e
 .medias .small{font-size:.86rem;color:var(--ink2);margin:.3rem 0 0}
 
 /* ---- Mock: barra de progreso de lectura ---- */
+/* menu.js ya pone la suya abajo en todas las páginas: aquí se oculta para comparar con la del mock. */
+.pm-progreso{display:none}
 .progreso{position:absolute;left:0;right:0;height:3px;background:var(--acc);transform:scaleX(0);transform-origin:0 50%;pointer-events:none;z-index:3;transition:transform .08s linear}
 body[data-barra="arriba"] .progreso{top:0}
 body[data-barra="abajo"] .progreso{bottom:-1px}
