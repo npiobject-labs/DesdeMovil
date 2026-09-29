@@ -32,13 +32,18 @@
     },
     {
       "texto": "Aún no tengo dominio. Gmail al principio. Gmail nuevo. No desarrolles solamente guarda los planes yo analizo, después te digo."
+    },
+    {
+      "texto": "dominio: \"peripateticos.oracle402.com\"",
+      "nota": "29-09-2026"
     }
   ],
   "cambios": [
     "CLAUDE.md: sección «Producto nuevo: preguntas pendientes», marcada como solo-plantilla.",
     "init-plantilla.yml: quita las secciones solo-plantilla de CLAUDE.md en los proyectos hijos.",
     "Drive (fuera del repositorio): documento base del producto nuevo.",
-    "Drive (fuera del repositorio): proyecto inicial v2 (decisiones y competencia) y especificación de la herramienta ideal v1."
+    "Drive (fuera del repositorio): proyecto inicial v2 (decisiones y competencia) y especificación de la herramienta ideal v1.",
+    "Drive (fuera del repositorio): proyecto inicial v3, con el dominio y el nombre del producto."
   ],
   "sha": null,
   "sha_completo": null,
