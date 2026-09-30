@@ -30,11 +30,11 @@ Google Drive es **opcional** y, cuando está configurado, **solo un destino de c
 La carpeta local del PC es un espejo de solo lectura. Nunca la trates como origen ni construyas un camino local → nube.
 <!-- solo-plantilla -->
 
-## Producto nuevo: preguntas pendientes
+## Producto nuevo: Peripatéticos
 
-Desde el 28-09-2026 se planifica un producto nuevo a partir de Peripatéticos (infraestructura limpia, niveles de prueba y premium, alta sin PC, botón de ayuda, pasarela de IA). Como lleva estrategia y precios, su documento base vive **solo** en Drive, en la carpeta de **Parámetros**: `Peripatéticos · proyecto inicial (vN).md`, la versión más alta. Es la única excepción, decidida por el usuario, a «Drive nunca es origen»; no se copia a `docs/`, que es público.
+Desde el 28-09-2026 se construye un producto nuevo a partir de este taller. Tiene casa propia: el repositorio privado `peripateticos-app/peripateticos` (su `CLAUDE.md` manda) y la carpeta «Peripateticos» del Drive de la cuenta del producto, con sus documentos (plan, especificación, receta de la infraestructura), que llevan estrategia y precios. Es la única excepción, decidida por el usuario, a «Drive nunca es origen»; nada de eso se copia a `docs/`, que es público. Las copias viejas que quedan en la carpeta de Drive de **Parámetros** están obsoletas.
 
-En cada sesión, léelo con el conector de Google Drive y pregunta al usuario las **Preguntas pendientes** que sigan abiertas, en orden y como mucho tres cada vez, aunque no las mencione: ha pedido que seas tú quien pregunte, porque se le olvidan. Anota las respuestas en **Decisiones tomadas** y sube el documento completo como versión nueva. Sin conector, pídele que conecte Google Drive. `init-plantilla.yml` quita esta sección en los proyectos hijos.
+Si la sesión va del producto, trabaja en ese repositorio (añádelo a la sesión si no está) y sigue su `CLAUDE.md`, que pide leer esos documentos y preguntar al usuario lo pendiente. En una sesión de este taller, recuérdale en una línea que hay preguntas pendientes del producto y ofrécete a repasarlas. `init-plantilla.yml` quita esta sección en los proyectos hijos.
 <!-- /solo-plantilla -->
 
 ## URLs vivas
