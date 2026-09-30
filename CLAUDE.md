@@ -32,9 +32,9 @@ La carpeta local del PC es un espejo de solo lectura. Nunca la trates como orige
 
 ## Producto nuevo: Peripatéticos
 
-Desde el 28-09-2026 se construye un producto nuevo a partir de este taller. Tiene casa propia: el repositorio privado `peripateticos-app/peripateticos` (su `CLAUDE.md` manda) y la carpeta «Peripateticos» del Drive de la cuenta del producto, con sus documentos (plan, especificación, receta de la infraestructura), que llevan estrategia y precios. Es la única excepción, decidida por el usuario, a «Drive nunca es origen»; nada de eso se copia a `docs/`, que es público. Las copias viejas que quedan en la carpeta de Drive de **Parámetros** están obsoletas.
+Desde el 28-09-2026 se construye un producto nuevo a partir de este taller. Tiene casa propia: el repositorio privado `peripateticos-app/peripateticos`, su fuente de verdad (su `CLAUDE.md` manda y sus documentos están en `docs/planificacion/`), con copias en la carpeta de Drive del producto. Nada de ese producto (cuentas, estrategia, precios) se copia a `docs/` de este repositorio, que es público. Las copias viejas de sus documentos que quedan en la carpeta de Drive de **Parámetros** están obsoletas.
 
-Si la sesión va del producto, trabaja en ese repositorio (añádelo a la sesión si no está) y sigue su `CLAUDE.md`, que pide leer esos documentos y preguntar al usuario lo pendiente. En una sesión de este taller, recuérdale en una línea que hay preguntas pendientes del producto y ofrécete a repasarlas. `init-plantilla.yml` quita esta sección en los proyectos hijos.
+Si la sesión va del producto, trabaja en ese repositorio (añádelo a la sesión si no está) y sigue su `CLAUDE.md`, que pide preguntar al usuario lo pendiente. En una sesión de este taller, recuérdale en una línea que hay preguntas pendientes del producto y ofrécete a repasarlas. `init-plantilla.yml` quita esta sección en los proyectos hijos.
 <!-- /solo-plantilla -->
 
 ## URLs vivas
