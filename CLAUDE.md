@@ -28,6 +28,14 @@ Google Drive es **opcional** y, cuando está configurado, **solo un destino de c
 - La carpeta tiene que ser una carpeta normal de `Mi unidad`. Nunca uses el "Proyecto" de Drive del mismo nombre: el conector no puede escribir en él.
 
 La carpeta local del PC es un espejo de solo lectura. Nunca la trates como origen ni construyas un camino local → nube.
+<!-- solo-plantilla -->
+
+## Producto nuevo: Peripatéticos
+
+Desde el 28-09-2026 se construye un producto nuevo a partir de este taller. Tiene casa propia: el repositorio privado `peripateticos-app/peripateticos`, su fuente de verdad (su `CLAUDE.md` manda y sus documentos están en `docs/planificacion/`), con copias en la carpeta de Drive del producto. Nada de ese producto (cuentas, estrategia, precios) se copia a `docs/` de este repositorio, que es público. Las copias viejas de sus documentos que quedan en la carpeta de Drive de **Parámetros** están obsoletas.
+
+Si la sesión va del producto, trabaja en ese repositorio (añádelo a la sesión si no está) y sigue su `CLAUDE.md`, que pide preguntar al usuario lo pendiente. En una sesión de este taller, recuérdale en una línea que hay preguntas pendientes del producto y ofrécete a repasarlas. `init-plantilla.yml` quita esta sección en los proyectos hijos.
+<!-- /solo-plantilla -->
 
 ## URLs vivas
 

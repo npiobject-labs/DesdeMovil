@@ -1,0 +1,67 @@
+{
+  "fecha": "2026-09-28T19:52:00+02:00",
+  "titulo": "Ideas para el producto nuevo: documento base y especificación en Drive",
+  "objetivo": "Valorar mejoras de fondo para Peripatéticos y dejarlas reunidas en un documento base, sin tocar la app.",
+  "prompts": [
+    {
+      "texto": "Resumido: ¿se puede evitar el paso por el PC y hacerlo desde la nube? Dime si es posible y cuál es la mejor opción, sin ejecutar nada."
+    },
+    {
+      "texto": "Resumido: qué tendría que hacer el usuario desde el móvil, muy escueto; en una primera fase de prueba la infraestructura sería nuestra y en una segunda, suya."
+    },
+    {
+      "texto": "Resumido: qué puede hacer en la fase de prueba quien no tiene Claude Code."
+    },
+    {
+      "texto": "Resumido: confirmar el planteamiento de los dos niveles y un botón de ayuda con captura, dibujo y nota de voz, atendido por un agente de IA."
+    },
+    {
+      "texto": "Resumido: conexiones de las apps a modelos de IA a través de la app openrouter, como opción."
+    },
+    {
+      "texto": "Resumido: crear una infraestructura nueva y limpia como base para las apps de los clientes, cómo hacer el marketing, y un proyecto inicial con todos los puntos."
+    },
+    {
+      "texto": "Guárdalo donde tú prefieras aunque yo creo que porque no en Drive en el drive de este móvil pues lo podrías guardar ahí y como documento base de para el arranque de esta nueva app. El resto de información que me pides te lo doy en la próxima sesión ahora lo que tienes que hacer es ir pidiéndome tú a mí las cosas ya que a mí se me olvidará todo lo que tengo que decirte"
+    },
+    {
+      "texto": "Resumido: qué tiene la competencia (Lovable, Bolt, Replit…) que no tenga Peripatéticos, y en qué no nos superan."
+    },
+    {
+      "texto": "Resumido: especificar la herramienta ideal basada en Claude Code para que un no técnico lleve una idea a la práctica desde el móvil, sin infraestructura propia o con ella; apuntar alto."
+    },
+    {
+      "texto": "Aún no tengo dominio. Gmail al principio. Gmail nuevo. No desarrolles solamente guarda los planes yo analizo, después te digo."
+    },
+    {
+      "texto": "dominio: \"peripateticos.oracle402.com\"",
+      "nota": "29-09-2026"
+    }
+  ],
+  "cambios": [
+    "CLAUDE.md: sección «Producto nuevo: preguntas pendientes», marcada como solo-plantilla.",
+    "init-plantilla.yml: quita las secciones solo-plantilla de CLAUDE.md en los proyectos hijos.",
+    "Drive (fuera del repositorio): documento base del producto nuevo.",
+    "Drive (fuera del repositorio): proyecto inicial v2 (decisiones y competencia) y especificación de la herramienta ideal v1.",
+    "Drive (fuera del repositorio): proyecto inicial v3, con el dominio y el nombre del producto."
+  ],
+  "sha": null,
+  "sha_completo": null,
+  "run": null,
+  "mock": null,
+  "build": null,
+  "pagina": null,
+  "fly": null,
+  "pendiente": [
+    "Fusionar el PR #48.",
+    "El usuario analiza los planes; no desarrollar hasta que lo diga.",
+    "Responder las preguntas pendientes del documento base (Claude las irá pidiendo)."
+  ],
+  "enlaces": [
+    {
+      "texto": "PR #48",
+      "url": "https://github.com/npiobject-labs/DesdeMovil/pull/48"
+    }
+  ],
+  "notas": "Los prompts de estrategia van resumidos a propósito: el usuario quiere mantener privados los planes y precios, y docs/ es público. El contenido está en los documentos de Drive. Sin SHA: el PR quedó abierto."
+}

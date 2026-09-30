@@ -1,0 +1,30 @@
+{
+  "fecha": "2026-09-30T21:30:00+02:00",
+  "titulo": "El producto nuevo se independiza del taller",
+  "objetivo": "Montar, paso a paso y desde el navegador, la infraestructura propia del producto nuevo y dejar en este taller solo un aviso que apunte a ella.",
+  "prompts": [
+    { "texto": "Resumido: arrancar la infraestructura del producto nuevo con cuentas propias, un paso cada vez, empezando por una cuenta de Google." },
+    { "texto": "Resumido: resolver los atascos de las altas (cuenta de Google sin Gmail, límite de verificación por teléfono, nombres cogidos, una organización creada por error, erratas en el dominio) a partir de capturas de pantalla." },
+    { "texto": "Resumido: guardar en Drive la receta de todo lo hecho para poder repetirlo, y una explicación del producto para no técnicos." },
+    { "texto": "Adelante hace el paso 8" }
+  ],
+  "cambios": [
+    "CLAUDE.md: la sección solo-plantilla del producto nuevo apunta ahora a su repositorio y a su carpeta de Drive.",
+    "Fuera de este repositorio: cuentas, organización y repositorios de GitHub, Fly, Drive, portada y DNS del producto."
+  ],
+  "sha": null,
+  "sha_completo": null,
+  "run": null,
+  "mock": null,
+  "build": null,
+  "pagina": null,
+  "fly": null,
+  "pendiente": [
+    "Fusionar el PR #48.",
+    "Producto: marcar Enforce HTTPS cuando GitHub termine el certificado; después, la F1."
+  ],
+  "enlaces": [
+    { "texto": "PR #48", "url": "https://github.com/npiobject-labs/DesdeMovil/pull/48" }
+  ],
+  "notas": "Sesión larga, casi toda fuera de este repositorio. Los prompts van resumidos: contienen cuentas, nombres y estrategia del producto que el usuario quiere mantener privados, y docs/ es público."
+}
